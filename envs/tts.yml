@@ -1,0 +1,50 @@
+# tts env: everything except MFA (docs/PLAN.md Sections 3-8, 10).
+# Exact versions pinned from the T1 install (2026-11-06); full transitive lock in envs/lock/tts.full.yml.
+# Never change a pin without a docs/DECISIONS.md entry.
+name: tts
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.10.22
+  # torchaudio >=2.9 removes forced_align (MMS_FA) and torchaudio.load (SpeechBrain): stay on 2.8.
+  - pytorch=2.8.0=cuda129*
+  - torchaudio=2.8.0=cuda129*
+  - cuda-version=12.9
+  - cudnn=9.10.2.21          # cuDNN 9 shared by torch and ctranslate2 (faster-whisper)
+  # audio / DSP
+  - numpy=2.2.6
+  - scipy=1.15.2
+  - librosa=0.11.0
+  - pysoundfile=0.14.0       # conda-forge name of the soundfile package
+  - ffmpeg=8.0.1
+  # text / G2P
+  - cmudict=1.1.3
+  - inflect=7.5.0
+  - unidecode=1.4.0
+  - nltk=3.10.3
+  # alignment I/O
+  - praatio=6.2.2
+  # training
+  - tensorboard=2.20.0
+  - omegaconf=2.4.0
+  - pyyaml=6.0.3
+  - tqdm=4.70.0
+  # evaluation
+  - openai-whisper=20250625  # only for whisper.normalizers.EnglishTextNormalizer
+  - jiwer=4.0.0
+  - huggingface_hub=1.29.0
+  - pandas=2.3.3
+  - matplotlib=3.10.9
+  # profiling
+  - ptflops=0.7.3
+  # tests
+  - pytest=9.2.0
+  - pip=26.2.1
+  - pip:
+      # not on conda-forge
+      - g2p_en==2.1.0
+      - pyrubberband==0.4.0
+      - faster-whisper==1.2.1
+      - ctranslate2==4.8.5
+      - speechbrain==1.0.3

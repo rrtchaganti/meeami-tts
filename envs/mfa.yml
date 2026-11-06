@@ -1,0 +1,8 @@
+# mfa env: Montreal Forced Aligner only (docs/PLAN.md Section 3). Never upgrade mid-project.
+# Pinned from the T1 install (2026-11-06); full transitive lock in envs/lock/mfa.full.yml.
+name: mfa
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - montreal-forced-aligner=3.4.3

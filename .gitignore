@@ -1,0 +1,33 @@
+# data and large artifacts (docs/PLAN.md Section 10)
+/data/
+/runs/
+/export/
+/logs/
+/out/
+bundle*.tar.gz
+
+# audio
+*.wav
+*.WAV
+*.mp3
+*.flac
+*.ogg
+*.m4a
+*.opus
+# edge-case suite is committed (Section 9)
+!/tests/edge_cases/**
+
+# tensorboard
+events.out.tfevents.*
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# editors / os
+.vscode/
+.idea/
+.DS_Store
