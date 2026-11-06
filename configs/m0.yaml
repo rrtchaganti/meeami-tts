@@ -1,0 +1,12 @@
+# M0: pretrained FastSpeech2 + HiFi-GAN, reference durations injected (inference only, Section 4).
+inherit: base.yaml
+exp: m0
+m0:
+  source: ming024/FastSpeech2@d4e79eb52e8b01d24703b2dfc0385544092958f3
+  fastspeech2_ckpt: data/models/fastspeech2/900000.pth.tar
+  fastspeech2_sha256: 8e24862525a53ba35ea22b3fa630d8c67808a99d7b66d90d47da26077003357d
+  hifigan_ckpt: data/models/fastspeech2/hifigan/generator_LJSpeech.pth.tar
+  hifigan_sha256: bb4b0cb7f9df59b8e57bb2e51a1bede57b43e9f0454863e3971c491f255505e4
+  gdrive_folder: 1DOhZGlTLMbbAAFZmZGDdc77kz1PloS7F
+  pitch_control: 1.0
+  energy_control: 1.0
