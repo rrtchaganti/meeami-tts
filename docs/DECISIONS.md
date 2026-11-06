@@ -197,3 +197,52 @@ except to add a "Resolved:" line.
   the capital-letter rule, fixed by D-29's end-of-text-only rule for `e.g./i.e.`; (b) an OmegaConf
   dotted override into a list index (`nltk.resources.0.sha256=…`) raises "Cannot merge incompatible
   container types"; the test now edits the loaded config instead. Then `make test` 84/84.
+
+## T4 — LJ alignment, TextGrid parser, filled LJ manifests, phone stats (Sections 3, 4, 5)
+
+### Decisions
+
+- **D-31 Pilot first.** 50-file pilot (`python -m tts.align.lj --limit 50`, separate `_pilot` dirs)
+  before the full run: 0.5 min, 50/50 parsed. Checked MFA's per-job logs
+  (`data/mfa_tmp/.../alignment/log/align.*.log`) show `'beam': 100` and `'retry_beam': 400`, i.e. the
+  pass-through flags really take effect (closes the D-11 follow-up together with D-32).
+- **D-32 MFA wrapper (`tts/align/mfa.py`).** `align_corpus` / `align_one` build the Section 3 commands
+  from config (`mfa.num_jobs`, `mfa.passthrough`), with `--temporary_directory data/mfa_tmp` so
+  MFA's scratch stays out of the bundled model dir. `passthrough_args` asks MFA for
+  `PretrainedAligner.get_configuration_parameters()` and raises on any name MFA would silently drop.
+- **D-33 Every speech phone gets >= 1 frame.** Cumulative rounding (rule 3) left 382 speech phones
+  (in kept rows) at 0 frames: MFA's 10 ms phones are shorter than one 11.6 ms frame. A 0-frame phone
+  breaks the log-duration loss (VITS uses log(d + 1e-6) = -13.8) and the stats. The parser now gives
+  such a phone 1 frame taken from its longer neighbour (ties: the previous one); sums are unchanged,
+  boundaries move by <= 1 frame. Applied in the shared parser, so training, references and outputs
+  are treated identically. Reported in `reports/align_lj.md`.
+- **D-34 Leading/trailing `sil` always present.** LJ clips are trimmed, so speech often starts at
+  t = 0; the token sequence still starts and ends with `sil` (possibly 0 frames) to match Section 5
+  step 4, which always places `sil` before the first and after the last word.
+- **D-35 Frame count.** `tts/audio.py:spectrogram` mirrors VITS `spectrogram_torch` (reflect pad
+  (n_fft - hop)/2, `center=False`), giving `N // 256` frames; `n_frames` calls it on the real
+  waveform as Section 3 requires. The cumulative-rounding sum `round(N/256)` was exactly +1 above it
+  for all 13,100 files, absorbed by the last token. Inputs shorter than 385 samples cannot be padded
+  (same as VITS); irrelevant for real audio.
+- **D-36 Word check.** Besides the plan's QC reasons, a file is dropped if MFA's word sequence differs
+  from the normalized transcript (`word_mismatch`); none occurred.
+- **D-37 Manifests from the source of truth.** `make align-lj` rebuilds `lj_{train,val,test}.jsonl`
+  from the VITS filelists + metadata (not from the manifests), so re-runs can't lose rows; dropped
+  files are removed from the manifests and listed in `data/align/lj_dropped.tsv`. `text` is now the
+  normalized text; `words` is the aligned word list.
+- **D-38 Stats.** `stats/phone_logdur.json` (committed): natural log of frames over the 12,474 kept
+  LJ train rows, 858,034 phone tokens, median sigma 0.434; AW0, OY0, OY2, UH0 have < 50 occurrences
+  and use the median sigma (flagged `sigma_from_median`). Augmented rows are excluded by design.
+
+### Results
+
+- `reports/align_lj.md`: **13,073 / 13,100 kept (99.79%)**, train 12,474 / val 100 / test 499;
+  all 27 drops are "non-silence phone > 0.5 s". MFA wall time 14.8 min (`-j 8`, 8 GB RAM was enough).
+  31,650 `sp` tokens; 1,710 short silences merged.
+
+### Errors / incidents
+
+- **E-9 Two T4 test bugs:** a 256-sample input is shorter than the 384-sample reflect pad (test now
+  uses >= 400 samples); `+key=value` is Hydra syntax that OmegaConf ignores, so the bad-flag test
+  did not inject the typo (now set directly). Then the D-33 tie-break test expected the wrong
+  neighbour; fixed the expectation (code was right).

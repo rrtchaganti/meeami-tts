@@ -13,13 +13,28 @@ paths:
   lexicon: data/lexicon/lexicon.txt     # the ONLY source of pronunciations (CLAUDE.md)
   mfa_root: data/models/mfa             # MFA_ROOT_DIR: pretrained models live in the project
   nltk_data: data/models/nltk_data      # g2p_en needs NLTK corpora; kept local for offline use
+  mfa_corpus: data/mfa                  # 16 kHz WAV + .lab copies for MFA (Section 2)
+  align: data/align                     # MFA TextGrid output
+  mfa_tmp: data/mfa_tmp                 # MFA --temporary_directory (kept out of mfa_root)
+  stats: stats
 
-audio:
+audio:                         # Section 4 hyperparameters (VITS LJSpeech)
   sample_rate: 22050
+  filter_length: 1024          # n_fft
+  win_length: 1024
+  hop_length: 256
+  n_mels: 80
+  mel_fmin: 0.0
+  mel_fmax: null
 
 # --- T3: models and data assets (Section 3) ------------------------------------------------
 mfa:
   conda_env: mfa
+  sample_rate: 16000           # MFA input copies: 16 kHz mono 16-bit (Section 2)
+  num_jobs: 8
+  # Section 3 decoder settings: pass-through options, validated against MFA's own parameter list
+  # (docs/DECISIONS.md D-11), so a typo fails instead of being silently ignored.
+  passthrough: {beam: 100, retry_beam: 400}
   acoustic_model: {name: english_us_arpa, version: v3.0.0,
                    sha256: d35ce271ded357d833d2f4b8d1041dc3748b9538567ba13f2c697f4e4126711b}
   g2p_model: {name: english_us_arpa, version: v2.0.0a,     # downloaded per Section 3; NOT used
@@ -88,3 +103,16 @@ lexicon:
   # "x's" not in cmudict but "x" is: cmudict(x) + regular suffix (IH0 Z after sibilants,
   # S after voiceless consonants, else Z) instead of g2p_en. docs/DECISIONS.md D-26.
   possessive_rule: true
+
+# --- T4: TextGrid parsing and alignment QC (Section 3) -------------------------------------
+align:
+  silence_labels: ["", "sil", "sp"]
+  unknown_label: spn           # failed word: drop the LJ file / trigger fallback at inference
+  min_sp_frames: 3             # internal silence >= 3 frames (~35 ms) -> sp, else merged left
+  qc:
+    max_phone_sec: 0.5         # drop LJ files with a non-silence phone longer than this
+    max_frame_diff: 2          # drop if |sum(durations) - n_frames| > this before adjustment
+    min_kept_fraction: 0.98    # T4 acceptance: at least 98% of LJ kept
+
+stats:
+  min_count: 50                # phones with fewer occurrences use the median sigma (Section 5)

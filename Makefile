@@ -4,7 +4,7 @@ CONDA ?= conda
 TTS_RUN := $(CONDA) run --no-capture-output -n tts
 MFA_RUN := $(CONDA) run --no-capture-output -n mfa
 
-STUBS := align-lj stats align-l2-dev align-dev-eval m0-demo smoke \
+STUBS := m0-demo smoke \
          aug-a pace-stats-b aug-b edge eval eval-all tune profile bundle check-data demo
 
 .PHONY: help env env-tts env-mfa env-export test $(STUBS)
@@ -52,6 +52,22 @@ assets:   # pinned MFA models (english_us_arpa) + NLTK corpora for g2p_en, sha25
 lexicon: assets
 	$(TTS_RUN) python -m tts.text.lexicon --config configs/splits.yaml $(ARGS)
 
-# --- not implemented yet (T4-T14) -------------------------------------------
+# --- T4: LJ alignment and phone stats (PLAN Sections 3, 5) -----------------------
+.PHONY: align-lj stats
+align-lj: lexicon   # CPU, ~tens of minutes; writes reports/align_lj.md and filled lj_* manifests
+	$(TTS_RUN) python -m tts.align.lj --config configs/splits.yaml $(ARGS)
+
+stats:
+	$(TTS_RUN) python -m tts.stats --config configs/base.yaml $(ARGS)
+
+# --- T5: L2 dev alignment and MFA-vs-manual evaluation (PLAN Sections 3, 7) ------
+.PHONY: align-l2-dev align-dev-eval
+align-l2-dev: lexicon   # all dev scripted utterances, speaker adaptation on; fills l2_dev.jsonl
+	$(TTS_RUN) python -m tts.align.l2 --config configs/splits.yaml --stage all $(ARGS)
+
+align-dev-eval:         # re-parse + compare with manual annotation -> reports/mfa_l2_dev.md
+	$(TTS_RUN) python -m tts.align.l2 --config configs/splits.yaml --stage parse $(ARGS)
+
+# --- not implemented yet (T6-T14) -------------------------------------------
 $(STUBS):
 	@echo "make $@: not implemented yet"
