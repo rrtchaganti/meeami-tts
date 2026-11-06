@@ -4,7 +4,7 @@ CONDA ?= conda
 TTS_RUN := $(CONDA) run --no-capture-output -n tts
 MFA_RUN := $(CONDA) run --no-capture-output -n mfa
 
-STUBS := edge eval eval-all tune profile bundle check-data demo
+STUBS := eval eval-all tune profile bundle check-data demo
 
 .PHONY: help env env-tts env-mfa env-export test $(STUBS)
 
@@ -95,7 +95,19 @@ m0-demo:
 smoke:
 	$(TTS_RUN) python -m tts.smoke
 
-# --- not implemented yet (T10-T14) -------------------------------------------
+# --- T10: edge-case suite (PLAN Section 9) ------------------------------------------
+# CKPT=m0 (default) or a VITS-MFA checkpoint; DEVICE=cuda|cpu. `make edge-build` regenerates
+# tests/edge_cases/ from dev-speaker audio.
+CKPT ?= m0
+DEVICE ?= cuda
+.PHONY: edge edge-build
+edge:
+	$(TTS_RUN) python -m tts.infer.edge_cases --run --ckpt $(CKPT) --device $(DEVICE)
+
+edge-build:
+	$(TTS_RUN) python -m tts.infer.edge_cases --build
+
+# --- not implemented yet (T11-T14) -------------------------------------------
 $(STUBS):
 	@echo "make $@: not implemented yet"
 

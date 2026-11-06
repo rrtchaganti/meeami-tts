@@ -1,0 +1,12 @@
+# Inference pipeline (docs/PLAN.md Section 5). Tuned on dev accents only (`make tune`).
+inherit: splits.yaml          # -> base.yaml; needs the test-speaker list for the guard
+inference:
+  transfer: elastic            # elastic | proportional | phone_copy
+  cap: 2.0                     # stretch cap c; null = none
+  noise_scale: 0.667
+  aligner: mfa                 # mfa | ctc
+  tuning_grid:
+    transfer: [elastic, proportional, phone_copy]
+    cap: [1.4, 1.6, 1.8, 2.0, 2.5, null]
+    noise_scale: [0.333, 0.5, 0.667]
+    aligner: [mfa, ctc]

@@ -47,6 +47,7 @@ IMPORT_NAME = {
     "faster-whisper": "faster_whisper",
     "speechbrain": "speechbrain",
     "ctranslate2": "ctranslate2",
+    "gdown": "gdown",
 }
 # Entries that are not Python packages; ffmpeg and cudnn are checked separately below.
 NOT_IMPORTABLE = {"python", "pip", "cuda-version", "ffmpeg", "cudnn"}

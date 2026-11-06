@@ -22,7 +22,8 @@ import sys
 import time
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+# scripts/ must not be importable (scripts/profile.py would shadow the stdlib `profile`)
+sys.path[0] = str(Path(__file__).resolve().parents[1])
 
 import torch  # noqa: E402
 from omegaconf import OmegaConf  # noqa: E402

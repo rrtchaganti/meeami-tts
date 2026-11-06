@@ -208,3 +208,20 @@ augment:
   filter:
     drop_fraction: 0.05        # drop the 5% with the largest UTMOS drop vs the original
     n_listen: 20               # random kept clips listed in the report
+
+# --- T11: evaluation (Section 8) -----------------------------------------------------------
+eval:
+  min_pause_s: 0.1             # pause = silence >= 100 ms between two words
+  bootstrap: 1000              # resamples over utterances, 95% CI
+  boundary_tolerances_ms: [20, 50]
+
+# --- T12: profiling (Section 8 "Efficiency metrics") ---------------------------------------
+profile:
+  warmup: 10
+  runs: 50
+  mfa_warmup: 1                # align_one takes ~10-15 s per call: fewer runs (D-55)
+  mfa_runs: 5
+  tokens_per_second: 12        # synthetic inputs for MACs / RTF-vs-length
+  rtf_lengths: [1, 2, 5, 10, 20]
+  reference_wav: data/raw/l2arctic/ASI/wav/arctic_a0003.wav     # dev speaker
+  reference_txt: data/raw/l2arctic/ASI/transcript/arctic_a0003.txt

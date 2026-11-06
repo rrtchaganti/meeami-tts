@@ -114,7 +114,8 @@ def summarize(errs: list[float]) -> dict:
         return {"n": 0, "mae_ms": None, "within_20ms": None, "within_50ms": None}
     x = np.asarray(errs) * 1000
     return {"n": int(x.size), "mae_ms": float(x.mean()), "median_ms": float(np.median(x)),
-            "within_20ms": float((x <= 20).mean() * 100), "within_50ms": float((x <= 50).mean() * 100)}
+            "within_20ms": float((x <= 20 + 1e-6).mean() * 100),
+            "within_50ms": float((x <= 50 + 1e-6).mean() * 100)}
 
 
 # --- parse + fill manifest -----------------------------------------------------------------

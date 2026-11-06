@@ -1,0 +1,129 @@
+[
+ {
+  "case": "norm_number",
+  "audio": "norm_number.wav",
+  "kind": "text normalization",
+  "expect": "exact_length"
+ },
+ {
+  "case": "norm_currency",
+  "audio": "norm_currency.wav",
+  "kind": "text normalization",
+  "expect": "exact_length"
+ },
+ {
+  "case": "norm_date",
+  "audio": "norm_date.wav",
+  "kind": "text normalization",
+  "expect": "exact_length"
+ },
+ {
+  "case": "norm_abbrev_name",
+  "audio": "norm_abbrev_name.wav",
+  "kind": "text normalization",
+  "expect": "exact_length"
+ },
+ {
+  "case": "norm_ordinal",
+  "audio": "norm_ordinal.wav",
+  "kind": "text normalization",
+  "expect": "exact_length"
+ },
+ {
+  "case": "norm_oov_name",
+  "audio": "norm_oov_name.wav",
+  "kind": "text normalization",
+  "expect": "exact_length"
+ },
+ {
+  "case": "norm_no_punct",
+  "audio": "norm_no_punct.wav",
+  "kind": "text normalization",
+  "expect": "exact_length"
+ },
+ {
+  "case": "fmt_mp3",
+  "audio": "fmt_mp3.mp3",
+  "kind": "audio format",
+  "expect": "exact_length"
+ },
+ {
+  "case": "fmt_8k",
+  "audio": "fmt_8k.wav",
+  "kind": "audio format",
+  "expect": "exact_length"
+ },
+ {
+  "case": "fmt_48k",
+  "audio": "fmt_48k.wav",
+  "kind": "audio format",
+  "expect": "exact_length"
+ },
+ {
+  "case": "fmt_stereo",
+  "audio": "fmt_stereo.wav",
+  "kind": "audio format",
+  "expect": "exact_length"
+ },
+ {
+  "case": "fmt_clipped",
+  "audio": "fmt_clipped.wav",
+  "kind": "audio format",
+  "expect": "exact_length"
+ },
+ {
+  "case": "fmt_noisy",
+  "audio": "fmt_noisy.wav",
+  "kind": "audio format",
+  "expect": "exact_length"
+ },
+ {
+  "case": "fmt_reverb",
+  "audio": "fmt_reverb.wav",
+  "kind": "audio format",
+  "expect": "exact_length"
+ },
+ {
+  "case": "timing_over_20s",
+  "audio": "timing_over_20s.wav",
+  "kind": "timing",
+  "expect": "exact_length"
+ },
+ {
+  "case": "timing_long_pause",
+  "audio": "timing_long_pause.wav",
+  "kind": "timing",
+  "expect": "exact_length"
+ },
+ {
+  "case": "timing_fast",
+  "audio": "timing_fast.wav",
+  "kind": "timing",
+  "expect": "exact_length"
+ },
+ {
+  "case": "timing_one_word",
+  "audio": "timing_one_word.wav",
+  "kind": "timing",
+  "expect": "exact_length"
+ },
+ {
+  "case": "align_unspoken_word",
+  "audio": "align_unspoken_word.wav",
+  "kind": "alignment failure",
+  "expect": "exact_length_or_fallback"
+ },
+ {
+  "case": "align_false_start",
+  "audio": "align_false_start.wav",
+  "kind": "alignment failure",
+  "expect": "exact_length_or_fallback"
+ },
+ {
+  "case": "align_ctc_path",
+  "audio": "align_ctc_path.wav",
+  "kind": "alignment failure",
+  "expect": "exact_length",
+  "aligner": "ctc"
+ }
+]

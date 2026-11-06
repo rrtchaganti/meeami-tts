@@ -11,7 +11,8 @@ import sys
 from datetime import date
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # run as a plain script (Section 9)
+# scripts/ must not be importable (scripts/profile.py would shadow the stdlib `profile`)
+sys.path[0] = str(Path(__file__).resolve().parents[1])
 
 from tts.config import REPO_ROOT, load_config, repo_path  # noqa: E402
 from tts.guard import freeze_tag_exists  # noqa: E402
