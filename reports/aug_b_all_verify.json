@@ -1,0 +1,10 @@
+{
+ "manifest": "data/manifests/aug_b_all.jsonl",
+ "sampled": 100,
+ "aligned_and_matched": 100,
+ "boundaries": 3218,
+ "mae_ms": 37.16383435508034,
+ "median_ms": 22.99319727891147,
+ "within_20ms": 45.58732131758856,
+ "within_50ms": 76.60037290242386
+}

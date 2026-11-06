@@ -159,3 +159,12 @@ def test_zero_frame_phone_gets_one_frame():
     p = parse(words, phones, 20, CFG)
     assert p.phones == ["sil", "AH0", "B", "IY1", "sil"]
     assert p.durations == [0, 9, 1, 10, 0] and p.extra["zero_frame_fixed"] == 1
+
+
+def test_zero_frame_phone_searches_beyond_neighbours():
+    from tts.align.textgrid import _fill_zero_phones
+
+    ph = ["sil", "AH0", "B", "IY1", "K", "sil"]
+    d = [0, 1, 0, 1, 6, 0]
+    assert _fill_zero_phones(ph, d) == 1
+    assert d == [0, 1, 1, 1, 5, 0] and sum(d) == 8

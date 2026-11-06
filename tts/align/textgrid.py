@@ -163,19 +163,21 @@ def parse(words: list[Interval], phones: list[Interval], n_frames: int, cfg: Dic
 
 
 def _fill_zero_phones(phones: list[str], durs: list[int]) -> int:
-    """Every speech phone gets >= 1 frame (D-33): a 0-frame phone takes one frame from its longer
-    neighbour (that keeps >= 1 frame, or >= 0 for sil/sp). Sum is unchanged; boundaries move by at
-    most one frame. Returns the number of phones fixed."""
+    """Every speech phone gets >= 1 frame (D-33): a 0-frame phone takes one frame from the nearest
+    token that can spare one (speech keeps >= 1, sil/sp >= 0); at equal distance the longer one,
+    then the previous one. Sum is unchanged. Returns the number of phones fixed."""
     fixed = 0
+    n = len(durs)
     for i, (ph, d) in enumerate(zip(phones, durs)):
         if d > 0 or ph in (SIL, SP):
             continue
         best = None
-        for j in (i - 1, i + 1):
-            if 0 <= j < len(durs):
-                floor = 0 if phones[j] in (SIL, SP) else 1
-                if durs[j] > floor and (best is None or durs[j] > durs[best]):
-                    best = j
+        for dist in range(1, n):
+            cands = [j for j in (i - dist, i + dist) if 0 <= j < n
+                     and durs[j] > (0 if phones[j] in (SIL, SP) else 1)]
+            if cands:
+                best = max(cands, key=lambda j: (durs[j], -j))
+                break
         if best is None:
             raise AlignmentError("frame_mismatch", f"cannot give phone {i} ({ph}) a frame")
         durs[best] -= 1
