@@ -184,7 +184,11 @@ eval_models:
   speaker: {repo: speechbrain/spkrec-ecapa-voxceleb,
             revision: 0f99f2d0ebe89ac095bcc5903c4dd8f72b367286}
   accent: {repo: Jzuluaga/accent-id-commonaccent_ecapa,
-           revision: 14bebf44b7e7a34204d0acc2c897935945fb5c51, us_label: us}
+           revision: 14bebf44b7e7a34204d0acc2c897935945fb5c51, us_label: us,
+           # classify_batch returns AAM cosine scores; P = softmax(score_scale * cos). Scale 30 =
+           # training AdditiveAngularMargin(margin 0.2, scale 30), JuanPZuluaga/accent-recog-slt2022
+           # @a2ff115 CommonAccent/accent_id/hparams/train_ecapa_tdnn.yaml (D-65)
+           score_scale: 30}
   utmos: {hub_repo: "tarepan/SpeechMOS:v1.2.0", entry: utmos22_strong}
 
 # --- T9: pace augmentation (Sections 6, 7) -------------------------------------------------

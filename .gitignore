@@ -31,3 +31,16 @@ __pycache__/
 .vscode/
 .idea/
 .DS_Store
+
+# evaluation intermediates (keep per_utt.csv, summary.json, comparison CSVs, plots, profiles)
+/results/*/*/wav/
+/results/*/*/align_out/
+/results/*/*/_out_corpus/
+/results/*/*/scores.jsonl
+/results/*/*/mfa_out.log
+/results/_ref/
+/results/tune/*/*/wav/
+/results/tune/*/*/align_out/
+/results/tune/*/*/scores.jsonl
+/results/_profile_tmp/
+/envs/condaenv.*.requirements.txt

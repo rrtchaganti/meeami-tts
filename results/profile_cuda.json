@@ -1,0 +1,110 @@
+{
+ "ckpt": "runs/smoke_m1/ckpt_last.pt",
+ "step": 250,
+ "device": "cuda",
+ "threads": null,
+ "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+ "cpu": "x86_64",
+ "torch": "2.8.0",
+ "params": {
+  "modules": {
+   "text_encoder": 6306432,
+   "duration_predictor": 345857,
+   "flow": 7102080,
+   "decoder": 14327424,
+   "posterior_encoder (train only)": 7238016,
+   "discriminators (train only)": 46747132
+  },
+  "inference_path": 28081793,
+  "training_only": 53985148
+ },
+ "macs": {
+  "1s": {
+   "text_encoder_dp_gmacs": 0.079547916,
+   "flow_decoder_gmacs": 27.09437568,
+   "total_gmacs": 27.173923596,
+   "gmacs_per_audio_second": 27.173923596
+  },
+  "5s": {
+   "text_encoder_dp_gmacs": 0.41764614,
+   "flow_decoder_gmacs": 135.78692928,
+   "total_gmacs": 136.20457542,
+   "gmacs_per_audio_second": 27.240915084
+  },
+  "hand_worked_decoder_conv_pre": {
+   "layer": "dec.conv_pre Conv1d(192 -> 512, kernel 7) on 1 s of frames",
+   "formula": "K x C_in x C_out x L_out",
+   "K": 7,
+   "C_in": 192,
+   "C_out": 512,
+   "L_out": 86,
+   "macs": 59179008,
+   "gmacs": 0.059179008
+  }
+ },
+ "latency_ms": {
+  "normalize_g2p": {
+   "p50": 0.12825250087189488,
+   "p90": 0.16273509863822258,
+   "mean": 0.1433137403364526,
+   "runs": 50,
+   "warmup": 10
+  },
+  "mfa_align_one": {
+   "p50": 4956.25215200198,
+   "p90": 5099.699308800336,
+   "mean": 4966.4449462004995,
+   "runs": 5,
+   "warmup": 1
+  },
+  "text_encoder_durations": {
+   "p50": 8.992927500003134,
+   "p90": 11.165012700075751,
+   "mean": 10.040657479912625,
+   "runs": 50,
+   "warmup": 10
+  },
+  "flow_decoder": {
+   "p50": 46.368513500056,
+   "p90": 50.62579700097558,
+   "mean": 46.97654956013139,
+   "runs": 50,
+   "warmup": 10
+  }
+ },
+ "reference": {
+  "wav": "data/raw/l2arctic/ASI/wav/arctic_a0003.wav",
+  "output_seconds": 3.7151927437641725
+ },
+ "rtf": {
+  "model_only": 0.014901364429337205,
+  "end_to_end": 1.3489856896159569
+ },
+ "rtf_vs_length": [
+  {
+   "seconds": 1.0,
+   "p50_ms": 26.948815499054035,
+   "rtf_model": 0.026948815499054035
+  },
+  {
+   "seconds": 2.0,
+   "p50_ms": 32.91964750133047,
+   "rtf_model": 0.016459823750665237
+  },
+  {
+   "seconds": 5.0,
+   "p50_ms": 57.37727849918883,
+   "rtf_model": 0.011475455699837767
+  },
+  {
+   "seconds": 10.0,
+   "p50_ms": 110.81074999856355,
+   "rtf_model": 0.011081074999856355
+  },
+  {
+   "seconds": 20.0,
+   "p50_ms": 212.68890099963755,
+   "rtf_model": 0.010634445049981877
+  }
+ ]
+}

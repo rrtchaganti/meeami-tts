@@ -106,6 +106,11 @@ def main(argv=None) -> int:
     # data
     base_rows = [r for m in t.train_manifests for r in read_manifest(m)]
     aug_rows = [r for m in t.aug_manifests for r in read_manifest(m)]
+    if float(t.aug_fraction) > 0 and not aug_rows:
+        # never let an ablation silently train as M1 (empty / unfiltered-missing manifests)
+        log.error(f"aug_fraction={t.aug_fraction} but {list(t.aug_manifests)} have no rows "
+                  "(run the UTMOS filter: make aug-filter; see docs/HANDOFF.md)")
+        return 3
     ds = ConcatDataset([ManifestDataset(base_rows, cfg), ManifestDataset(aug_rows, cfg)])
     sampler = MixedBucketSampler([r["n_frames"] for r in base_rows],
                                  [r["n_frames"] for r in aug_rows], t.batch_size,

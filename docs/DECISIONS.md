@@ -267,7 +267,8 @@ docs/HANDOFF.md instead of being worked around.
   unit contributes start and end boundaries.
 - **Result** (`reports/mfa_l2_dev.md`, `results/mfa_l2_dev.json`): 13,450/13,450 aligned; on the
   1,800 annotated utterances word MAE 19.4 ms (61.4% <= 20 ms, 92.4% <= 50 ms), phone MAE 13.1 ms
-  (77.5% / 96.1%); Hindi 18.2, Mandarin 20.2, Spanish 19.9 ms word MAE. MFA wall time 10.1 min.
+  (77.5% / 96.1%) [superseded: see "Correction to the T5 numbers" below — 75.0% / 93.8% and
+  87.7% / 96.7%]; Hindi 18.2, Mandarin 20.2, Spanish 19.9 ms word MAE. MFA wall time 10.1 min.
 
 ## T6 — M0: FastSpeech2 + HiFi-GAN with injected durations (Section 4)
 
@@ -428,3 +429,55 @@ docs/HANDOFF.md instead of being worked around.
   aligner on a fixed 120-utterance dev subset; choice = highest UTMOS among settings within 5 ms of
   the best word-boundary MAE (lowest WER if UTMOS is unavailable); written into
   configs/inference.yaml (`# tuned`).
+
+### T11 incidents
+
+- **E-18 SpeechBrain models tried to download from the Hub and crashed**
+  (`hf_hub_download() got an unexpected keyword argument 'use_auth_token'`): the accent model card's
+  `hyperparams.yaml` sets `pretrained_path: Jzuluaga/accent-id-commonaccent_ecapa`, and speechbrain
+  1.0.3 still passes `use_auth_token`, which huggingface_hub 1.x removed. Fixed by loading with
+  `overrides={"pretrained_path": <pinned local snapshot>}` — fully offline, same pinned files, no
+  package change. (Latent incompatibility speechbrain 1.0.3 / huggingface_hub 1.29 noted; nothing in
+  the project calls the Hub through speechbrain any more.)
+- **D-65 US probability = softmax(30 x cosine).** `classify_batch` of the CommonAccent ECAPA model
+  returns additive-angular-margin cosine scores (sum ~20), not probabilities; my first heuristic
+  produced 0.09 for LJSpeech. The training recipe (JuanPZuluaga/accent-recog-slt2022 @ a2ff115,
+  `train_ecapa_tdnn.yaml`: AdditiveAngularMargin margin 0.2, **scale 30**) gives the logit scale;
+  `eval_models.accent.score_scale: 30`. Sanity check: LJ001-0001 0.90; dev ASI (Hindi) 0.25, BWC
+  (Mandarin) 0.16, NJS (Spanish) 0.93; an M0 output 0.98. Predicted labels were already right
+  (LJ -> us, ASI -> indian), only the probability scaling changed.
+
+### T13 result and incidents
+
+- **Bundle** (`make bundle`, 8.7 min): `export/bundle.tar` 13 GB (13,767,915,520 bytes), 62,983 files,
+  sha256 `1b283ea2d7ca8d452fef5daf0ad2b55e692d745013a282732cbedc1ead953bf1`. Fresh unpack + `git archive
+  HEAD` in a temp dir: **check-data PASS** (all checksums; lj_train 12,474 / val 100 / test 499 and
+  aug_a_all / aug_b_all 24,948 rows each, 0 duration-sum or audio errors).
+- **E-19 Silent-ablation hazard found by check-data's output.** The bundle carries the empty
+  `aug_a.jsonl` / `aug_b.jsonl` skeletons from T2; with them `abl_a` would have trained with
+  aug_fraction silently forced to 0 (the sampler drops the augmented share when the pool is empty),
+  i.e. as a second M1. `train.py` now exits (code 3) when aug_fraction > 0 and the aug manifests
+  have no rows. Copy the UTMOS-filtered manifests over them (HANDOFF 2a) before training A/B.
+- **E-20 "CUDA failed with error unknown error" in ctranslate2** during the M0 dev evaluation while
+  the bundle build saturated disk and CPU — the same WSL GPU instability as E-16. Re-run alone;
+  stage caching meant no work was lost.
+- **E-21 ptflops counted ~0 MACs** with its module-hook backend (0.001 GMACs encoder, 0 flow+decoder);
+  the `aten` backend counts the actual ops: 27.2 GMACs per second of audio (flow+decoder 27.1, text
+  encoder + DP 0.08). `scripts/profile.py` now passes `backend="aten"`.
+- **Correction to the T5 numbers (D-60 effect).** Both MFA and the manual annotations sit on a 10 ms
+  grid, so many errors are exactly 20 or 50 ms and float rounding had excluded them. After the epsilon
+  fix (`make align-dev-eval` re-run): word <= 20 ms **75.0%** (was reported 61.4%), <= 50 ms 93.8%;
+  phone <= 20 ms 87.7%, <= 50 ms 96.7%. MAEs unchanged (word 19.4 ms, phone 13.1 ms).
+
+## End-of-night results (dev only; test locked)
+
+- **M0 on dev** (`make eval SYSTEM=m0 SPLIT=dev ARGS=--no_utmos`, 1,200/1,200 ok, all MFA-aligned):
+  length error 0 on every utterance; word-boundary MAE vs manual 31.2 ms (55.4% <= 20 ms, 84.7%
+  <= 50 ms; MMS_FA cross-check 50.7 ms); pause F1 0.748; WER 10.0% (references 4.1%, LJ test ground
+  truth 1.9%); US probability 0.731 (references 0.298); speaker similarity to LJ 0.763, to the
+  reference speaker 0.051; UTMOS not measured (E-13). Per accent in results/m0/dev/summary.json.
+- **Profile** (laptop RTX 4060, smoke checkpoint = M1 architecture): 28.1 M inference parameters
+  (decoder 14.3 M, flow 7.1 M, text encoder 6.3 M, DP 0.35 M), 54.0 M training-only; 27.2 GMACs/s
+  of audio; p50 latency text encoder + durations 9 ms, flow + decoder 46 ms, `mfa align_one` ~5 s;
+  RTF model-only 0.015, end-to-end 1.35 (MFA-bound); RTF 0.027 (1 s) -> 0.011 (20 s).
+- **Edge suite** 21/21 on GPU and CPU (M0). **Demo page** built for M0 (9 samples).

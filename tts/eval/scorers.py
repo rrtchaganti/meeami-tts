@@ -29,7 +29,10 @@ def _speechbrain_model(cfg: DictConfig, key: str, device: str):
     d = hf_dir(cfg, key)
     if not (d / ".complete").exists():
         raise FileNotFoundError(f"{cfg.eval_models[key].repo} missing at {d}; run make assets-eval")
+    # the model cards' hyperparams.yaml point pretrained_path at the Hub repo; load the pinned
+    # local snapshot instead (offline; avoids speechbrain 1.0.3 vs huggingface_hub 1.x, E-18)
     return EncoderClassifier.from_hparams(source=str(d), savedir=str(d / "_sb"),
+                                          overrides={"pretrained_path": str(d)},
                                           run_opts={"device": device})
 
 
@@ -53,6 +56,7 @@ class AccentID:
     def __init__(self, cfg: DictConfig, device: str = "cuda"):
         self.model = _speechbrain_model(cfg, "accent", device)
         self.us = cfg.eval_models.accent.us_label
+        self.scale = float(cfg.eval_models.accent.score_scale)
         labels = self.model.hparams.label_encoder.ind2lab
         self.us_index = [i for i, l in labels.items() if l == self.us]
         if not self.us_index:
@@ -61,7 +65,6 @@ class AccentID:
     @torch.no_grad()
     def us_probability(self, y: np.ndarray, sr: int) -> float:
         y16 = torch.from_numpy(resample(y.astype(np.float32), sr, 16000)).unsqueeze(0)
-        out = self.model.classify_batch(y16)
-        logp = out[0].squeeze()
-        p = torch.softmax(logp, -1) if logp.min() < 0 or logp.sum() > 1.001 else logp
+        cos = self.model.classify_batch(y16)[0].squeeze().float()  # AAM cosine scores
+        p = torch.softmax(self.scale * cos, -1)
         return float(p[self.us_index[0]])

@@ -109,10 +109,12 @@ def main(argv=None) -> int:
         z = torch.randn(1, cfg.model.inter_channels, frames, device=dev)
         mask = torch.ones(1, 1, frames, device=dev)
         e, _ = get_model_complexity_info(Enc(), (1,), input_constructor=lambda _: {"x": x, "n": n},
-                                         as_strings=False, print_per_layer_stat=False, verbose=False)
+                                         as_strings=False, print_per_layer_stat=False, verbose=False,
+                                         backend="aten")  # module hooks count 0 here (E-21)
         f, _ = get_model_complexity_info(FlowDec(), (1,),
                                          input_constructor=lambda _: {"z": z, "mask": mask},
-                                         as_strings=False, print_per_layer_stat=False, verbose=False)
+                                         as_strings=False, print_per_layer_stat=False, verbose=False,
+                                         backend="aten")  # module hooks count 0 here (E-21)
         macs[f"{int(seconds)}s"] = {"text_encoder_dp_gmacs": e / 1e9, "flow_decoder_gmacs": f / 1e9,
                                     "total_gmacs": (e + f) / 1e9,
                                     "gmacs_per_audio_second": (e + f) / 1e9 / seconds}
