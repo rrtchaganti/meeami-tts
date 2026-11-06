@@ -26,6 +26,8 @@ Filled in as tasks land (docs/PLAN.md Section 10). Targets not listed here still
 ```bash
 make data   # T2: checks LJSpeech + L2-ARCTIC, fetches pinned VITS filelists, writes
             #     data/manifests/*.jsonl, data/splits/*_eval_ids.txt, reports/data_splits.md
+make assets # T3: pinned MFA english_us_arpa models + NLTK data (sha256-checked), under data/models/
+make lexicon  # T3: data/lexicon/lexicon.txt (cmudict first pron., g2p_en OOVs), reports/lexicon.md
 ```
 
 Datasets are not downloaded by `make data`: LJSpeech 1.1 must be at `data/raw/LJSpeech-1.1/`

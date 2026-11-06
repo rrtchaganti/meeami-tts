@@ -10,6 +10,81 @@ paths:
   manifests: data/manifests
   splits: data/splits
   reports: reports
+  lexicon: data/lexicon/lexicon.txt     # the ONLY source of pronunciations (CLAUDE.md)
+  mfa_root: data/models/mfa             # MFA_ROOT_DIR: pretrained models live in the project
+  nltk_data: data/models/nltk_data      # g2p_en needs NLTK corpora; kept local for offline use
 
 audio:
   sample_rate: 22050
+
+# --- T3: models and data assets (Section 3) ------------------------------------------------
+mfa:
+  conda_env: mfa
+  acoustic_model: {name: english_us_arpa, version: v3.0.0,
+                   sha256: d35ce271ded357d833d2f4b8d1041dc3748b9538567ba13f2c697f4e4126711b}
+  g2p_model: {name: english_us_arpa, version: v2.0.0a,     # downloaded per Section 3; NOT used
+              sha256: 0ef6a3b288dc0a91a267f98bf556a45bbfeae198e578398e92ac603a61ad46e5}
+
+nltk:
+  resources:
+    - {id: averaged_perceptron_tagger, path: taggers/averaged_perceptron_tagger.zip,
+       sha256: e1f13cf2532daadfd6f3bc481a49859f0b8ea6432ccdcd83e6a49a5f19008de9}
+    - {id: cmudict, path: corpora/cmudict.zip,
+       sha256: d07cca47fd72ad32ea9d8ad1219f85301eeaf4568f8b6b73747506a71fb5afd6}
+
+# --- T3: text normalizer (Section 2) -------------------------------------------------------
+text:
+  # Bare 4-digit integers in this range are read as years ("1999" -> "nineteen ninety nine").
+  year_range: [1100, 2099]
+  # Dotted abbreviations (matched case-insensitively, trailing period required).
+  # "st." is special-cased in code: "saint" before a capitalised word, otherwise "street".
+  abbreviations:
+    mr: mister
+    mrs: missus
+    ms: miz
+    dr: doctor
+    jr: junior
+    sr: senior
+    prof: professor
+    capt: captain
+    col: colonel
+    gen: general
+    gov: governor
+    lt: lieutenant
+    sgt: sergeant
+    maj: major
+    rev: reverend
+    hon: honorable
+    esq: esquire
+    mt: mount
+    ft: fort
+    ave: avenue
+    blvd: boulevard
+    co: company
+    corp: corporation
+    inc: incorporated
+    ltd: limited
+    dept: department
+    vs: versus
+    etc: et cetera
+    approx: approximately
+  # Multi-dot abbreviations, replaced before dotted initialisms are spelled out.
+  phrases:
+    "e.g.": for example
+    "i.e.": that is
+  symbols:
+    "&": and
+    "@": at
+    "+": plus
+    "=": equals
+    "°": degrees
+  currency:            # symbol: [singular, plural, sub-unit singular, sub-unit plural]
+    "$": [dollar, dollars, cent, cents]
+    "£": [pound, pounds, penny, pence]
+    "€": [euro, euros, cent, cents]
+
+# --- T3: lexicon (Section 3) ---------------------------------------------------------------
+lexicon:
+  # "x's" not in cmudict but "x" is: cmudict(x) + regular suffix (IH0 Z after sibilants,
+  # S after voiceless consonants, else Z) instead of g2p_en. docs/DECISIONS.md D-26.
+  possessive_rule: true

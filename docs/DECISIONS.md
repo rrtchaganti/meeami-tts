@@ -134,3 +134,66 @@ except to add a "Resolved:" line.
   "fewer annotations than the 300-ID union", because speakers were annotated on different 150-ID
   subsets. Resolved: the report now lists, per speaker, the IDs it alone keeps out of its split's
   common set (only YBAA / `arctic_a0094`).
+
+## T3 — normalizer, lexicon, symbols (Sections 2, 3, 4 change 3)
+
+### Decisions
+
+- **D-22 MFA models pinned and kept in the project.** `MFA_ROOT_DIR=data/models/mfa` (git-ignored,
+  bundled in T13) so models are offline and independent of `~/Documents/MFA`. Pins in
+  `configs/base.yaml`: acoustic `english_us_arpa` v3.0.0 (sha256 `d35ce271…`; internal version
+  string `3.0.0a2.dev0+g940e907`, trained 2024-02-10) and G2P `english_us_arpa` v2.0.0a
+  (`0ef6a3b2…`). Verified that `mfa model download … --version <pin>` into an empty root reproduces
+  both checksums. `make assets` downloads only when missing and aborts on any hash mismatch.
+- **D-23 MFA's G2P model is downloaded (Section 3 lists it) but not used.** Pronunciations come only
+  from `lexicon.txt` (cmudict + g2p_en), per CLAUDE.md and Section 3.
+- **D-24 Phone set.** The acoustic model's phone set is exactly the 69 ARPAbet tokens of
+  `tts/text/symbols.py` (15 vowels × 3 stresses + 24 consonants); `pad, sil, sp` + 69 = 72 =
+  `n_vocab`. `test_mfa_phone_set_equals_symbols` asserts equality, and `make lexicon` fails fast if
+  any lexicon phone is outside the model's set.
+- **D-25 g2p_en usage.** OOV words use `G2p().predict(letters)` (the neural model) directly, not
+  `G2p()(text)`, which would redo its own number expansion, POS tagging and nltk-cmudict lookup.
+  Apostrophes are dropped before prediction (its grapheme set is a–z). g2p_en still needs the NLTK
+  `cmudict` corpus to construct and checks for `averaged_perceptron_tagger` on import, so both are
+  pinned by sha256 in `data/models/nltk_data`; `use_local_nltk` points NLTK there and makes any
+  download attempt raise.
+- **D-26 Possessive rule (deviation from the literal "OOV from g2p_en"; recommended option taken).**
+  141 OOVs were possessives; g2p_en mangled many whose base is in cmudict (e.g. `companion's` →
+  `K AH0 M P EY1 N IY0 AH0 N Z`). Now `x's` with `x` in cmudict gets cmudict(x) + `IH0 Z`
+  (after S Z SH ZH CH JH) / `S` (after P T K F TH) / `Z`. Affects 104 words; flag
+  `lexicon.possessive_rule` in `configs/base.yaml` turns it off. Still built only in
+  `tts/text/lexicon.py`, so "the lexicon is the only source" holds.
+- **D-27 Lexicon contents.** Words from LJ `metadata.csv` column 3, all 24 L2 speakers' transcripts
+  (text only; no audio, consistent with the test lock) and the 22 suitcase transcripts, each passed
+  through the normalizer. Result: 14,912 words; 13,640 cmudict, 104 possessive rule, 1,168 g2p_en
+  (LJ 1,235→mostly rare/archaic words and names; L2 28; suitcase 9). All 69 phones used. Full OOV
+  list with pronunciations in `reports/lexicon.md` for review. Build is deterministic
+  (lexicon sha256 `0969f40c…` on two runs). `ensure_words()` appends inference OOVs (Section 3).
+- **D-28 Normalizer design (`tts/text/normalize.py`).** Rule order: currency (before `unidecode`,
+  which would turn `£` into "PS") → symbols → `unidecode` → dates → times → abbreviations /
+  initialisms → numbers (decades, ordinals, %, fractions, `#`, minus, ranges, decimals, years,
+  cardinals). Tables (abbreviations, phrases, symbols, currency, `year_range` [1100, 2099]) live in
+  `configs/base.yaml`. Output keeps `. , ? ! ; :` attached to the preceding word so Ablation A can
+  find punctuation-followed boundaries (`words_with_punct`); `words()` gives `.lab`/lexicon tokens
+  (`[a-z]+('[a-z]+)*`). Any digit left after normalization raises `NormalizeError` rather than
+  being dropped. Conventions chosen: no "and" in numbers ("one hundred twenty"); bare 4-digit
+  numbers in range are years ("1500 men" → "fifteen hundred men"); `St.` = saint before a
+  capitalised word, else street; dotted initialisms are spelled ("U.S." → "u s"); all-caps words
+  without dots are left to the lexicon (cmudict has e.g. "fbi").
+- **D-29 Sentence-final periods after abbreviations.** A period that is both an abbreviation dot
+  and a sentence end is kept for `a.m./p.m.`, `etc.`, and dotted initialisms when followed by a
+  capital or end of text; for titles (`mr.`, `dr.` …) and `e.g./i.e.` only at end of text, because
+  they are normally followed by a capitalised name/word.
+- **D-30 Lexicon CLI as a module.** `python -m tts.text.lexicon` and `python -m tts.assets` instead
+  of new files in `scripts/`, keeping `scripts/` to the Section 10 list.
+
+### Errors / incidents
+
+- **E-6 `AttributeError: 'str' object has no attribute 'stem'`** when reading the acoustic model in
+  MFA 3.4.3: `AcousticModel()` needs a `pathlib.Path`, not a string. Resolved in `tts/align/mfa.py`.
+- **E-7 Abbreviation dots swallowed sentence ends** ("at 7am." lost its period; first normalizer
+  draft). Resolved by D-29.
+- **E-8 Test failures on first run (30 passed, 2 failed):** (a) "e.g. Tom" gained a stray period from
+  the capital-letter rule, fixed by D-29's end-of-text-only rule for `e.g./i.e.`; (b) an OmegaConf
+  dotted override into a list index (`nltk.resources.0.sha256=…`) raises "Cannot merge incompatible
+  container types"; the test now edits the loaded config instead. Then `make test` 84/84.

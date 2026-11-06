@@ -4,7 +4,7 @@ CONDA ?= conda
 TTS_RUN := $(CONDA) run --no-capture-output -n tts
 MFA_RUN := $(CONDA) run --no-capture-output -n mfa
 
-STUBS := lexicon align-lj stats align-l2-dev align-dev-eval m0-demo smoke \
+STUBS := align-lj stats align-l2-dev align-dev-eval m0-demo smoke \
          aug-a pace-stats-b aug-b edge eval eval-all tune profile bundle check-data demo
 
 .PHONY: help env env-tts env-mfa env-export test $(STUBS)
@@ -44,6 +44,14 @@ test:
 data:
 	$(TTS_RUN) python scripts/prepare_data.py --config configs/splits.yaml $(ARGS)
 
-# --- not implemented yet (T3-T14) -------------------------------------------
+# --- T3: assets, normalizer, lexicon (PLAN Sections 2, 3) ------------------------
+.PHONY: assets lexicon
+assets:   # pinned MFA models (english_us_arpa) + NLTK corpora for g2p_en, sha256-verified
+	$(TTS_RUN) python -m tts.assets --config configs/base.yaml
+
+lexicon: assets
+	$(TTS_RUN) python -m tts.text.lexicon --config configs/splits.yaml $(ARGS)
+
+# --- not implemented yet (T4-T14) -------------------------------------------
 $(STUBS):
 	@echo "make $@: not implemented yet"
