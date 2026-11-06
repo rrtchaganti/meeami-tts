@@ -1,0 +1,6 @@
+# Ablation B: LJ train + target-aware (dev-accent) pace augmentation (Section 7). Same steps as M1.
+inherit: base.yaml
+exp: abl_b
+train:
+  aug_manifests: [data/manifests/aug_b.jsonl]
+  aug_fraction: 0.4

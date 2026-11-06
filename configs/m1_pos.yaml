@@ -1,0 +1,5 @@
+# M1+pos (optional): M1 with the within-phone position embedding (Section 4 change 5).
+inherit: base.yaml
+exp: m1_pos
+model:
+  use_pos: true

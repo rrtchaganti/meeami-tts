@@ -62,3 +62,23 @@ def n_frames(y: np.ndarray | torch.Tensor, audio: DictConfig) -> int:
     """Number of training-spectrogram frames for waveform `y` (from `spectrogram` itself)."""
     t = torch.as_tensor(y)
     return int(spectrogram(t, audio).shape[-1])
+
+
+@lru_cache(maxsize=4)
+def _mel_basis(sr: int, n_fft: int, n_mels: int, fmin: float, fmax: float | None) -> torch.Tensor:
+    import librosa
+
+    return torch.from_numpy(librosa.filters.mel(sr=sr, n_fft=n_fft, n_mels=n_mels, fmin=fmin,
+                                                fmax=fmax)).float()
+
+
+def spec_to_mel(spec: torch.Tensor, audio: DictConfig) -> torch.Tensor:
+    """Linear magnitude -> log mel (VITS `spec_to_mel_torch` + dynamic range compression), fp32."""
+    basis = _mel_basis(int(audio.sample_rate), int(audio.filter_length), int(audio.n_mels),
+                       float(audio.mel_fmin), None if audio.mel_fmax is None else float(audio.mel_fmax))
+    mel = torch.matmul(basis.to(spec.device), spec.float())
+    return torch.log(torch.clamp(mel, min=1e-5))
+
+
+def mel_spectrogram(y: torch.Tensor, audio: DictConfig) -> torch.Tensor:
+    return spec_to_mel(spectrogram(y, audio), audio)

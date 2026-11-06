@@ -48,3 +48,4 @@ dependencies:
       - faster-whisper==1.2.1
       - ctranslate2==4.8.5
       - speechbrain==1.0.3
+      - gdown==5.2.0           # official Google Drive checkpoints (VITS, FastSpeech2), D-41

@@ -1,0 +1,6 @@
+# Ablation A: LJ train + target-agnostic pace augmentation (Section 6). Same steps as M1.
+inherit: base.yaml
+exp: abl_a
+train:
+  aug_manifests: [data/manifests/aug_a.jsonl]
+  aug_fraction: 0.4            # 60% LJ / 40% augmented rows per batch

@@ -4,8 +4,7 @@ CONDA ?= conda
 TTS_RUN := $(CONDA) run --no-capture-output -n tts
 MFA_RUN := $(CONDA) run --no-capture-output -n mfa
 
-STUBS := m0-demo smoke \
-         aug-a pace-stats-b aug-b edge eval eval-all tune profile bundle check-data demo
+STUBS := edge eval eval-all tune profile bundle check-data demo
 
 .PHONY: help env env-tts env-mfa env-export test $(STUBS)
 
@@ -68,6 +67,43 @@ align-l2-dev: lexicon   # all dev scripted utterances, speaker adaptation on; fi
 align-dev-eval:         # re-parse + compare with manual annotation -> reports/mfa_l2_dev.md
 	$(TTS_RUN) python -m tts.align.l2 --config configs/splits.yaml --stage parse $(ARGS)
 
-# --- not implemented yet (T6-T14) -------------------------------------------
+# --- T9: pace augmentation A/B + UTMOS filter (PLAN Sections 6, 7) ---------------
+.PHONY: aug-a pace-stats-b aug-b assets-eval
+assets-eval:   # pinned Section 8 models (faster-whisper large-v3, ECAPA, accent-id, UTMOS)
+	$(TTS_RUN) python -m tts.eval.assets --config configs/base.yaml
+
+aug-a:
+	$(TTS_RUN) python -m tts.augment.generate --kind a $(ARGS)
+	$(TTS_RUN) python -m tts.augment.verify --manifest data/manifests/aug_a_all.jsonl --n 100
+	$(TTS_RUN) python -m tts.augment.filter --kind a
+
+pace-stats-b:  # needs MFA dev alignments (make align-l2-dev); always on the laptop
+	$(TTS_RUN) python -m tts.augment.pace_b --config configs/splits.yaml
+
+aug-b:
+	$(TTS_RUN) python -m tts.augment.generate --kind b $(ARGS)
+	$(TTS_RUN) python -m tts.augment.verify --manifest data/manifests/aug_b_all.jsonl --n 100
+	$(TTS_RUN) python -m tts.augment.filter --kind b
+
+# --- T6: M0 demo on 5 dev references ---------------------------------------------------
+.PHONY: m0-demo
+m0-demo:
+	$(TTS_RUN) python -m tts.infer.batch --system m0 --split dev --n 5 --out out/m0_demo
+
+# --- T8: smoke runs (every config 200 steps at batch 4, resume, benchmark) -----------
+.PHONY: smoke
+smoke:
+	$(TTS_RUN) python -m tts.smoke
+
+# --- not implemented yet (T10-T14) -------------------------------------------
 $(STUBS):
 	@echo "make $@: not implemented yet"
+
+# --- T7: one-utterance overfit check (~500 steps, batch 1) ---------------------------
+.PHONY: overfit
+overfit:
+	$(TTS_RUN) python scripts/train.py --config configs/m1.yaml --tag overfit --max_steps 500 \
+	  --batch_size 1 train.train_manifests=[data/manifests/overfit.jsonl] \
+	  train.val_manifest=data/manifests/overfit.jsonl train.n_val_audio=1 train.val_interval=250 \
+	  train.ckpt_interval=500 train.log_interval=50 train.num_workers=1 $(ARGS)
+	$(TTS_RUN) python -m tts.models.vits_mfa.overfit_check --run runs/overfit

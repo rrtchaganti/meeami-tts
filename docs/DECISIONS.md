@@ -246,3 +246,94 @@ except to add a "Resolved:" line.
   uses >= 400 samples); `+key=value` is Hydra syntax that OmegaConf ignores, so the bad-flag test
   did not inject the typo (now set directly). Then the D-33 tie-break test expected the wrong
   neighbour; fixed the expectation (code was right).
+
+## Autonomous run (2026-11-06 evening): T5-T14
+
+The user granted a free hand to finish all laptop tasks overnight. Decisions follow the
+"recommended option" rule; hard stops (test audio, unavailable pinned models) are reported in
+docs/HANDOFF.md instead of being worked around.
+
+## T5 — dev alignment and MFA-vs-manual evaluation (Sections 3, 7)
+
+- **D-39 Scope.** `make align-l2-dev` aligns *all* 13,450 scripted dev utterances (needed for the
+  Ablation B pool, Section 7) with speaker adaptation (one folder per speaker, no
+  `--single_speaker`), parses them with the Section 3 rules (`n_frames` = round(N_ref·22050/sr/256),
+  Section 5 step 8) and fills `l2_dev.jsonl` (`words`, `phones`, `durations`, `word_ids`,
+  `n_frames`, `ref_words_mfa`, `ref_words_manual` for the 1,800 annotated IDs, `align_status`).
+  `l2_test.jsonl` is untouched (test lock); its manual words are filled after freeze-v1.
+- **D-40 Comparison method.** Words are matched by label sequence (difflib); phones are matched
+  within matched words by canonical label: first field of L2-ARCTIC's `canon,perceived,tag`
+  labels, stress removed, additions (`…,a`) excluded. Interval times only (Section 3). Each matched
+  unit contributes start and end boundaries.
+- **Result** (`reports/mfa_l2_dev.md`, `results/mfa_l2_dev.json`): 13,450/13,450 aligned; on the
+  1,800 annotated utterances word MAE 19.4 ms (61.4% <= 20 ms, 92.4% <= 50 ms), phone MAE 13.1 ms
+  (77.5% / 96.1%); Hindi 18.2, Mandarin 20.2, Spanish 19.9 ms word MAE. MFA wall time 10.1 min.
+
+## T6 — M0: FastSpeech2 + HiFi-GAN with injected durations (Section 4)
+
+- **D-41 Weights from the official Google Drive folders via `gdown==5.2.0`** (new pinned pip
+  package, added to envs/tts.yml). ming024/FastSpeech2 @ d4e79eb, `LJSpeech_900000.zip` ->
+  `900000.pth.tar` (sha256 `8e248625…`); HiFi-GAN `generator_LJSpeech.pth.tar` from the repo's
+  bundled zip (`bb4b0cb7…`). Unused AISHELL3/LibriTTS checkpoints from the same folder deleted.
+- **D-42 Vendored inference code** (`tts/models/fastspeech2/`, MIT licences kept): transformer,
+  FastSpeech2, variance adaptor, HiFi-GAN; the symbol table is reproduced in the original order so
+  embedding indices match; module-global `device` replaced by the input's device. Mapping: phone
+  -> `@`+phone, `sil` -> `@sil`, `sp` -> `@sp`; unknown symbols raise. Durations are passed as
+  `d_targets` (training path); pitch/energy predicted. Output padded/trimmed to sum(d)·256.
+- **D-43 Safe checkpoint loading everywhere.** All checkpoints load with `weights_only=True`. The
+  2021 FastSpeech2/HiFi-GAN pickles contain numpy scalars; only `numpy.core.multiarray.scalar`
+  (registered under its numpy-1 name) and numpy dtypes are allow-listed (`m0._safe_load`).
+  (E-11: a first `weights_only=False` probe of the VITS checkpoint was refused by the session's
+  safety classifier; the safe loader was the right call anyway.)
+
+## T7 — VITS-MFA (Section 4 changes 1-6)
+
+- **D-44 Pretrained VITS** from the official Drive folder (`pretrained_ljs.pth`, sha256
+  `c94fb49d…`, pinned in base.yaml). It is generator-only: discriminators start from scratch (plan
+  allows). Loading: 553 tensors loaded; skipped = `enc_p.emb.weight` (178 -> 72 symbols) + the 284
+  stochastic-duration-predictor tensors; not initialized = new embedding + 10 deterministic-DP
+  tensors (`runs/<exp>/init_skipped_keys.txt`). `test_pretrained_loads_only_expected_skips`
+  asserts exactly this.
+- **D-45 Code layout.** VITS `commons/modules/attentions/transforms/losses` vendored unchanged
+  (relative imports only); `models.py` rewritten with changes 1-5; `data.py` (manifests, spec via
+  `tts.audio.spectrogram`, collate, `MixedBucketSampler` 60/40); `trainer.py` (one train step,
+  bf16 autocast with fp32 STFT/mel/losses, LSGAN, TensorBoard val). `use_pos` embedding is
+  zero-initialized so M1+pos starts as M1.
+- **D-46 Overfit check (acceptance).** `make overfit`: LJ019-0272 (a median-length ordinary
+  sentence; the first pick was a chapter heading, re-picked), 500 steps, batch 1, from the
+  pretrained generator. Duration loss 0.65 -> 0.013, val mel L1 0.40 -> 0.31; faster-whisper
+  large-v3 transcribes "prisons were still far from inflicting the three punishments, hard
+  labor, hard fare, and a hard bed." -> WER 5.6% (only the initial "the" missed). Exact length.
+- **E-10 cudnn.benchmark = 13x slowdown.** With variable-length batches cuDNN re-tunes for every
+  new shape: 6.2 s/step at batch 4 vs 0.457 s/step with it off. `train.cudnn_benchmark: false`.
+  (The first 8 s/step measurement was also starved by MFA using all 12 cores.)
+
+## T9 — pace augmentation A/B (Sections 6, 7)
+
+- **D-47 One Rubber Band call per copy.** Speech phones get r_i via a `--timemap` anchored at every
+  LJ phone boundary (R3 `--fine`, pitch preserved); silences are mapped 1:1 in that pass and then
+  lengthened by looping their own audio (crossfaded so each lengthened silence starts and ends on
+  its original samples — no clicks); inserted pauses loop the utterance's longest silence (room
+  tone; fallback: lowest-RMS 50 ms window). Never digital zeros.
+- **D-48 FLAC instead of WAV for augmented audio** (lossless 16-bit, 22.05 kHz): halves the GPU
+  bundle; soundfile reads it transparently. Plan said WAV; content is identical.
+- **D-49 Ablation B interpretation.** Target word length = rho_w x sum_p exp(mu_p) (rho is defined
+  against the LJ means, Section 7 step 2); z_w solved by bisection under the [0.6, 2.5] clip
+  (saturates when unreachable). Pauses: at each word boundary with P(sp)=0.223, length from the
+  empirical histogram; an existing LJ sp is lengthened to max(existing, sampled), never shortened.
+- **Pace stats B** (`stats/l2_dev_pace.json`): 13,450 utts, 119,472 words; utterance mean log rho
+  0.159 (sd 0.186; dev speakers ~17% slower than LJ means); residual var 0.093, lag-1 -0.105;
+  P(sp after word) 0.223. Uses only word ratios and pauses (Section 7 rules).
+- **Results.** A: 24,948 clips in 6.2 min; B: 24,948 in 5.8 min (12 cores). Independent check
+  (`tts.augment.verify`: MFA re-alignment of 100 random clips vs the planned boundaries): A median
+  17.2 ms / MAE 28.6 ms (84% <= 50 ms); B median 23.0 / MAE 37.2 ms (77%) — of the order of MFA's
+  own error, so the stretched audio follows its durations.
+- **E-12 Augmentation crash** ("cannot give phone 2 (IY1) a frame"): a 1-frame phone compressed by
+  0.6 between two 1-frame neighbours. The >= 1 frame rule now takes a frame from the *nearest*
+  token that can spare one (identical result whenever a neighbour can spare one, so T4 manifests are
+  unchanged); A regenerated, B unaffected (it never hit the case).
+- **BLOCKED — UTMOS filter (E-13).** Loading `tarepan/SpeechMOS:v1.2.0` via
+  `torch.hub.load(..., trust_repo=True)` executes code downloaded from GitHub and was refused by the
+  session's safety classifier. Not worked around (no manual clone/import). `tts/augment/filter.py`
+  is written and unit-tested; it must be run by the user (`make aug-filter`), see HANDOFF.md. Until
+  then the filtered `aug_a.jsonl` / `aug_b.jsonl` do not exist and `abl_a`/`abl_b` refuse to train.
