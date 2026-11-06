@@ -1,0 +1,15 @@
+# Base config (docs/PLAN.md Sections 4, 10). Every other config inherits it via `inherit: base.yaml`.
+# All paths are relative to the repo root. Later tasks extend this file; they never hard-code values.
+seed: 1234
+freeze_tag: freeze-v1          # test-speaker audio is locked until this git tag exists (Section 2)
+
+paths:
+  raw_lj: data/raw/LJSpeech-1.1
+  raw_l2: data/raw/l2arctic
+  filelists: data/filelists/vits
+  manifests: data/manifests
+  splits: data/splits
+  reports: reports
+
+audio:
+  sample_rate: 22050

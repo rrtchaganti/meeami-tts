@@ -4,7 +4,7 @@ CONDA ?= conda
 TTS_RUN := $(CONDA) run --no-capture-output -n tts
 MFA_RUN := $(CONDA) run --no-capture-output -n mfa
 
-STUBS := data lexicon align-lj stats align-l2-dev align-dev-eval m0-demo smoke \
+STUBS := lexicon align-lj stats align-l2-dev align-dev-eval m0-demo smoke \
          aug-a pace-stats-b aug-b edge eval eval-all tune profile bundle check-data demo
 
 .PHONY: help env env-tts env-mfa env-export test $(STUBS)
@@ -39,6 +39,11 @@ env-export:
 test:
 	$(TTS_RUN) python -m pytest -q tests/
 
-# --- not implemented yet (T2-T14) -------------------------------------------
+# --- T2: data and splits (PLAN Section 2) ---------------------------------------
+.PHONY: data
+data:
+	$(TTS_RUN) python scripts/prepare_data.py --config configs/splits.yaml $(ARGS)
+
+# --- not implemented yet (T3-T14) -------------------------------------------
 $(STUBS):
 	@echo "make $@: not implemented yet"

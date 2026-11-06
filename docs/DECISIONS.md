@@ -87,3 +87,50 @@ except to add a "Resolved:" line.
   anyio pytest plugin (`CallSpec2` alias), harmless until pytest 10; (b) torchaudio 2.8 deprecation
   warning on `list_audio_backends` from SpeechBrain, expected per D-4 (APIs are removed in 2.9, which
   is why 2.8 is pinned).
+
+## T2 — data and splits (Sections 2, 10)
+
+### Decisions
+
+- **D-14 Filelists are fetched by `make data`, not committed.** Source pinned to jaywalnut310/vits
+  commit `2e561ba` (repo head, 2021-06-14); URL template, commit, line counts and sha256 of each
+  file live in `configs/splits.yaml`. Downloaded once to `data/filelists/vits/` (git-ignored) and
+  re-verified on every run; a hash mismatch aborts. Verified: 12,500 / 100 / 500 IDs, disjoint,
+  union equals the 13,100 `metadata.csv` IDs. This is the only network access in T2.
+- **D-15 Config inheritance.** `tts/config.py:load_config` resolves an `inherit:` key relative to the
+  config file and merges with OmegaConf, then applies `key=value` overrides. `configs/base.yaml`
+  holds only seed, freeze tag, paths and the sample rate so far; later tasks extend it.
+- **D-16 Library modules outside the Section 10 package list.** `tts/config.py`, `tts/guard.py`,
+  `tts/splits.py` sit at the package top level because they serve every subpackage. Scripts add the
+  repo root to `sys.path` themselves so `python scripts/<x>.py` works without `make` (Section 9 demo).
+- **D-17 Test-split lock (`tts/guard.py`).** `assert_audio_allowed(speaker, cfg)` raises
+  `SplitLockedError` for test speakers unless `git rev-parse refs/tags/freeze-v1` succeeds;
+  `assert_split_allowed('test', cfg)` is for `evaluate.py --split test`. The exception was first
+  named `TestSplitLocked`, renamed because pytest would try to collect a `Test*` class.
+  A unit test checks the test-speaker list in `splits.yaml` equals the one in CLAUDE.md.
+- **D-18 What T2 reads for test speakers.** Directory listings (file names) and transcript `.txt`
+  text only; no audio bytes and no wav headers. `sr` / `n_samples` in `l2_test.jsonl` are null until
+  the freeze tag exists. The unit test fills fake test wavs with junk bytes so any read would fail.
+- **D-19 Evaluation set = intersection of `annotation/` file names per split** (Section 2).
+  Result: dev 100 IDs (× 12 = 1,200), test 104 IDs (× 12 = 1,248). 99 IDs are annotated by all 24
+  speakers; each split adds a few its own speakers share. Only gap: YBAA lacks `arctic_a0094`
+  (149 annotations), which is therefore excluded from test. Lists in `data/splits/{dev,test}_eval_ids.txt`;
+  counts in `reports/data_splits.md`. Note: the 99 shared IDs mean dev tuning and test use the same
+  sentences read by different accents; this is inherent to L2-ARCTIC and acceptable because the split
+  is by accent (speaker), not by text.
+- **D-20 Manifest skeletons.** Section 10 schema; fields that need T3/T4/T5 (`words`, `phones`,
+  `durations`, `word_ids`, `n_frames`, `ref_words_*`) are `null`. LJ `text` is `metadata.csv`
+  column 3 as-is (T3's normalizer is applied later). L2 rows add `utt` (ARCTIC ID) and
+  `in_eval_set` (bool) beyond the plan's schema, so loaders can select the evaluation set and the
+  Ablation B pool (all dev rows) from one file. `l2_dev` 13,450 rows, `l2_test` 13,417, `aug_a` and
+  `aug_b` empty. `make data` never overwrites a non-empty manifest (later tasks fill them) unless
+  run with `make data ARGS=--force`.
+- **D-21 LJ audio check.** Every one of the 13,100 headers is checked for 22,050 Hz / mono / PCM_16
+  (Section 2 "use as is"); all pass.
+
+### Errors / incidents
+
+- **E-5 Misleading report line (first `make data`).** The report flagged every speaker as having
+  "fewer annotations than the 300-ID union", because speakers were annotated on different 150-ID
+  subsets. Resolved: the report now lists, per speaker, the IDs it alone keeps out of its split's
+  common set (only YBAA / `arctic_a0094`).

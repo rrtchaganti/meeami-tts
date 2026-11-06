@@ -20,5 +20,14 @@ make test   # environment checks: CUDA, bf16, ctranslate2 GPU, Rubber Band, MFA 
 
 ## Commands in run order
 
-Filled in as tasks T2-T14 land (docs/PLAN.md Section 10). All other Makefile targets currently
-print "not implemented yet".
+Filled in as tasks land (docs/PLAN.md Section 10). Targets not listed here still print
+"not implemented yet".
+
+```bash
+make data   # T2: checks LJSpeech + L2-ARCTIC, fetches pinned VITS filelists, writes
+            #     data/manifests/*.jsonl, data/splits/*_eval_ids.txt, reports/data_splits.md
+```
+
+Datasets are not downloaded by `make data`: LJSpeech 1.1 must be at `data/raw/LJSpeech-1.1/`
+and L2-ARCTIC v5 (manual access form) at `data/raw/l2arctic/`. Test-accent audio is locked
+until the `freeze-v1` git tag exists (`tts/guard.py`).

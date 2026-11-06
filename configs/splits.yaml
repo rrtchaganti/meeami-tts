@@ -1,0 +1,40 @@
+# Data splits (docs/PLAN.md Section 2). Built by `make data` (T2).
+inherit: base.yaml
+
+lj:
+  n_clips: 13100
+  metadata: metadata.csv        # under paths.raw_lj; column 3 = normalized text
+  wav_dir: wavs
+  expect:                       # Section 2: "22.05 kHz mono 16-bit; use as is"
+    sample_rate: ${audio.sample_rate}
+    channels: 1
+    subtype: PCM_16
+  # Original VITS LJSpeech filelists, so the pretrained checkpoint never saw val/test (Section 2).
+  filelists:
+    url: https://raw.githubusercontent.com/jaywalnut310/vits/{commit}/filelists/{name}
+    commit: 2e561ba58618d021b5b8323d3765880f7e0ecfdb
+    files:
+      train: {name: ljs_audio_text_train_filelist.txt, n: 12500,
+              sha256: 350cec089d63699f4c50f8376fa37423d484697c73639b045010226cf146cb3d}
+      val:   {name: ljs_audio_text_val_filelist.txt, n: 100,
+              sha256: 375eaca4fb1f5fdfc83054d5de2b94126b03930c94a79313ac7cd3c89cb84afc}
+      test:  {name: ljs_audio_text_test_filelist.txt, n: 500,
+              sha256: b4f98e7508e71fb416a0d3956233fc85a31f1f4658c311b43bb800fcbf8c5b4d}
+
+l2:
+  n_speakers: 24
+  wav_dir: wav
+  transcript_dir: transcript
+  annotation_dir: annotation
+  suitcase_dir: suitcase_corpus
+  # Split by L1 accent. Dev: tuning + Ablation B. Test: read only after freeze_tag.
+  dev:
+    hindi: [ASI, RRBI, SVBI, TNI]
+    mandarin: [BWC, LXC, NCC, TXHC]
+    spanish: [EBVS, ERMS, MBMPS, NJS]
+  test:
+    arabic: [ABA, SKA, YBAA, ZHAA]
+    korean: [HJK, HKK, YDCK, YKWK]
+    vietnamese: [HQTV, PNV, THV, TLV]
+
+manifests: [lj_train, lj_val, lj_test, aug_a, aug_b, l2_dev, l2_test]
