@@ -337,3 +337,94 @@ docs/HANDOFF.md instead of being worked around.
   session's safety classifier. Not worked around (no manual clone/import). `tts/augment/filter.py`
   is written and unit-tested; it must be run by the user (`make aug-filter`), see HANDOFF.md. Until
   then the filtered `aug_a.jsonl` / `aug_b.jsonl` do not exist and `abl_a`/`abl_b` refuse to train.
+
+## T8 — train.py, smoke (Sections 4, 10)
+
+- **D-50 train.py** implements the Section 10 flags (`--config --resume --init_from --tag --max_steps
+  --batch_size --benchmark` + overrides). `--init_from` accepts the official VITS generator (Section
+  4 change 3 path) or one of our checkpoints (generator + discriminator weights, step reset: the
+  one-GPU branching design). Checkpoints every 2,000 steps + `ckpt_last.pt` (atomic writes), keep 3;
+  SIGTERM/SIGINT saves and stops; non-finite loss saves and exits 2; lr decay per epoch.
+  `train.max_steps` in base.yaml is a placeholder (100k) that the runbook overrides from the
+  300-step benchmark so M1/A/B share one value.
+- **Smoke result** (`make smoke`): m1, m1_pos, abl_a, abl_b each 200 steps at batch 4; resume
+  200 -> 250 works; `--benchmark 20`: 0.463 s/step, 2.8 GiB peak on the RTX 4060 (batch 4).
+  A/B smoke used the *unfiltered* `aug_*_all.jsonl` because the UTMOS filter is blocked (E-13);
+  smoke only — real A/B training requires the filtered manifests.
+- **E-16 `abl_b` smoke died with "CUDA error: unknown error"** while other GPU jobs (CTC, ASR, M0)
+  shared the 8 GB laptop GPU; rerun alone it passed. WSL GPU instability under contention.
+- **E-17 `scripts/profile.py` shadowed the stdlib `profile` module** (`module 'profile' has no
+  attribute 'run'` inside torch) because Python puts the script's directory first on sys.path.
+  Every script now replaces sys.path[0] with the repo root.
+- **D-51 smoke-ok tag placement.** The runbook checks out `smoke-ok` and then runs
+  `scripts/setup_gpu.sh` / `fetch_bundle.sh`, so the tag is placed after T13 (bundle scripts), not
+  right after T8; no model/training code changes after the tag.
+
+## T10 — inference pipeline, CLI, edge cases (Sections 5, 9)
+
+- **D-52 Pipeline** (`tts/infer/pipeline.py`) follows Section 5 steps 1-10 literally; elastic fit
+  by bisection on [-5, 5] (0.5-frame tolerance), then rescaled to hit D exactly; the cap inserts
+  (or extends) an `sp` after the word; cumulative rounding + >= 1 frame per phone; output
+  padded/trimmed to round(N_ref·22050/sr_ref). `timings.json` also records the stretch ratio
+  (speech frames / native predicted frames) for plot 4. `phone_copy` needs MFA phone durations;
+  with the CTC fallback it degrades to elastic and says so in `notes`.
+- **D-53 Batch pre-alignment for evaluation.** `mfa align_one` costs ~14 s per reference (model
+  load); batches (m0-demo, evaluate, tune) pre-align references and outputs in one
+  `mfa align --single_speaker` pass — same acoustic model, lexicon and beam, and like align_one no
+  speaker adaptation — and hand the TextGrid to the pipeline. Single-file inference (the live demo)
+  still calls align_one.
+- **E-14 `align_one` writes `<eps>` for word-tier silence** (corpus `align` writes ""), so every
+  align_one result failed the word check and fell back to CTC. `<eps>` added to
+  `align.silence_labels`.
+- **E-15 conda-forge torchaudio 2.8.0 lacks the forced-alignment extension**
+  (`forced_align ... Requires alignment extension`). **D-56:** keep the pinned MMS_FA acoustic model;
+  implement CTC Viterbi forced alignment in numpy (`tts/infer/ctc.py:forced_align`, unit-tested).
+  Same model and algorithm, no environment change the night before the GPU run. (D-4's reason for
+  pinning torchaudio 2.8 was partly moot; 2.8 is still right for SpeechBrain's torchaudio.load.)
+- **D-57 CTC word ends.** CTC emissions are spiky, so raw word ends come early. Gaps shorter than
+  the Section 8 pause threshold (100 ms) are split at their midpoint (not a pause by definition).
+  On 30 dev references vs manual: CTC MAE 58.1 -> 52.8 ms (MFA: 21.0 ms). CTC stays the fallback.
+- **D-58 Edge suite** (`tests/edge_cases/`, 21 cases, 7.7 MB, committed; built by
+  `make edge-build` from dev speakers BWC/NJS/ASI only): text normalization (digits, currency,
+  date, abbreviation + name, ordinal, OOV name, no punctuation) by writing the *digit form* of what
+  the ARCTIC speaker says; formats (MP3, 8 kHz, 48 kHz, stereo, clipped, noisy 10 dB SNR, reverb);
+  timing (> 20 s, 1.8 s internal pause of room tone, 1.6x tempo, one word cut with the manual
+  word tier); alignment (an unspoken transcript word, a false start, forced CTC path). The
+  automatic MFA->CTC fallback is covered by `test_mfa_failure_falls_back_to_ctc`.
+  **Result: 21/21 pass on GPU** (exact length). (CPU run: see HANDOFF.md.)
+
+## T11 — evaluation harness (Section 8)
+
+- **D-59 `scripts/evaluate.py`** caches every stage per utterance (synthesis, MFA-on-output,
+  scores) so re-runs and tuning reuse work; references' ASR/accent/ECAPA are cached once per split
+  in `results/_ref/`. Output word times: MFA (batch `--single_speaker`, D-53) on the output with the
+  input text; MMS_FA cross-check. Pause F1 at word-boundary level over boundaries whose two words
+  are matched; "no pauses on either side" counts as F1 = 1. Speaker similarity: output vs the mean
+  ECAPA embedding of 100 LJ test clips (every 5th of the 499) and vs the reference utterance.
+  Bootstrap 95% CIs (1,000 resamples, seed 1234); paired Wilcoxon vs M1 for every system.
+- **D-60 Tolerance comparisons use a 1 µs epsilon** (|0.70 - 0.72| = 0.020000000000000018 s must
+  count as "within 20 ms"); also applied to the T5 summary.
+- **UTMOS** cannot be loaded in this session (E-13). `--no_utmos` makes this explicit: UTMOS =
+  NaN with a note in summary.json; a later run without the flag backfills UTMOS into the cached
+  scores (outputs and LJ ground truth). No other MOS model is substituted.
+
+## T12-T14
+
+- **D-61 Profiling** (`scripts/profile.py`): parameters per module (inference path vs training
+  only), ptflops MACs for 1 s / 5 s outputs (text encoder + DP, flow + decoder) and a hand-worked
+  `dec.conv_pre` (7 x 192 x 512 x 86 = 59.2 MMACs per second of audio); latency per stage with
+  10 warm-up + 50 timed runs except MFA align_one (1 + 5: ~14 s per call); RTF model-only and
+  end-to-end; RTF vs output length (1-20 s).
+- **D-62 Bundle** (`make bundle`): uncompressed tar (audio does not compress) of exactly the files
+  the training manifests reference + metadata, filelists, lexicon, pretrained VITS; per-file sha256
+  in `data/BUNDLE_SHA256.txt`; then a fresh `git archive HEAD` + the tar are unpacked in a temp dir
+  and `python -m tts.check_data` must pass (T13 acceptance). `BUNDLE_AUG=0` makes a ~3.8 GB light
+  bundle (no augmented audio; regenerate on the instance, Section 10 allows it). No L2 audio.
+- **D-63 Demo** (`make demo`): static `out/demo_site/index.html` with results tables (95% CIs),
+  plots, and per sample the reference and every available system's output + timing plot; dev
+  samples labelled "dev" until freeze-v1; dev-speaker suitcase clips and `demo/own_recordings/`
+  labelled "stress test". The per-sample outputs double as the backup outputs.
+- **D-64 Tune** (`make tune`, dev only): elastic cap x noise_scale grid + transfer variants + CTC
+  aligner on a fixed 120-utterance dev subset; choice = highest UTMOS among settings within 5 ms of
+  the best word-boundary MAE (lowest WER if UTMOS is unavailable); written into
+  configs/inference.yaml (`# tuned`).

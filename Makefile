@@ -4,12 +4,13 @@ CONDA ?= conda
 TTS_RUN := $(CONDA) run --no-capture-output -n tts
 MFA_RUN := $(CONDA) run --no-capture-output -n mfa
 
-STUBS := eval eval-all tune profile bundle check-data demo
-
-.PHONY: help env env-tts env-mfa env-export test $(STUBS)
+.PHONY: help env env-tts env-mfa env-export test
 
 help:
-	@echo "Targets: env test env-export $(STUBS)"
+	@echo "Laptop:  env test data lexicon align-lj stats align-l2-dev align-dev-eval pace-stats-b"
+	@echo "         aug-a aug-b aug-filter m0-demo overfit smoke edge eval eval-all tune profile"
+	@echo "         bundle check-data demo"
+	@echo "GPU:     see docs/HANDOFF.md (setup_gpu.sh, fetch_bundle.sh, check-data, train.py)"
 
 # --- T1: environments -------------------------------------------------------
 # Creates each env if missing, otherwise updates it in place (safe to re-run).
@@ -107,9 +108,52 @@ edge:
 edge-build:
 	$(TTS_RUN) python -m tts.infer.edge_cases --build
 
-# --- not implemented yet (T11-T14) -------------------------------------------
-$(STUBS):
-	@echo "make $@: not implemented yet"
+# UTMOS filter only (needs the torch.hub SpeechMOS model; see docs/HANDOFF.md)
+.PHONY: aug-filter
+aug-filter:
+	$(TTS_RUN) python -m tts.augment.filter --kind a
+	$(TTS_RUN) python -m tts.augment.filter --kind b
+
+# --- T11: evaluation (PLAN Section 8) ------------------------------------------------
+# make eval SYSTEM=m0 SPLIT=dev ; SYSTEM=m1 uses export/m1/ckpt_last.pt unless CKPT_EVAL is set.
+SYSTEM ?= m0
+SPLIT ?= dev
+CKPT_EVAL ?=
+SYSTEMS ?= m0 m1 abl_a abl_b
+.PHONY: eval eval-all tune
+eval:
+	$(TTS_RUN) python scripts/evaluate.py --system $(SYSTEM) --split $(SPLIT) \
+	  $(if $(CKPT_EVAL),--ckpt $(CKPT_EVAL),) $(ARGS)
+
+eval-all:
+	@for s in $(SYSTEMS); do \
+	  if [ "$$s" = m0 ] || [ -f export/$$s/ckpt_last.pt ]; then \
+	    $(TTS_RUN) python scripts/evaluate.py --system $$s --split $(SPLIT) $(ARGS) || exit 1; \
+	  else echo "eval-all: skipping $$s (no export/$$s/ckpt_last.pt)"; fi; \
+	done
+
+tune:     # dev only: grid over cap x noise_scale (+ transfer variants); writes configs/inference.yaml
+	$(TTS_RUN) python -m tts.eval.tune --split $(SPLIT) $(ARGS)
+
+# --- T12: profiling ----------------------------------------------------------------------
+CKPT_PROF ?= export/m1/ckpt_last.pt
+.PHONY: profile
+profile:
+	$(TTS_RUN) python scripts/profile.py --ckpt $(if $(filter-out m0,$(CKPT)),$(CKPT),$(CKPT_PROF)) --device $(DEVICE) $(ARGS)
+
+# --- T13: GPU bundle -------------------------------------------------------------------
+.PHONY: bundle check-data
+BUNDLE_AUG ?= 1
+bundle:   # BUNDLE_AUG=0: light bundle without augmented audio (regenerate on the instance)
+	CONDA=$(CONDA) BUNDLE_AUG=$(BUNDLE_AUG) bash scripts/bundle.sh export/bundle.tar
+
+check-data:
+	$(TTS_RUN) python -m tts.check_data --root . $(ARGS)
+
+# --- T14: demo page ----------------------------------------------------------------------
+.PHONY: demo
+demo:
+	$(TTS_RUN) python scripts/make_demo.py $(ARGS)
 
 # --- T7: one-utterance overfit check (~500 steps, batch 1) ---------------------------
 .PHONY: overfit

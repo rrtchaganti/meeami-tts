@@ -225,3 +225,14 @@ profile:
   rtf_lengths: [1, 2, 5, 10, 20]
   reference_wav: data/raw/l2arctic/ASI/wav/arctic_a0003.wav     # dev speaker
   reference_txt: data/raw/l2arctic/ASI/transcript/arctic_a0003.txt
+
+# --- make tune (Section 5; dev only) -------------------------------------------------------
+tune:
+  n_utts: 120                  # fixed dev subset (10 per speaker, round-robin over accents)
+  mae_tolerance_ms: 5          # settings within 5 ms of the best word-boundary MAE are eligible
+
+# --- T14: demo page (Section 9) ------------------------------------------------------------
+demo:
+  n_per_accent: 2
+  suitcase_speakers: [BWC, NJS, TNI]   # dev speakers; test-speaker clips only after freeze-v1
+  own_recordings: demo/own_recordings  # optional: <name>.wav + <name>.txt, labelled "stress test"

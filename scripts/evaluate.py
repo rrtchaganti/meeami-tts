@@ -69,6 +69,8 @@ def main(argv=None) -> int:
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--n", type=int, default=0, help="limit utterances (debug)")
     ap.add_argument("--tag", default=None, help="results name (default: system)")
+    ap.add_argument("--no_utmos", action="store_true",
+                    help="skip UTMOS (torch.hub SpeechMOS); recorded as NaN with a note")
     ap.add_argument("overrides", nargs="*")
     a = ap.parse_args(argv)
     cfg = load_config(repo_path(a.config), a.overrides)
@@ -133,17 +135,22 @@ def main(argv=None) -> int:
     from tts.infer.ctc import ctc_word_times
 
     utmos = None
-    try:
-        from tts.eval.scorers import UTMOS
+    if a.no_utmos:
+        notes.append("UTMOS skipped (--no_utmos: torch.hub SpeechMOS not loaded); utmos = NaN")
+    else:
+        try:
+            from tts.eval.scorers import UTMOS
 
-        utmos = UTMOS(cfg, a.device)
-    except Exception as e:  # pinned model unavailable: report, never substitute (CLAUDE.md)
-        notes.append(f"UTMOS unavailable ({type(e).__name__}: {str(e)[:120]}); utmos = NaN")
+            utmos = UTMOS(cfg, a.device)
+        except Exception as e:  # pinned model unavailable: report, never substitute (CLAUDE.md)
+            notes.append(f"UTMOS unavailable ({type(e).__name__}: {str(e)[:120]}); utmos = NaN")
     asr, accent, spk = ASR(cfg, a.device), AccentID(cfg, a.device), SpeakerEmbedder(cfg, a.device)
 
     lj_emb_p = repo_path("results") / "_ref" / "lj_test_ecapa_mean.npy"
     lj_gt = repo_path("results") / "_ref" / "lj_test_gt.json"
-    if not lj_emb_p.exists() or not lj_gt.exists():
+    gt_needs_mos = utmos is not None and lj_gt.exists() and \
+        json.loads(lj_gt.read_text()).get("utmos") is None
+    if not lj_emb_p.exists() or not lj_gt.exists() or gt_needs_mos:
         from tts.models.vits_mfa.data import read_manifest
 
         lj_rows = sorted(read_manifest("data/manifests/lj_test.jsonl"), key=lambda r: r["id"])
@@ -192,6 +199,18 @@ def main(argv=None) -> int:
         done[r["id"]] = d
         if i % 100 == 0:
             print(f"  scored {i}/{len(ok_rows)}", flush=True)
+
+    if utmos is not None:  # fill UTMOS for outputs scored in an earlier run without it
+        filled = 0
+        for r in ok_rows:
+            d = done.get(r["id"])
+            if d is not None and d.get("utmos") is None:
+                y, sr = load_wav(wav_root / r["id"] / "out.wav")
+                d["utmos"] = utmos(y, sr)
+                filled += 1
+        if filled:
+            out_cache.write_text("".join(json.dumps(done[r["id"]]) + "\n" for r in ok_rows
+                                         if r["id"] in done))
 
     # 4. per-utterance table
     per, pooled_mfa, pooled_ctc = [], [], []
