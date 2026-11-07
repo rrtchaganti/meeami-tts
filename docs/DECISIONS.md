@@ -578,3 +578,10 @@ docs/HANDOFF.md instead of being worked around.
 - **E-25 setup_gpu.sh CUDA check never ran.** It was `conda run -n tts python - <<'PY'`; `conda run`
   does not forward stdin, so python got an empty script and exited 0 without printing. Now
   `conda run --no-capture-output -n tts python -c "..."` (fails the script if CUDA is not visible).
+- **D-70 M1 budget: 8 h on the L40S, `max_steps` 114,000; `num_workers` 16.** Benchmark on the instance
+  (`--benchmark 300`, batch 32): 0.229 s/step mean (0.227 median), 9.8 GiB peak of 46 GB. The user chose
+  8 h; 7.5 h of training (0.5 h kept for profiling + export) = ~117,900 steps, minus ~3% for validation
+  and checkpointing every 2k steps -> 114,000. Batch stays 32 (PLAN Section 4): spare memory is not
+  spare speed, and a larger batch would change the experiment. The instance has 60 CPUs, so
+  `num_workers` 8 -> 16 so loading never stalls the GPU; it changes loader throughput only, not batch
+  contents or order.

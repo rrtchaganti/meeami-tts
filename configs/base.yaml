@@ -163,14 +163,14 @@ train:
   precision: bf16              # autocast; STFT, mel and losses in fp32
   cudnn_benchmark: false       # true re-tunes per new shape: 13x slower with variable lengths (E-10)
   grad_clip: null
-  max_steps: 100000            # set from the 300-step benchmark (runbook step 2); same for M1/A/B
+  max_steps: 114000            # L40S benchmark 0.229 s/step x 7.5 h, -3% val/ckpt overhead (D-70)
   ckpt_interval: 2000
   keep_ckpts: 3
   val_interval: 2000
   log_interval: 100
   n_val_audio: 4               # fixed LJ val utterances logged to TensorBoard
   freeze_decoder_steps: 0      # warm-up option (~3000 if the new embedding settles slowly)
-  num_workers: 8
+  num_workers: 16              # instance has 60 CPUs; loader speed only (D-70)
   aug_fraction: 0.0            # A/B: 0.4 (60% LJ / 40% augmented rows per batch)
   train_manifests: [data/manifests/lj_train.jsonl]
   aug_manifests: []
