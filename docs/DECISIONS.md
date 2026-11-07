@@ -569,3 +569,9 @@ docs/HANDOFF.md instead of being worked around.
   refused) and `make check-data` verifies every wav against the laptop's sha256. The full 13 GB
   bundle is unchanged (lists kept as data/BUNDLE_*.full.txt); for phase 2 the augmented audio can be
   regenerated on the instance or uploaded separately.
+- **E-24 pip conflict on the NVIDIA PyTorch image.** `conda env create` failed in the pip step:
+  "speechbrain 1.0.3 depends on torch>=1.9; The user requested (constraint)
+  torch==2.8.0a0+5228986c39.nv25.6". The NGC-style image sets a global pip constraint pinning its
+  own torch build, which pip also applied inside our separate conda env. `setup_gpu.sh` now unsets
+  `PIP_CONSTRAINT` (and index overrides) and sets `PIP_CONFIG_FILE=/dev/null` before creating the
+  env, so pip installs exactly envs/tts.yml against the env's conda-forge torch 2.8.0. No pin changed.

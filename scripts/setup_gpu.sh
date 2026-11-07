@@ -21,6 +21,13 @@ conda config --add channels conda-forge >/dev/null 2>&1 || true
 conda config --remove channels defaults >/dev/null 2>&1 || true
 conda config --set channel_priority strict >/dev/null 2>&1 || true
 conda config --set solver libmamba >/dev/null 2>&1 || true
+# NVIDIA PyTorch images pin their own torch build for every pip call (PIP_CONSTRAINT, pip.conf);
+# the tts env has its own conda-forge torch, so pip must ignore the image's constraint (E-24)
+if [ -n "${PIP_CONSTRAINT:-}" ] || [ -f /etc/pip/constraint.txt ] || [ -f /etc/pip.conf ]; then
+  echo "[setup] ignoring the image's pip constraint/config (PIP_CONSTRAINT='${PIP_CONSTRAINT:-}')"
+fi
+unset PIP_CONSTRAINT PIP_INDEX_URL PIP_EXTRA_INDEX_URL
+export PIP_CONFIG_FILE=/dev/null
 
 if conda env list | awk '{print $1}' | grep -qx tts; then
   conda env update -n tts -f envs/tts.yml --prune
