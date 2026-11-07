@@ -41,10 +41,11 @@ if [ "${INSTALL_RUBBERBAND:-0}" = "1" ]; then
 fi
 
 mkdir -p logs runs export
-conda run -n tts python - <<'PY'
+# (conda run does not forward stdin, so the check is passed with -c, not a heredoc: E-25)
+conda run --no-capture-output -n tts python -c "
 import torch
-assert torch.cuda.is_available(), "CUDA not visible in the tts env"
-print("[setup] torch", torch.__version__, "CUDA", torch.version.cuda, torch.cuda.get_device_name(0),
-      "bf16", torch.cuda.is_bf16_supported())
-PY
+assert torch.cuda.is_available(), 'CUDA not visible in the tts env'
+print('[setup] torch', torch.__version__, 'CUDA', torch.version.cuda, torch.cuda.get_device_name(0),
+      'bf16', torch.cuda.is_bf16_supported())
+"
 echo "[setup] done. Next: bash scripts/fetch_bundle.sh <url|path> && make check-data"

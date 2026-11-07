@@ -575,3 +575,6 @@ docs/HANDOFF.md instead of being worked around.
   own torch build, which pip also applied inside our separate conda env. `setup_gpu.sh` now unsets
   `PIP_CONSTRAINT` (and index overrides) and sets `PIP_CONFIG_FILE=/dev/null` before creating the
   env, so pip installs exactly envs/tts.yml against the env's conda-forge torch 2.8.0. No pin changed.
+- **E-25 setup_gpu.sh CUDA check never ran.** It was `conda run -n tts python - <<'PY'`; `conda run`
+  does not forward stdin, so python got an empty script and exited 0 without printing. Now
+  `conda run --no-capture-output -n tts python -c "..."` (fails the script if CUDA is not visible).
