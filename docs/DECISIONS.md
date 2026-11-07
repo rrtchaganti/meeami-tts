@@ -592,3 +592,11 @@ docs/HANDOFF.md instead of being worked around.
   (HANDOFF phase 1 step 6b; benchmark mode writes no files). M1 itself stays at batch 32 (PLAN
   Section 4). Using another batch later (e.g. the phase-2 branches) is an experimental change: all
   branches would use the same batch, with the learning rate decided and logged before the run.
+  **Result (L40S, M1 paused at a checkpoint and resumed afterwards):** median s/step and clips/s:
+  batch 32 0.227 / 141; 48 0.301 / 159 (+13%); **64 0.381 / 168 (+19%)**; 96 0.603 / 159 (+13%);
+  peak memory 9.8 / 13.7 / 17.6 / 25.5 GiB. Throughput peaks at 64 and falls at 96: the GPU is near
+  its compute limit. M1 continues at batch 32 (a mid-run change would mix two settings; per hour,
+  batch 64 makes 40% fewer updates, so the gain in learning per hour is unproven). Proposed for the
+  optional phase-2 branches: batch 64 with learning rate 2e-4 (the original VITS LJ setting,
+  64 / 2e-4), the same for `m1_cont`, `abl_a` and `abl_b`; to be confirmed before that run. Resuming
+  restarts the sampler's order for the current epoch; no practical effect on M1.
