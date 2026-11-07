@@ -5,6 +5,9 @@ freeze_tag: freeze-v1          # test-speaker audio is locked until this git tag
 
 paths:
   raw_lj: data/raw/LJSpeech-1.1
+  # official LJSpeech 1.1 archive: lets the GPU instance download the wavs itself (bundle-m1, D-69);
+  # every wav is still checked against data/BUNDLE_SHA256.txt (make check-data)
+  lj_archive_url: https://data.keithito.com/data/speech/LJSpeech-1.1.tar.bz2
   raw_l2: data/raw/l2arctic
   filelists: data/filelists/vits
   manifests: data/manifests

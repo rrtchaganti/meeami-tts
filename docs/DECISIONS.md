@@ -560,3 +560,12 @@ docs/HANDOFF.md instead of being worked around.
   accepting the ToS on the user's behalf, `scripts/setup_gpu.sh` now installs Miniforge
   (conda-forge only) when no conda exists, and always sets the channels to conda-forge only
   (`--remove channels defaults`, strict priority). Package pins are unchanged.
+- **D-69 M1-only bundle; the instance downloads LJSpeech itself.** The laptop upload runs at ~1 MB/s
+  (13 GB = ~3.7 h). M1 needs neither the augmented audio (9.2 GB) nor our copy of the LJ wavs
+  (3.6 GB, the untouched official files). `make bundle-m1` (`BUNDLE_AUG=0 BUNDLE_LJWAV=0`) packs
+  manifests, filelists, lexicon, metadata and the pretrained VITS generator (~0.3 GB) while still
+  listing and hashing every LJ wav in data/BUNDLE_SHA256.txt; on the instance `make lj-download`
+  fetches the official archive (`paths.lj_archive_url`), extracts LJSpeech-1.1/ (members outside it
+  refused) and `make check-data` verifies every wav against the laptop's sha256. The full 13 GB
+  bundle is unchanged (lists kept as data/BUNDLE_*.full.txt); for phase 2 the augmented audio can be
+  regenerated on the instance or uploaded separately.

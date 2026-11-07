@@ -190,3 +190,28 @@ def test_write_jsonl_keeps_existing(tmp_path):
     assert json.loads(p.read_text())["id"] == "b"
     e = tmp_path / "empty.jsonl"
     assert write_jsonl(e, [], force=False) == "wrote 0 rows" and e.read_text() == ""
+
+
+def test_fetch_lj_extract(tmp_path):
+    """lj-download extraction: LJSpeech-1.1/ members only (D-69)."""
+    import io
+    import tarfile
+
+    from tts.fetch_lj import extract
+
+    def make(path, names):
+        with tarfile.open(path, "w:bz2") as tf:
+            for n in names:
+                data = b"x"
+                ti = tarfile.TarInfo(n)
+                ti.size = len(data)
+                tf.addfile(ti, io.BytesIO(data))
+
+    good = tmp_path / "good.tar.bz2"
+    make(good, ["LJSpeech-1.1/metadata.csv", "LJSpeech-1.1/wavs/LJ001-0001.wav"])
+    out = extract(good, tmp_path / "raw")
+    assert (out / "wavs" / "LJ001-0001.wav").read_bytes() == b"x"
+    bad = tmp_path / "bad.tar.bz2"
+    make(bad, ["LJSpeech-1.1/a.wav", "../evil"])
+    with pytest.raises(ValueError):
+        extract(bad, tmp_path / "raw2")

@@ -142,10 +142,16 @@ profile:
 	$(TTS_RUN) python scripts/profile.py --ckpt $(if $(filter-out m0,$(CKPT)),$(CKPT),$(CKPT_PROF)) --device $(DEVICE) $(ARGS)
 
 # --- T13: GPU bundle -------------------------------------------------------------------
-.PHONY: bundle check-data
+.PHONY: bundle bundle-m1 lj-download check-data
 BUNDLE_AUG ?= 1
 bundle:   # BUNDLE_AUG=0: light bundle without augmented audio (regenerate on the instance)
 	CONDA=$(CONDA) BUNDLE_AUG=$(BUNDLE_AUG) bash scripts/bundle.sh export/bundle.tar
+
+bundle-m1:   # M1 only, small: no augmented audio, no LJ wavs (instance: make lj-download) (D-69)
+	CONDA=$(CONDA) BUNDLE_AUG=0 BUNDLE_LJWAV=0 bash scripts/bundle.sh export/bundle_m1.tar
+
+lj-download:   # on the GPU instance: official LJSpeech 1.1 archive -> data/raw/LJSpeech-1.1
+	$(TTS_RUN) python -m tts.fetch_lj --config configs/base.yaml $(ARGS)
 
 check-data:
 	$(TTS_RUN) python -m tts.check_data --root . $(ARGS)
