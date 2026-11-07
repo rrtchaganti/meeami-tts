@@ -35,3 +35,25 @@ def test_bootstrap_and_wilcoxon():
     a = np.arange(20, dtype=float)
     r = wilcoxon(a + 1.0, a)
     assert r["n"] == 20 and r["p"] < 0.001 and r["median_diff"] == 1.0
+
+
+def test_utmos_weights_pinned(tmp_path):
+    """UTMOS weights must match the pinned sha256; no download when download=False."""
+    import hashlib
+
+    from omegaconf import OmegaConf
+
+    from tts.eval.assets import UtmosWeightsError, utmos_weights
+
+    url = "https://example.invalid/rel/utmos.pt"
+    f = tmp_path / "eval" / "utmos" / "utmos.pt"
+    cfg = OmegaConf.create({"eval_models": {"root": "eval", "utmos": {
+        "weights_url": url, "weights_sha256": "0" * 64}}})
+    with pytest.raises(UtmosWeightsError, match="missing"):
+        utmos_weights(cfg, tmp_path, download=False)
+    f.parent.mkdir(parents=True)
+    f.write_bytes(b"weights")
+    with pytest.raises(UtmosWeightsError, match="sha256"):
+        utmos_weights(cfg, tmp_path, download=False)
+    cfg.eval_models.utmos.weights_sha256 = hashlib.sha256(b"weights").hexdigest()
+    assert utmos_weights(cfg, tmp_path, download=False) == f

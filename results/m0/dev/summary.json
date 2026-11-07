@@ -4,9 +4,7 @@
  "split": "dev",
  "n": 1200,
  "n_ok": 1200,
- "notes": [
-  "UTMOS skipped (--no_utmos: torch.hub SpeechMOS not loaded); utmos = NaN"
- ],
+ "notes": [],
  "pooled_boundaries_mfa": {
   "mae_ms": 31.175014697428402,
   "within_20ms": 55.39934053856017,
@@ -20,7 +18,7 @@
  "lj_test_ground_truth": {
   "n": 100,
   "wer": 0.019377364555995594,
-  "utmos": null
+  "utmos": 4.360156664848327
  },
  "aligner_counts": {
   "mfa": 1200,
@@ -120,10 +118,10 @@
     ]
    },
    "utmos": {
-    "mean": NaN,
+    "mean": 3.9417990813652675,
     "ci95": [
-     NaN,
-     NaN
+     3.9217783545702694,
+     3.962053096209963
     ]
    },
    "stretch_ratio": {
@@ -227,10 +225,10 @@
     ]
    },
    "utmos": {
-    "mean": NaN,
+    "mean": 3.941506323218346,
     "ci95": [
-     NaN,
-     NaN
+     3.905582828804851,
+     3.9738979864865542
     ]
    },
    "stretch_ratio": {
@@ -334,10 +332,10 @@
     ]
    },
    "utmos": {
-    "mean": NaN,
+    "mean": 3.9490863156318663,
     "ci95": [
-     NaN,
-     NaN
+     3.9128856429457666,
+     3.983859403461218
     ]
    },
    "stretch_ratio": {
@@ -441,10 +439,10 @@
     ]
    },
    "utmos": {
-    "mean": NaN,
+    "mean": 3.9348046052455903,
     "ci95": [
-     NaN,
-     NaN
+     3.9012367828190326,
+     3.968449771523476
     ]
    },
    "stretch_ratio": {

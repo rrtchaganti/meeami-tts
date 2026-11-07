@@ -16,7 +16,7 @@ pauses, total length) of a reference recording of the same text by a non-US spea
 ## Setup
 
 Requirements: Linux/WSL2, conda (Miniconda), NVIDIA GPU + driver for CUDA 12.9, system
-`rubberband-cli` >= 3.0, `ffmpeg`, `sox`, `git`, `make`. Datasets are not downloaded by the code:
+`rubberband-cli` >= 3.0 (only for `augment.stretcher: rubberband`), `ffmpeg`, `sox`, `git`, `make`. Datasets are not downloaded by the code:
 LJSpeech 1.1 must be at `data/raw/LJSpeech-1.1/`, L2-ARCTIC v5 (access form) at `data/raw/l2arctic/`.
 
 ```bash
@@ -50,16 +50,16 @@ make m0-demo         # T6: FastSpeech2 baseline on 5 dev references
 make overfit         # T7: one-utterance overfit + ASR intelligibility check
 make smoke           # T8: every config 200 steps at batch 4, resume, benchmark
 make pace-stats-b    # T9: stats/l2_dev_pace.json (dev accents only)
-make aug-a aug-b     # T9: augmented sets (Rubber Band R3) + MFA verification + UTMOS filter
+make aug-a aug-b     # T9: augmented sets (time-varying WSOLA, D-67) + MFA verification + UTMOS filter
 make edge            # T10: 21-case edge suite (CKPT=m0|path, DEVICE=cuda|cpu)
 make assets-eval     # pinned Section 8 models (ASR, ECAPA, accent ID, UTMOS via torch.hub)
 make eval SYSTEM=m0 SPLIT=dev   # T11 (ARGS=--no_utmos if UTMOS is not available)
 make profile CKPT=runs/smoke_m1/ckpt_last.pt DEVICE=cuda   # T12 (laptop numbers)
 make bundle          # T13: export/bundle.tar (+ check-data on a fresh unpack); BUNDLE_AUG=0 = light
-git tag smoke-ok
+git tag smoke-ok      # after T8; then `git tag gpu-ready` on the commit the GPU run uses
 
 # --- GPU instance(s), day 2 (step by step: docs/HANDOFF.md) ---------------------------------
-git clone <repo> meeami-tts && cd meeami-tts && git checkout smoke-ok
+git clone <repo> meeami-tts && cd meeami-tts && git checkout gpu-ready
 bash scripts/setup_gpu.sh
 bash scripts/fetch_bundle.sh <url-or-path>/bundle.tar
 make check-data

@@ -1,8 +1,8 @@
 """Pace-augmentation core shared by Ablations A and B (docs/PLAN.md Sections 6, 7).
 
 Given an aligned LJ row and a plan (per-phone factors, sp lengthening, inserted pauses):
- 1. one time-varying, pitch-preserving Rubber Band stretch (R3 "fine" engine, `--timemap`)
-    anchored at the LJ phone boundaries; speech phones scaled by r_i, silences mapped 1:1;
+ 1. one time-varying, pitch-preserving stretch (`augment.stretcher`: WSOLA, tts/augment/wsola.py,
+    default since D-67; or Rubber Band R3 `--timemap`) anchored at the LJ phone boundaries; speech phones scaled by r_i, silences mapped 1:1;
  2. lengthened `sp` and inserted pauses are built by looping the utterance's own silence (room
     tone) with 10 ms crossfades, never digital zeros;
  3. durations from the target boundaries with the Section 3 cumulative rounding (and the >= 1
@@ -122,7 +122,7 @@ def lengthen(seg: np.ndarray, target: int, tone: np.ndarray, xf: int) -> np.ndar
 # --- render --------------------------------------------------------------------------------------
 def render(y: np.ndarray, row: dict, plan: Plan, cfg: DictConfig, rbargs: dict) -> tuple:
     """Returns (audio, phones, durations, word_ids)."""
-    import pyrubberband as pyrb
+    from tts.augment import wsola
 
     a = cfg.augment
     sr, hop = int(cfg.audio.sample_rate), int(cfg.audio.hop_length)
@@ -145,7 +145,13 @@ def render(y: np.ndarray, row: dict, plan: Plan, cfg: DictConfig, rbargs: dict) 
             tmap.append((s, t))
     if tmap[-1][0] != len(y):
         tmap[-1] = (len(y), tmap[-1][1])
-    ys = pyrb.timemap_stretch(y, sr, tmap, dict(rbargs)).astype(np.float32)
+    if a.stretcher == "wsola":   # D-67: R3 costs ~0.85 UTMOS on LJ even at 0.95x/1.05x
+        ys = wsola.timemap_stretch(y, sr, tmap, float(a.wsola.frame_ms), float(a.wsola.tolerance_ms))
+    elif a.stretcher == "rubberband":
+        import pyrubberband as pyrb
+        ys = pyrb.timemap_stretch(y, sr, tmap, dict(rbargs)).astype(np.float32)
+    else:
+        raise ValueError(f"augment.stretcher must be wsola or rubberband, got {a.stretcher!r}")
     total_mid = tmap[-1][1]
     ys = ys[:total_mid] if len(ys) >= total_mid else np.pad(ys, (0, total_mid - len(ys)))
 

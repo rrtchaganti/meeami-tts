@@ -189,7 +189,11 @@ eval_models:
            # training AdditiveAngularMargin(margin 0.2, scale 30), JuanPZuluaga/accent-recog-slt2022
            # @a2ff115 CommonAccent/accent_id/hparams/train_ecapa_tdnn.yaml (D-65)
            score_scale: 30}
-  utmos: {hub_repo: "tarepan/SpeechMOS:v1.2.0", entry: utmos22_strong}
+  # model code via torch.hub at the pinned tag (pretrained=False); weights = the release asset that
+  # hubconf.py@v1.2.0 names, sha256-pinned and loaded with weights_only=True (D-66)
+  utmos: {hub_repo: "tarepan/SpeechMOS:v1.2.0", entry: utmos22_strong,
+          weights_url: "https://github.com/tarepan/SpeechMOS/releases/download/v1.0.0/utmos22_strong_step7459_v1.pt",
+          weights_sha256: 38aa51ab79e2a4e09a1449758a4b37e9cbb2e8235a49662a732d33a9ba1e9bff}
 
 # --- T9: pace augmentation (Sections 6, 7) -------------------------------------------------
 augment:
@@ -197,7 +201,11 @@ augment:
   factor_clip: [0.6, 2.5]      # r_i = clip(exp(z_w * sigma_i))
   crossfade_ms: 10
   room_tone_window_ms: 50      # fallback room tone: lowest-RMS window of the utterance
-  rubberband_args: {"--fine": ""}   # R3 engine; pitch preserved
+  # time-varying stretch: wsola (tts/augment/wsola.py, default since D-67) or rubberband (R3,
+  # the original PLAN Section 6 choice; ~0.85 UTMOS loss on LJ even at 0.95x/1.05x)
+  stretcher: wsola
+  wsola: {frame_ms: 15, tolerance_ms: 5}   # chosen on 6 LJ clips x 5 ratios by UTMOS (D-67)
+  rubberband_args: {"--fine": ""}   # R3 engine; pitch preserved (stretcher: rubberband)
   audio_format: flac           # lossless 16-bit; half the size of WAV for the GPU bundle (D-45)
   workers: 0                   # 0 = all CPU cores
   out_dir: data/aug

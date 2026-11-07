@@ -481,3 +481,60 @@ docs/HANDOFF.md instead of being worked around.
   of audio; p50 latency text encoder + durations 9 ms, flow + decoder 46 ms, `mfa align_one` ~5 s;
   RTF model-only 0.015, end-to-end 1.35 (MFA-bound); RTF 0.027 (1 s) -> 0.011 (20 s).
 - **Edge suite** 21/21 on GPU and CPU (M0). **Demo page** built for M0 (9 samples).
+
+## 2026-11-07 — UTMOS weights pinned and loaded safely (follow-up to E-13)
+
+- **D-66 UTMOS weights: sha256 pin + `weights_only=True`.** The user reviewed
+  `tarepan/SpeechMOS@v1.2.0` and pointed out that `hubconf.py` downloads the weights from the
+  *v1.0.0* release asset (`utmos22_strong_step7459_v1.pt`). Checked: it calls
+  `torch.hub.load_state_dict_from_url(...)` with defaults `check_hash=False` and, in torch 2.8,
+  `weights_only=False` (a full pickle load). So the tag pins the code but not the weights, and the
+  weights load would be able to run code. Change: `tts/eval/assets.py::utmos_weights` downloads that
+  exact URL to `data/models/eval/utmos/`, checks sha256
+  `38aa51ab79e2a4e09a1449758a4b37e9cbb2e8235a49662a732d33a9ba1e9bff` (411,179,119 bytes, downloaded
+  2026-11-07), and `load_utmos` builds the model with `torch.hub.load(..., pretrained=False)` and
+  loads the state dict with `torch.load(weights_only=True)`. Verified the file loads that way: plain
+  OrderedDict, 225 tensors, 102.8 M parameters. Same model, same weights — no substitution. The
+  repo's Python code (hubconf.py, speechmos/utmos22) still runs via torch.hub; that is what the user
+  reviewed. Test: `tests/test_eval.py::test_utmos_weights_pinned`.
+
+## 2026-11-07 — Augmentation stretcher: Rubber Band R3 -> WSOLA (deviation from PLAN Section 6)
+
+- **E-22 Rubber Band R3 degrades LJ speech even at mild ratios.** The first UTMOS filter run on set
+  A (R3 data) gave originals 4.376 vs augmented 2.917 (mean drop 1.459, p95 2.211); the drop was
+  ~1.2 even for clips whose total length changed < 5%. Controlled test on 6 LJ train clips, uniform
+  stretch (UTMOS, length factor 0.7 / 0.95 / 1.05 / 1.2 / 1.5 / 2.0; original 4.43):
+  R3 `--fine` 3.28 / 3.61 / 3.49 / 3.38 / 3.08 / 2.48; R3 + `--window-short` 3.09 / 3.48 / 3.39 /
+  3.35 / 3.02 / 2.42; R2 (default engine) at 1.2x 2.21; `sox tempo -s` (WSOLA) 4.23 / 4.43 / 4.42 /
+  4.39 / 4.17 / 3.22. An identity map passes through unchanged, so the loss is the phase-vocoder
+  processing itself, not our time map / room tone / FLAC path. Since every clip is affected, the 5%
+  filter cannot remove it; training A/B on it would mostly measure the stretcher's artifacts.
+  Listening samples: `out/diag_stretch/` (not in git). R3 reports kept in `reports/r3/`.
+- **D-67 Use time-varying WSOLA (user decision, 2026-11-07).** Options put to the user: switch to
+  WSOLA / keep R3 as planned and report it / build both. The user chose WSOLA.
+  `tts/augment/wsola.py`: WSOLA with the same sample-level time map R3 received (anchors at every
+  LJ phone boundary; speech phones x r_i, silences 1:1), periodic Hann, 50% overlap, normalized
+  cross-correlation search with a tiny bias to zero lag (identity map = exact copy). sox itself
+  only does constant tempo, so a time-varying implementation was needed; numpy only, no new package.
+  Parameters chosen by UTMOS on the same 6 clips x 5 ratios: frame 15 ms, tolerance 5 ms
+  (0.7 / 0.95 / 1.2 / 1.5 / 2.0: 4.26 / 4.43 / 4.40 / 4.31 / 3.83 — at or above sox everywhere; larger
+  frames/tolerances were worse, e.g. 40 ms: 3.88 / 4.40 / 4.14 / 3.54 / 2.65). Held-out check through
+  the real A pipeline (first 30 LJ train utterances x 2 seeds, mean length factor 1.16): mean UTMOS
+  drop R3 1.336 -> WSOLA 0.321 (p95 2.04 -> 0.66), better in every stretch bin. ~0.03 s per clip.
+  Config: `augment.stretcher: wsola`, `augment.wsola: {frame_ms: 15, tolerance_ms: 5}`;
+  `stretcher: rubberband` still reproduces the PLAN Section 6 data. Tests:
+  `tests/test_augment.py` (identity, length, pitch, RMS, time-varying anchor, render with both).
+  Everything downstream is unchanged (plans, seeds, durations, MFA verification, UTMOS filter,
+  sampler, `max_steps`). For the slides: this is a deviation from Section 6, with the numbers above
+  as the reason. Caveat: the parameters were picked with UTMOS, which is also an evaluation metric;
+  the selection used LJ ground-truth clips only (no system outputs, no L2 audio).
+- **Regenerated sets (WSOLA, 2026-11-07).** `make aug-a aug-b`: generation 2.5 / 3.7 min (12
+  workers); MFA check of 100 clips vs planned word boundaries, median 6.8 / 7.2 ms (R3: 17 / 23 ms);
+  UTMOS filter, 23,701 of 24,948 kept in each. A: augmented 4.039 (kept 4.070) vs original 4.376,
+  drop threshold 0.777 (R3: 2.917, threshold 2.211). B: augmented 3.620 (kept 3.660), threshold 1.324.
+- **Why B scores lower than A (no change made).** B's extra drop follows its inserted pauses (L2
+  pace statistics, P(pause after word) 0.22): mean 0.176 inserted pauses per word in B vs 0.001 in A;
+  corr(UTMOS drop, pauses per word) 0.50 in B. B clips with no inserted pause drop 0.38 (A overall
+  0.33); 0.1-0.2 pauses/word 0.72; > 0.3 1.01. So UTMOS is penalising the L2-like pause pattern B is
+  designed to contain, not the stretcher. The 5% filter is applied as specified (it removes the most
+  pause-heavy clips first; noted as a possible bias of Ablation B toward fewer pauses).
