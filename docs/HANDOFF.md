@@ -106,7 +106,7 @@ an L40/A100 is expected around 0.5-1 s/step; the benchmark decides.
 | Overfit check (T7) | 500 steps, one utterance: ASR WER 5.6% | runs/overfit/overfit.json |
 | Profile (4060, M1 architecture) | 28.1 M inference params; 27.2 GMACs/s audio; RTF model 0.015, end-to-end 1.35 (MFA ~5 s) | results/profile_cuda.json |
 | Edge suite | 21/21 exact length, GPU and CPU (M0) | out/edge/{cuda,cpu}/edge_results.json |
-| Bundle | export/bundle.tar 13 GB, sha256 1b283ea2…; check-data PASS on fresh unpack | export/bundle.tar.sha256 |
+| Bundle | export/bundle.tar 13 GB, sha256 f1e2ff2d… (2026-11-07, WSOLA data + filtered manifests); check-data PASS on fresh unpack | export/bundle.tar.sha256 |
 
 ## 5. Back on the laptop (days 3-5)
 
