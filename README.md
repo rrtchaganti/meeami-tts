@@ -58,16 +58,16 @@ make profile CKPT=runs/smoke_m1/ckpt_last.pt DEVICE=cuda   # T12 (laptop numbers
 make bundle          # T13: export/bundle.tar (+ check-data on a fresh unpack); BUNDLE_AUG=0 = light
 git tag smoke-ok      # after T8; then `git tag gpu-ready` on the commit the GPU run uses
 
-# --- GPU instance(s), day 2 (step by step: docs/HANDOFF.md) ---------------------------------
+# --- GPU instance, day 2: one L40, M1 first, ablations optional later (docs/HANDOFF.md, D-68) ---
 git clone <repo> meeami-tts && cd meeami-tts && git checkout gpu-ready
 bash scripts/setup_gpu.sh
 bash scripts/fetch_bundle.sh <url-or-path>/bundle.tar
 make check-data
 conda run -n tts python scripts/train.py --config configs/m1.yaml --benchmark 300
-#   -> set train.max_steps in configs/base.yaml to the printed value (identical for M1, A, B)
+#   -> set train.max_steps in configs/base.yaml on the laptop, commit, push; git pull here
 tmux new -d -s train 'conda run --no-capture-output -n tts python scripts/train.py --config configs/m1.yaml 2>&1 | tee logs/m1.log'
-#   instance 2: configs/abl_a.yaml   instance 3: configs/abl_b.yaml   (after a crash: add --resume)
-make profile CKPT=runs/m1/ckpt_last.pt DEVICE=cuda
+#   after a crash: add --resume. Ablations (optional): branching from export/m1, HANDOFF.md phase 2
+make profile CKPT=runs/m1/ckpt_last.pt DEVICE=cuda ARGS="profile.mfa_runs=0"
 bash scripts/export_run.sh m1        # -> export/m1.tar.gz ; rsync to the laptop
 
 # --- laptop, days 3-5 -----------------------------------------------------------------------

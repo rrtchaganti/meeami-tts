@@ -46,53 +46,87 @@ WSOLA is numpy only, no `rubberband-cli` needed).
 ### 2c. max_steps
 
 `train.max_steps` in `configs/base.yaml` is a placeholder (100,000). Set it from the 300-step
-benchmark on the instance (section 3, step 2) — one value in base.yaml keeps M1, A and B identical.
+benchmark on the instance (section 3, phase 1 step 4) and commit it from the laptop.
 
-## 3. GPU runbook (exact commands)
+## 3. GPU runbook — one L40, M1 first (D-68)
 
-Per instance (L40/A100, CUDA image, 8+ cores, ~100 GB disk):
+Only one L40 is available and **M1 is the priority**. Phase 1 trains M1 alone on the whole budget;
+the ablations are decided after M1's dev results (phase 2, optional, possibly a later instance).
+The three-instance plan of PLAN Section 10 is not used.
+
+Instance: 1x L40, CUDA 12.x image (driver supports CUDA 12.9), 8+ cores, ~100 GB disk,
+`git make wget tmux`.
+
+### Phase 1 — M1
 
 ```bash
-# 1. setup (~15 min)
-git clone <repo-url> meeami-tts && cd meeami-tts && git checkout gpu-ready   # smoke-ok + WSOLA data/UTMOS fixes
-bash scripts/setup_gpu.sh                         # tts env from envs/tts.yml + CUDA check
-bash scripts/fetch_bundle.sh <url-or-path>/bundle.tar   # verifies bundle.tar.sha256 if present
-make check-data                                   # sha256 of every file, counts, durations == frames
-# 1b. only with the light bundle (BUNDLE_AUG=0): regenerate + verify + filter on the instance
-#     (needs the mfa env and the eval models: make env-mfa assets assets-eval), then
-#     make aug-a aug-b
+# 1. code + env (~15 min)
+git clone <CLONE_URL> meeami-tts && cd meeami-tts && git checkout gpu-ready
+bash scripts/setup_gpu.sh                    # must end "[setup] ... bf16 True"
 
-# 2. benchmark (batch 32), then fix max_steps for all three runs
+# 2. bundle — from the laptop (WSL):
+#    rsync -avP ~/meeami-tts/export/bundle.tar ~/meeami-tts/export/bundle.tar.sha256 user@HOST:~/meeami-tts/export/
+bash scripts/fetch_bundle.sh export/bundle.tar   # checks the sha256, unpacks
+make check-data                                  # must end "check-data: PASS"
+rm export/bundle.tar                             # optional, after PASS
+
+# 3. benchmark (~5 min): prints s/step and the max_steps that fit 5 / 8 / 10 h
 conda run -n tts python scripts/train.py --config configs/m1.yaml --benchmark 300
-#    edit configs/base.yaml: train.max_steps: <value printed for your budget>
-
-# 3. launch (one per instance; tmux survives a dropped SSH session)
-mkdir -p logs
-tmux new -d -s train 'conda run --no-capture-output -n tts python scripts/train.py --config configs/m1.yaml 2>&1 | tee logs/m1.log'
-#    instance 2: configs/abl_a.yaml     instance 3: configs/abl_b.yaml
-#    crashed/preempted: same command + --resume
-
-# 4. monitor: ssh -L 6006:localhost:6006 user@host ; then on the instance
-conda run -n tts tensorboard --logdir runs --port 6006
-#    listen to val/* audio every ~10k steps; nvidia-smi
-
-# 5. one-GPU fallback (branching design)
-#    train m1 for most of the budget, then:
-#    python scripts/train.py --config configs/m1.yaml    --init_from runs/m1/ckpt_last.pt --tag m1_cont
-#    python scripts/train.py --config configs/abl_a.yaml --init_from runs/m1/ckpt_last.pt
-#    python scripts/train.py --config configs/abl_b.yaml --init_from runs/m1/ckpt_last.pt
-
-# 6. profile on the GPU before shutting down (needs MFA for the end-to-end stage: run
-#    `make env-mfa assets` first, or pass profile.mfa_runs=0 to skip that stage)
-make profile CKPT=runs/m1/ckpt_last.pt DEVICE=cuda
-
-# 7. export and download, then terminate
-bash scripts/export_run.sh m1     # export/m1.tar.gz (+ .sha256)
-#    on the laptop: rsync -avP user@host:~/meeami-tts/export/ ./export/ ; sha256sum -c export/*.sha256
 ```
 
-Laptop numbers for orientation: batch 4 runs at ~0.46 s/step on the RTX 4060 (2.8 GiB). Batch 32 on
-an L40/A100 is expected around 0.5-1 s/step; the benchmark decides.
+4. **Set `max_steps` on the laptop** (one committed value, recorded in `runs/m1/git_commit.txt`).
+   Budget = hours you pay for minus ~0.5 h for profiling and export:
+
+   ```bash
+   # laptop: configs/base.yaml -> train.max_steps: <steps for (H - 0.5) h>
+   make test && git commit -am "max_steps <N> from L40 benchmark" && git push
+   # instance:
+   git checkout main && git pull
+   ```
+
+```bash
+# 5. train (tmux survives a dropped SSH session)
+mkdir -p logs
+tmux new -d -s train 'conda run --no-capture-output -n tts python scripts/train.py --config configs/m1.yaml 2>&1 | tee logs/m1.log'
+#    watch: tmux attach -t train  (detach: Ctrl-b d)
+#    crash / preemption: same command + --resume   (checkpoints every 2k steps)
+
+# 6. monitor: on the laptop  ssh -L 6006:localhost:6006 user@HOST  ; on the instance
+conda run -n tts tensorboard --logdir runs --port 6006
+#    open http://localhost:6006 ; losses, val/* audio every ~10k steps, nvidia-smi
+
+# 7. profile before shutting down (MFA is not installed here -> skip that stage)
+make profile CKPT=runs/m1/ckpt_last.pt DEVICE=cuda ARGS="profile.mfa_runs=0"
+
+# 8. export -> laptop, verify, then terminate
+bash scripts/export_run.sh m1                    # export/m1.tar.gz + .sha256
+#    laptop: rsync -avP 'user@HOST:~/meeami-tts/export/m1.tar.gz*' ~/meeami-tts/export/
+#            cd ~/meeami-tts && sha256sum -c export/m1.tar.gz.sha256      # OK, then terminate
+```
+
+`export/m1/ckpt_last.pt` keeps generator + discriminator, so phase 2 can start from it on any
+later instance. Keep it safe.
+
+### Phase 2 — ablations (only if decided after M1's dev results)
+
+Branching design (PLAN Section 10 step 5): three equal-length continuations from the finished M1
+checkpoint, run back to back. The fair comparison is then `m1_cont` vs `abl_a` vs `abl_b`
+(same start, same extra steps, same fresh optimizer/LR schedule); `m1` itself is their common base.
+
+```bash
+# new instance: steps 1-3 of phase 1 (full bundle), then put the M1 checkpoint back:
+#    laptop: rsync -avP ~/meeami-tts/export/m1.tar.gz user@HOST:~/meeami-tts/export/
+tar -xzf export/m1.tar.gz                        # -> export/m1/ckpt_last.pt
+# benchmark the slower config (augmented clips are ~1.2x longer):
+conda run -n tts python scripts/train.py --config configs/abl_a.yaml --benchmark 300
+# K = steps per branch, e.g. (H - 0.5) h / 3 ; same K for all three, given on the command line
+tmux new -d -s branches 'B=export/m1/ckpt_last.pt; K=<K>; R="conda run --no-capture-output -n tts python scripts/train.py"
+  $R --config configs/m1.yaml    --init_from $B --tag m1_cont --max_steps $K 2>&1 | tee logs/m1_cont.log &&
+  $R --config configs/abl_a.yaml --init_from $B --max_steps $K             2>&1 | tee logs/abl_a.log &&
+  $R --config configs/abl_b.yaml --init_from $B --max_steps $K             2>&1 | tee logs/abl_b.log'
+#    a crashed branch: rerun just that line with --resume (and --tag m1_cont for the first)
+for e in m1_cont abl_a abl_b; do bash scripts/export_run.sh $e; done
+```
 
 ## 4. Results available now (dev only; test is locked)
 
@@ -108,17 +142,37 @@ an L40/A100 is expected around 0.5-1 s/step; the benchmark decides.
 | Edge suite | 21/21 exact length, GPU and CPU (M0) | out/edge/{cuda,cpu}/edge_results.json |
 | Bundle | export/bundle.tar 13 GB, sha256 f1e2ff2d… (2026-11-07, WSOLA data + filtered manifests); check-data PASS on fresh unpack | export/bundle.tar.sha256 |
 
-## 5. Back on the laptop (days 3-5)
+## 5. Back on the laptop
+
+After phase 1 (M1 only):
 
 ```bash
-for e in m1 abl_a abl_b; do tar -xzf export/$e.tar.gz; done   # -> export/<e>/ckpt_last.pt
-make tune SPLIT=dev        # grid over cap x noise_scale; writes configs/inference.yaml
-make eval-all SPLIT=dev
-git tag freeze-v1          # G3: code, configs, checkpoints frozen
-make eval-all SPLIT=test   # unlocks test audio
-make profile CKPT=export/m1/ckpt_last.pt DEVICE=cuda
-make demo
+tar -xzf export/m1.tar.gz                        # -> export/m1/ckpt_last.pt
+make tune SPLIT=dev                              # cap x noise_scale grid; writes configs/inference.yaml
+make eval SYSTEM=m1 SPLIT=dev                    # M1 vs M0 on dev: decide on phase 2 from this
+make profile CKPT=export/m1/ckpt_last.pt DEVICE=cuda   # laptop end-to-end numbers (with MFA)
 make edge CKPT=export/m1/ckpt_last.pt DEVICE=cuda && make edge CKPT=export/m1/ckpt_last.pt DEVICE=cpu
+make demo
+git add -A && git commit -m "M1 dev results + tuned inference config" && git push
+```
+
+**Do not tag `freeze-v1` yet** if phase 2 is still possible: after the tag, model code and
+experiment configs must not change (CLAUDE.md), and the test accents get unlocked. Tag only once
+the set of systems is final.
+
+If phase 2 ran, the comparison model is `m1_cont`:
+
+```bash
+for e in m1_cont abl_a abl_b; do tar -xzf export/$e.tar.gz; done
+make eval-all SPLIT=dev SYSTEMS="m0 m1 m1_cont abl_a abl_b"
+```
+
+When the systems are final:
+
+```bash
+git tag freeze-v1 && git push origin freeze-v1   # G3: code, configs, checkpoints frozen
+make eval-all SPLIT=test SYSTEMS="<final systems>"   # unlocks test audio
+make demo
 ```
 
 After `freeze-v1`, also fill the test manifest's manual word times if you want them in the

@@ -538,3 +538,16 @@ docs/HANDOFF.md instead of being worked around.
   0.33); 0.1-0.2 pauses/word 0.72; > 0.3 1.01. So UTMOS is penalising the L2-like pause pattern B is
   designed to contain, not the stretcher. The 5% filter is applied as specified (it removes the most
   pause-heavy clips first; noted as a possible bias of Ablation B toward fewer pauses).
+
+## 2026-11-07 — GPU plan: one L40, M1 first
+
+- **D-68 One L40; M1 is the priority, ablations decided afterwards (user decision).** Only a single
+  L40 is available. Phase 1 trains M1 alone on the whole budget (`train.max_steps` from the
+  300-step benchmark, committed from the laptop). The ablations are decided after M1's dev results;
+  if they run, they use PLAN Section 10's one-GPU branching design: three equal-length
+  continuations from the finished M1 checkpoint (`m1_cont`, `abl_a`, `abl_b`, same `--max_steps K`
+  on the command line, fresh optimizer/LR schedule each), so the ablation comparison is
+  `m1_cont` vs `abl_a` vs `abl_b`, not `m1`. Consequences: (1) with branching, the ablations measure
+  pace augmentation introduced late in fine-tuning, not from the start — to be stated in the
+  write-up; (2) `freeze-v1` (and with it the test evaluation) waits until the set of systems is
+  final, because experiment configs cannot change after it. Runbook: docs/HANDOFF.md section 3.
