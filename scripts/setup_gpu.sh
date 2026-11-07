@@ -8,12 +8,18 @@ cd "$(dirname "$0")/.."
 
 if ! command -v conda >/dev/null 2>&1; then
   if [ ! -x "$HOME/miniconda3/bin/conda" ]; then
-    echo "[setup] installing Miniconda to ~/miniconda3"
-    wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh
-    bash /tmp/miniconda.sh -b -p "$HOME/miniconda3"
+    # Miniforge: conda-forge only, no Anaconda channels / Terms of Service prompt (E-23)
+    echo "[setup] installing Miniforge to ~/miniconda3"
+    wget -q https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -O /tmp/miniforge.sh
+    bash /tmp/miniforge.sh -b -p "$HOME/miniconda3"
   fi
   export PATH="$HOME/miniconda3/bin:$PATH"
 fi
+# envs/*.yml use conda-forge + nodefaults only; drop Anaconda's default channels so a Miniconda
+# install does not stop at CondaToSNonInteractiveError (E-23)
+conda config --add channels conda-forge >/dev/null 2>&1 || true
+conda config --remove channels defaults >/dev/null 2>&1 || true
+conda config --set channel_priority strict >/dev/null 2>&1 || true
 conda config --set solver libmamba >/dev/null 2>&1 || true
 
 if conda env list | awk '{print $1}' | grep -qx tts; then

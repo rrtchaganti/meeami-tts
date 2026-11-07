@@ -551,3 +551,12 @@ docs/HANDOFF.md instead of being worked around.
   pace augmentation introduced late in fine-tuning, not from the start — to be stated in the
   write-up; (2) `freeze-v1` (and with it the test evaluation) waits until the set of systems is
   final, because experiment configs cannot change after it. Runbook: docs/HANDOFF.md section 3.
+
+## 2026-11-07 — GPU instance setup
+
+- **E-23 `CondaToSNonInteractiveError` on the instance.** Recent Miniconda installers configure
+  Anaconda's `pkgs/main` and `pkgs/r` channels and refuse to run non-interactively until their Terms
+  of Service are accepted. Our envs never use them (conda-forge + `nodefaults`), so rather than
+  accepting the ToS on the user's behalf, `scripts/setup_gpu.sh` now installs Miniforge
+  (conda-forge only) when no conda exists, and always sets the channels to conda-forge only
+  (`--remove channels defaults`, strict priority). Package pins are unchanged.
