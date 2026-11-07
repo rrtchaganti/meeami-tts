@@ -585,3 +585,10 @@ docs/HANDOFF.md instead of being worked around.
   spare speed, and a larger batch would change the experiment. The instance has 60 CPUs, so
   `num_workers` 8 -> 16 so loading never stalls the GPU; it changes loader throughput only, not batch
   contents or order.
+- **D-71 Batch-size throughput test planned after M1 (user request).** The L40S runs batch 32 at
+  0.229 s/step with 88-96% GPU utilisation and 11.8 of 46 GB used. The user wants to measure whether a
+  bigger batch gives more clips per second. It is measured after M1 finishes (sharing the GPU with
+  the run would slow M1 and invalidate the numbers): `--benchmark 300 --batch_size {48,64,96}`
+  (HANDOFF phase 1 step 6b; benchmark mode writes no files). M1 itself stays at batch 32 (PLAN
+  Section 4). Using another batch later (e.g. the phase-2 branches) is an experimental change: all
+  branches would use the same batch, with the learning rate decided and logged before the run.

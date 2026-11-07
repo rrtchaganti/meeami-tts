@@ -95,6 +95,13 @@ tmux new -d -s train 'conda run --no-capture-output -n tts python scripts/train.
 conda run -n tts tensorboard --logdir runs --port 6006
 #    open http://localhost:6006 ; losses, val/* audio every ~10k steps, nvidia-smi
 
+# 6b. batch-size throughput test (after M1 finishes, GPU otherwise idle; ~10 min; writes nothing)
+#     clips/s = batch / median s/step ; batch 32 baseline: 32 / 0.227 = ~141 clips/s
+for b in 48 64 96; do
+  conda run -n tts python scripts/train.py --config configs/m1.yaml --benchmark 300 --batch_size $b 2>&1 \
+    | grep -E "^benchmark|out of memory" | tee -a logs/batch_bench.txt
+done
+
 # 7. profile before shutting down (MFA is not installed here -> skip that stage)
 make profile CKPT=runs/m1/ckpt_last.pt DEVICE=cuda ARGS="profile.mfa_runs=0"
 
