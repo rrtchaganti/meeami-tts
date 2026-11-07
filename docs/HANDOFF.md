@@ -102,8 +102,8 @@ for b in 48 64 96; do
     | grep -E "^benchmark|out of memory" | tee -a logs/batch_bench.txt
 done
 
-# 7. profile before shutting down (MFA is not installed here -> skip that stage)
-make profile CKPT=runs/m1/ckpt_last.pt DEVICE=cuda ARGS="profile.mfa_runs=0"
+# 7. no profiling here (E-26): profile.py takes no overrides and its latency stage needs the L2 dev
+#    reference audio and the mfa env, neither of which bundle-m1 ships. Profile on the laptop (step 5).
 
 # 8. export -> laptop, verify, then terminate
 bash scripts/export_run.sh m1                    # export/m1.tar.gz + .sha256

@@ -67,7 +67,6 @@ conda run -n tts python scripts/train.py --config configs/m1.yaml --benchmark 30
 #   -> set train.max_steps in configs/base.yaml on the laptop, commit, push; git pull here
 tmux new -d -s train 'conda run --no-capture-output -n tts python scripts/train.py --config configs/m1.yaml 2>&1 | tee logs/m1.log'
 #   after a crash: add --resume. Ablations (optional): branching from export/m1, HANDOFF.md phase 2
-make profile CKPT=runs/m1/ckpt_last.pt DEVICE=cuda ARGS="profile.mfa_runs=0"
 bash scripts/export_run.sh m1        # -> export/m1.tar.gz ; rsync to the laptop
 
 # --- laptop, days 3-5 -----------------------------------------------------------------------

@@ -600,3 +600,12 @@ docs/HANDOFF.md instead of being worked around.
   optional phase-2 branches: batch 64 with learning rate 2e-4 (the original VITS LJ setting,
   64 / 2e-4), the same for `m1_cont`, `abl_a` and `abl_b`; to be confirmed before that run. Resuming
   restarts the sampler's order for the current epoch; no practical effect on M1.
+- **E-26 `make profile` could not run on the GPU instance (M1 end, 2026-11-07).** The runbook's
+  `ARGS="profile.mfa_runs=0"` failed: `scripts/profile.py` accepts no key=value overrides
+  ("unrecognized arguments"). Even with that fixed, its latency stage runs the full pipeline on
+  `profile.reference_wav` (an L2 dev clip) with MFA, and bundle-m1 ships neither L2 audio nor the
+  `mfa` env. Decision: skip profiling on the instance; export M1 and profile on the laptop (RTX 4060
+  and CPU) per HANDOFF section 5. Consequence: no L40S latency row in the efficiency table (PLAN
+  Section 8 lists L40/A100); the training benchmark (0.229 s/step, D-70) is the only L40S number.
+  If phase 2 runs, the L40S profile can be added then by copying the reference clip + transcript.
+  HANDOFF step 7 and README updated.
