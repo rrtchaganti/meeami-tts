@@ -640,3 +640,31 @@ docs/HANDOFF.md instead of being worked around.
   numbers are slightly optimistic. Laptop profile with the M1 checkpoint: model RTF 0.015,
   end-to-end 1.43 (MFA 5.3 s per reference). Edge suite 21/21 on GPU and CPU. Demo rebuilt with
   M0 + M1. Not tagged `freeze-v1`: the phase-2 decision (ablations) is the user's.
+
+### Word-ending investigation (user listening report, 2026-11-08)
+
+- **Report:** in the TensorBoard validation clips, M1's words "end sharply" while LJ "extends"
+  the end of each word; the accent or style sounds not quite US.
+- **Measurements** (ad-hoc probes, not repo modules: 100 LJ val clips, ground-truth MFA durations,
+  M1 at noise 0.667 and 0.333, vs the LJ recordings):
+  - **Energy envelope at word ends:** same as LJ. Before a pause both fade ~16-17 dB over the last
+    8 frames; same dip between connected words.
+  - **Pitch and voicing over the last 12 frames before a pause:** same shape (M1 ~0.4 st lower).
+  - **Duration predictor:** keeps LJ's word-final lengthening (pre-pausal final phones GT 13.07
+    vs predicted 13.36 frames; other phones within 3%).
+  - **Accent ID on the same sentences:** M1 US prob 0.87-0.90 vs LJ recordings 0.74.
+  - **What differs:** spectral movement *inside* phones (log-mel frame-to-frame distance, phones
+    >= 8 frames): LJ 4.73, M1 4.05 (-14%); middle third 4.29 vs 3.41 (-20%). Phone-onset steps
+    are the same (6.35), so the onset/inside ratio is 1.34 vs 1.57. M1 holds each phone steadier
+    and then jumps.
+- **Reading:** this points at the prior, not the lexicon, MFA or durations. With
+  `use_pos: false`, every frame of a phone gets the same prior mean (project, then expand). The
+  original VITS softened this with blank tokens between phones (`add_blank`), which PLAN Section 4
+  change 2 removed because blanks have no MFA duration. M1+pos (change 5, `configs/m1_pos.yaml`)
+  is the PLAN's own remedy. Its position embedding is zero-initialized, so it can branch from the
+  M1 checkpoint. Not tested: the encoder has no word-boundary token (the original VITS input had
+  spaces and punctuation), so word-final vs word-internal phones are only distinguishable from
+  context.
+- **Proposed (user to decide):** phase 2 starts with `m1_pos` and `m1_cont` branched from M1 for
+  the same K steps. Compare them on within-phone movement, listening and dev eval; the ablations
+  then use the winning architecture.
