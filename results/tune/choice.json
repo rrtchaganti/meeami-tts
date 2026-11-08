@@ -1,0 +1,16 @@
+{
+ "choice": {
+  "name": "elastic_cap2.5_ns0.333_mfa",
+  "transfer": "elastic",
+  "cap": 2.5,
+  "noise_scale": 0.333,
+  "aligner": "mfa",
+  "wb_mae_ms": 21.906286280765496,
+  "utmos": 4.2148915727933245,
+  "wer": 0.024550842675842673,
+  "us_prob": 0.7361233070952342,
+  "spk_sim_lj": 0.8011724263429642
+ },
+ "criterion": "UTMOS",
+ "best_mae_ms": 21.475931149256706
+}

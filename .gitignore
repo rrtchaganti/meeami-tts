@@ -44,3 +44,7 @@ __pycache__/
 /results/tune/*/*/scores.jsonl
 /results/_profile_tmp/
 /envs/condaenv.*.requirements.txt
+# tune grid: keep grid.json, choice.json and each setting's per_utt.csv + summary.json
+/results/tune/*/*/*
+!/results/tune/*/*/per_utt.csv
+!/results/tune/*/*/summary.json

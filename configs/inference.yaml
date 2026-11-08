@@ -2,8 +2,8 @@
 inherit: splits.yaml          # -> base.yaml; needs the test-speaker list for the guard
 inference:
   transfer: elastic            # elastic | proportional | phone_copy
-  cap: 2.0                     # stretch cap c; null = none
-  noise_scale: 0.667
+  cap: 2.5                     # stretch cap c; null = none  # tuned
+  noise_scale: 0.333  # tuned
   aligner: mfa                 # mfa | ctc
   tuning_grid:
     transfer: [elastic, proportional, phone_copy]

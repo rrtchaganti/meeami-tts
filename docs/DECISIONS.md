@@ -609,3 +609,34 @@ docs/HANDOFF.md instead of being worked around.
   Section 8 lists L40/A100); the training benchmark (0.229 s/step, D-70) is the only L40S number.
   If phase 2 runs, the L40S profile can be added then by copying the reference clip + transcript.
   HANDOFF step 7 and README updated.
+
+## Phase 1 results (M1 on one L40S, then the laptop; 2026-11-07/08)
+
+- **M1 training run.** 114,000 steps at batch 32 (commit 8d1253c, clean tree), finished
+  2026-11-07 19:03 instance time. One planned pause for the batch test (D-71), resumed from
+  `ckpt_last.pt`. Losses: `val/dur` 0.134 (2k) -> 0.094 (114k), falling throughout; train KL
+  3.24 -> ~2.7; `val/mel_l1` lowest 0.354 at 12k, 0.377 at 114k. The rise in reconstruction L1 is
+  read as the GAN trade-off, not overfitting: the discriminators start from scratch, `fm`
+  0.6 -> 3-4 and discriminator grad norm grow after ~45k while `loss_d` stays 2.2-3.0 and `adv`
+  1.5-2.8 (balanced), and train and val mel drift together. Learning rate left unchanged (decay
+  0.999875 per epoch ends at ~0.96x; same scheme as VITS, Light Speed, Coqui), which keeps M1/A/B
+  hyperparameters identical (PLAN Section 4). Note for any future change: `ExponentialLR` stores
+  `gamma` in the checkpoint, so a `train.lr_decay=` override has no effect on `--resume`.
+  Logging quirk: train.log shortens keys, so `loss/d` and `grad/d` both print as `d=` (first one
+  is the loss).
+- **D-72 Tuned inference setting: elastic, cap 2.5, noise_scale 0.333, MFA** (`make tune`,
+  21 settings on the fixed 120-clip dev subset; rule D-64). Best MAE 21.5 ms (no cap); chosen
+  21.9 ms with the highest UTMOS 4.21, WER 2.5%. Patterns: noise_scale drives WER (0.333: 2.5-3.5%,
+  0.667: 4.6-6.7%); a looser cap lowers MAE (26.1 ms at 1.4 -> 21.5 ms uncapped) with no UTMOS
+  cost; `phone_copy` has the worst WER (10.6%) with slightly higher US prob (0.77) and lower
+  speaker similarity (0.78), which supports copying word boundaries only; CTC aligner MAE 44.5 ms,
+  WER 12.7%. Written to configs/inference.yaml (`# tuned`); grid in results/tune/grid.json.
+- **D-73 M1 dev results (1,200 references, tuned setting) vs M0** (paired Wilcoxon,
+  results/dev_comparison.csv): word-boundary MAE 31.3 -> 23.7 ms (p ~ 1e-140); within 20 ms
+  55.4% -> 68.5%; pause F1 0.75 -> 0.84; WER 10.0% -> 3.5% (reference audio 4.1%); speaker
+  similarity to LJ 0.76 -> 0.80; UTMOS 3.94 -> 4.20 (LJ ground truth 4.36); US probability
+  0.73 vs 0.72, no difference (p = 0.61); length error 0 for both. Holds per accent (MAE: Hindi
+  22.0, Spanish 23.6, Mandarin 25.4 ms). Caveat: tuning used 120 of these references, so M1's dev
+  numbers are slightly optimistic. Laptop profile with the M1 checkpoint: model RTF 0.015,
+  end-to-end 1.43 (MFA 5.3 s per reference). Edge suite 21/21 on GPU and CPU. Demo rebuilt with
+  M0 + M1. Not tagged `freeze-v1`: the phase-2 decision (ablations) is the user's.

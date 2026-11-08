@@ -3,6 +3,11 @@
 Written at the end of the autonomous overnight run (2026-11-06). Details and reasons for every
 choice are in [DECISIONS.md](DECISIONS.md) (D-n = decision, E-n = error/incident).
 
+**Update 2026-11-08: phase 1 done.** M1 trained 114,000 steps on one L40S (D-70, D-71), exported
+(`export/m1.tar.gz`, sha256-checked), instance stopped. On the laptop: `make tune` (D-72), M1 dev
+eval, profile, edge suite and demo all done; results in section 4 and D-73. **Open decisions (yours):**
+run phase 2 (`m1_cont`, `abl_a`, `abl_b`, section 3) or not; then `freeze-v1` and the test eval.
+
 ## 1. Status of the laptop tasks (PLAN.md Section 10)
 
 | # | Task | Status | Acceptance result |
@@ -22,7 +27,7 @@ choice are in [DECISIONS.md](DECISIONS.md) (D-n = decision, E-n = error/incident
 | T13 | GPU bundle + data check | done | `export/bundle.tar`; check-data PASS on a fresh unpack |
 | T14 | Demo page | done | `out/demo_site/index.html` (M0 only until trained checkpoints exist) |
 
-`make test`: **145 passed**.
+`make test`: **146 passed** (2026-11-08).
 
 ## 2. Things only you can decide or do
 
@@ -145,8 +150,12 @@ for e in m1_cont abl_a abl_b; do bash scripts/export_run.sh $e; done
 | Augmented sets (WSOLA) | MFA finds planned boundaries: A median 6.8 ms, B 7.2 ms (R3 was 17 / 23); UTMOS kept A 4.07, B 3.66 vs original 4.38 (R3 A 2.97) | reports/aug_*.md, reports/aug_*_all_verify.json |
 | M0 on dev (1,200 refs) | length error 0; word-boundary MAE 31.2 ms (84.7% <= 50 ms); pause F1 0.75; WER 10.0% (refs 4.1%); US prob 0.73 (refs 0.30); spk sim LJ 0.76 / ref 0.05; UTMOS 3.94 [3.92, 3.96] (LJ test ground truth 4.36) | results/m0/dev/summary.json, results/plots/ |
 | Overfit check (T7) | 500 steps, one utterance: ASR WER 5.6% | runs/overfit/overfit.json |
-| Profile (4060, M1 architecture) | 28.1 M inference params; 27.2 GMACs/s audio; RTF model 0.015, end-to-end 1.35 (MFA ~5 s) | results/profile_cuda.json |
-| Edge suite | 21/21 exact length, GPU and CPU (M0) | out/edge/{cuda,cpu}/edge_results.json |
+| M1 training (L40S) | 114,000 steps, batch 32, ~8 h; final val mel L1 0.377, val dur 0.094 (falling throughout); GAN balanced (loss_d 2.2-3.0) | export/m1/train.log, export/m1/tb/ |
+| Tune (M1, 120 dev clips) | chosen elastic, cap 2.5, noise 0.333 (MAE 21.9 ms, UTMOS 4.21, WER 2.5%); phone_copy WER 10.6%; CTC MAE 44.5 ms | results/tune/grid.json, D-72 |
+| M1 on dev (1,200 refs, tuned) | length error 0; word-boundary MAE 23.7 ms (68.5% <= 20 ms, 90.5% <= 50 ms); pause F1 0.84; WER 3.5% (refs 4.1%); US prob 0.72 (refs 0.30); spk sim LJ 0.80 / ref 0.05; UTMOS 4.20. Better than M0 on all but US prob (p = 0.61, no difference) | results/m1/dev/summary.json, results/dev_comparison.csv |
+| Profile (4060, M1 checkpoint) | RTF model 0.015 (text enc + dur 9 ms, flow + dec 46 ms), end-to-end 1.43 (MFA 5.3 s); no L40S row (E-26) | results/profile_cuda.json |
+| Edge suite (M1) | 21/21 pass, exact length, GPU and CPU | out/edge/{cuda,cpu}/edge_results.json |
+| Demo | 9 samples x 2 systems (M0, M1) | out/demo_site/index.html |
 | Bundle | export/bundle.tar 13 GB, sha256 f1e2ff2d… (2026-11-07, WSOLA data + filtered manifests); check-data PASS on fresh unpack | export/bundle.tar.sha256 |
 
 ## 5. Back on the laptop
@@ -194,5 +203,7 @@ manifest (evaluation reads the annotation TextGrids directly, so this is optiona
   once (E-16); run GPU jobs one at a time on the laptop.
 - Ablation B's filter drops the most pause-heavy clips first (UTMOS penalises B's L2-like pauses,
   DECISIONS.md "Why B scores lower than A"); worth one sentence in the analysis.
-- M1/A/B checkpoints do not exist yet, so `make demo`, `make eval-all` and `make tune` currently
-  cover M0 only (they pick up `export/*/ckpt_last.pt` automatically).
+- Dev numbers are slightly optimistic for M1: `make tune` chose cap and noise on 120 of the same
+  dev references. The held-out test accents give the honest number.
+- A/B checkpoints do not exist; `make demo` and `make eval-all` cover M0 and M1 (they pick up
+  `export/*/ckpt_last.pt` automatically).
