@@ -249,7 +249,7 @@ class Normalizer:
         for k, v in self.t.symbols:
             text = text.replace(k, f" {v} ")
         text = unidecode(text)
-        text = text.replace("’", "'")
+        text = text.replace("’", "'").replace("`", "'")   # unidecode keeps the backtick
         text = self._dates(text)
         text = self._times(text)
         text = self._abbreviations(text)

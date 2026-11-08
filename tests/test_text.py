@@ -115,6 +115,7 @@ def test_symbols_and_punctuation(norm):
         ('He said, "don\'t" -- the boys\' toys...', "he said, don't the boys toys."),
         ("Wait!! Really??", "wait! really?"),
         ("café naïve “quoted” it’s", "cafe naive quoted it's"),
+        ("Philip`s lips ‘n’ it´s", "philip's lips n it's"),
         ("well-known x-ray", "well known x ray"),
         ("no punctuation here", "no punctuation here"),
     ])
@@ -153,3 +154,11 @@ def test_symbols():
     assert symbols.to_ids(["sil", "AA0", "ZH"]) == [1, 3, 71]
     with pytest.raises(KeyError):
         symbols.to_ids(["UW"])  # unstressed-less vowel is never silently mapped
+
+
+def test_punctuation_and_case_do_not_change_words(norm):
+    """Test-time text: punctuation and case never reach the model (docs/DECISIONS.md D-74)."""
+    t = "A cry of joy burst Philip's lips"
+    for v in [t.upper(), t.lower(), t + ".", '"' + t + '!"', t.replace(" ", ", "),
+              t.replace("'", "’"), t.replace("'", "`"), t.replace(" ", "  \t")]:
+        assert words(norm(v)) == words(norm(t)), v

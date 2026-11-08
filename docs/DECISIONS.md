@@ -668,3 +668,33 @@ docs/HANDOFF.md instead of being worked around.
 - **Proposed (user to decide):** phase 2 starts with `m1_pos` and `m1_cont` branched from M1 for
   the same K steps. Compare them on within-phone movement, listening and dev eval; the ablations
   then use the winning architecture.
+
+- **D-74 Text-input assumptions, defined from the LJSpeech transcripts (2026-11-08, user
+  request).** Audit of how punctuation, case and similar features in test-time text reach the
+  model.
+  - **Path:** input text → `Normalizer` → `words()` (lowercase letters + internal apostrophes
+    only) → lexicon phones. Punctuation and case never reach the model. Pauses (`sp`) come from
+    the reference audio via MFA (PLAN Section 5 step 4), never from punctuation. The only use of
+    punctuation outside the normalizer is Ablation A/B training-data generation
+    (`words_with_punct`).
+  - **LJ conventions** (metadata.csv column 3, the training text): no digits (numbers are spelled
+    out); punctuation `, . - ' " ; : ( ) ? ! [ ]`; mixed case; titles always dotted (`Mr.`, `Mrs.`,
+    `Dr.`, `St.`, `i.e.`, `etc.`); a few accented letters (ü, é).
+  - **ARCTIC prompts** (dev, 1,281 distinct): no punctuation except apostrophes, mixed case; the
+    only abbreviation is a bare `etc` (CMUdict covers it).
+  - **Measured:** token sequences of all 13,100 LJ texts and all ARCTIC dev prompts are unchanged
+    under uppercase/lowercase (except `St.` below), added or removed quotes, extra
+    commas/periods, curly or left-quote apostrophes, extra whitespace and em dashes. ARCTIC is
+    100% invariant to every variant.
+  - **Two effects found:**
+    1. A backtick used as an apostrophe (`Philip`s`) split words (`philip s`) in 8.8% of LJ
+       texts. **Fixed:** the normalizer maps it to `'`. LJ and ARCTIC contain no backticks, so
+       training data, alignments and the lexicon are unchanged. New test
+       `test_punctuation_and_case_do_not_change_words`.
+    2. Abbreviations need their period, as in LJ. Without it the word is spoken as written: bare
+       `Mr`/`Mrs` are OOV (g2p guess), and bare `Dr` gets CMUdict's "drive". Stripping
+       punctuation changes 4.6% of LJ texts, all through this (Mr/Mrs/Dr most). `St.` →
+       saint/street depends on capitalization of the next word.
+  - **Assumption kept (LJ convention):** title abbreviations carry their period. No rule was added
+    for bare forms ("Dr" is ambiguous; LJ never uses it). Test inputs (ARCTIC) contain none.
+    Probe scripts: session scratchpad (`punct_invariance.py`, `punct_diff.py`).
