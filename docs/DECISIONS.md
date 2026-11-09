@@ -795,3 +795,28 @@ docs/HANDOFF.md instead of being worked around.
   - If m1_pos wins: run `abl_*_pos`, with m1_pos as the control.
   - Otherwise: run `abl_a`/`abl_b`, with m1_cont as the control.
   This keeps one start point, one step count and one optimizer reset for every phase-2 system.
+- **D-80 "cry" heard as "cra": the model flattens diphthongs (user's listening, 2026-11-09).**
+  The input is correct: `cry` -> `K R AY1` in `lexicon.txt` and in the token sequence. The error is
+  the model's. LPC formants (order 12, 11.025 kHz), compared at 20-35% vs 65-80% of the phone:
+  - This AY1 in TNI_arctic_a0137:
+    - reference: F2 1641 -> 1926 Hz (+285), F1 737 -> 554 (the glide to /ɪ/)
+    - M1: F2 -59
+    - m1_cont: F2 -228
+    - m1_pos: F2 +55
+    - In all three outputs F1 does not fall: a held /a/ ("cra").
+  - LJ val, every diphthong >= 8 frames with GT durations, median F2 change:
+    - AY (n = 73): LJ +90, M1 -8, m1_cont -27, m1_pos +139
+    - AW (n = 25): LJ -316, M1 +17, m1_cont -24, m1_pos -49 (missing in every model)
+    - EY: LJ +167, M1 +148, m1_cont +136, m1_pos +87
+    - OW: LJ -137, M1 -80, m1_cont -124, m1_pos -155
+    - Mean |ΔF2|: LJ 396, M1 307, m1_cont 348, m1_pos 321 Hz
+  - **Likely root cause (token design):** the pretrained VITS read espeak IPA one character at a
+    time with blanks interleaved, so "cry" = `k _ ɹ _ ˈ _ a _ ɪ`. The diphthong was two targets
+    plus a transition token. Our ARPAbet input makes AY one token with one constant prior over all
+    its frames (PLAN Section 4: MFA's phone set). The flow must create the whole glide. m1_pos
+    partly restores AY but not AW, which fits its larger US prob (D-78).
+  - **Fix not done (PLAN deviation + retraining):** split each diphthong (and possibly CH, JH, ER)
+    into two sub-tokens with an MFA-duration split, e.g. 50/50. This needs new embeddings and a
+    branch from M1. Logged as the leading follow-up, with the word-boundary token (D-75 c).
+  - Script: session scratchpad `glide.py`. LPC formants are noisy: OY has n = 3, and medians are
+    used.
