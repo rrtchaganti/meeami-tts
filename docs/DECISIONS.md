@@ -752,4 +752,6 @@ docs/HANDOFF.md instead of being worked around.
   fresh login shell can't find conda. The env itself was intact. Fix: `export
   PATH="$HOME/miniconda3/bin:$PATH"` (optionally `conda init bash`). The restart also dropped the apt packages
   (`tmux: command not found`); only `/home/jovyan` persists. Reinstall: `apt-get install -y tmux
-  rsync make wget git` (fallback `conda install -n base -c conda-forge tmux rsync make`). Both added to HANDOFF Phase 2a.
+  rsync make wget git` (fallback `conda install -n base -c conda-forge tmux rsync make`). Both added to HANDOFF Phase 2a. The first tmux launch died silently: tmux's shell had no conda, and
+  `| tee` returned 0, so `&&` ran the second command too (two 39-byte logs). The launch line now sets PATH
+  inside tmux and ends with `exec bash`. Phase 2a started 2026-11-09 from runs/m1/ckpt_last.pt (sha256 matched).

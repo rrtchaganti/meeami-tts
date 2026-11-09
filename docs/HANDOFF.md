@@ -142,9 +142,12 @@ B=runs/m1/ckpt_last.pt
 #    instance: sha256sum -c export/m1.tar.gz.sha256 && tar -xzf export/m1.tar.gz ; B=export/m1/ckpt_last.pt
 
 mkdir -p logs
-tmux new -d -s p2a "B=$B; K=20000; R='conda run --no-capture-output -n tts python scripts/train.py'
+~/miniconda3/bin/conda init bash && source ~/.bashrc   # once per instance disk (E-28)
+tmux new -d -s p2a "export PATH=$HOME/miniconda3/bin:\$PATH; cd ~/meeami-tts; B=$B; K=20000; R='conda run --no-capture-output -n tts python scripts/train.py'
   \$R --config configs/m1_pos.yaml --init_from \$B --max_steps \$K               2>&1 | tee logs/m1_pos.log &&
-  \$R --config configs/m1.yaml     --init_from \$B --max_steps \$K --tag m1_cont 2>&1 | tee logs/m1_cont.log"
+  \$R --config configs/m1.yaml     --init_from \$B --max_steps \$K --tag m1_cont 2>&1 | tee logs/m1_cont.log; exec bash"
+#    PATH is set inside tmux; `exec bash` keeps the session open so a failure stays readable.
+#    Note `tee` hides a failed first run from `&&`: check logs/m1_pos.log ends "done at step 20000".
 #    first log line of each run must say "init_from ...: generator + discriminator weights (step reset)";
 #    for m1_pos it adds "left at init: ['enc_p.pos_emb.weight']". val/mel_l1 at step 0 ~0.38 (= M1).
 #    a crashed run: rerun just that line with --resume (keep --tag m1_cont for the second)
