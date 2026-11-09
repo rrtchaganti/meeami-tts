@@ -747,3 +747,7 @@ docs/HANDOFF.md instead of being worked around.
   - **Winner rule:** m1_pos wins if its within-phone movement moves toward LJ without losing dev
     MAE, WER or UTMOS against m1_cont, and if the user's listening agrees. The ablations then
     branch from the winner. Runbook: HANDOFF "Phase 2a".
+- **E-28 `conda: command not found` after restarting the stopped instance.** `setup_gpu.sh`
+  exports `~/miniconda3/bin` into PATH only for its own process and never runs `conda init`, so a
+  fresh login shell can't find conda. The env itself was intact. Fix: `export
+  PATH="$HOME/miniconda3/bin:$PATH"` (optionally `conda init bash`). Added to HANDOFF Phase 2a.

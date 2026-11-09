@@ -131,7 +131,8 @@ only difference is `use_pos`. At ~0.23 s/step that is ~80 min each, ~2.7 h in al
 missing key.
 
 ```bash
-# A. same instance as phase 1 (stopped, disk kept): start it, then
+# A. same instance as phase 1 (stopped, disk kept): start it, then (new shells lack conda, E-28)
+export PATH="$HOME/miniconda3/bin:$PATH" && conda env list   # must list tts
 cd ~/meeami-tts && git checkout main && git pull
 sha256sum runs/m1/ckpt_last.pt     # must be f71428fb046da022aeee7fba5627c792927cd60c46723d3dc4e620e3c75f2ee0
 B=runs/m1/ckpt_last.pt
