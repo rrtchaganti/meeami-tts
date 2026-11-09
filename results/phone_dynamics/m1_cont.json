@@ -1,0 +1,15 @@
+{
+  "name": "m1_cont",
+  "n_clips": 100,
+  "noise_scale": 0.333,
+  "seed": 1234,
+  "n_phones": 2645,
+  "inside": 4.0573,
+  "onset": 6.4004,
+  "onset_over_inside": 1.5775,
+  "inside_thirds": [
+    4.237,
+    3.4144,
+    4.5717
+  ]
+}

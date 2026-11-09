@@ -755,3 +755,17 @@ docs/HANDOFF.md instead of being worked around.
   rsync make wget git` (fallback `conda install -n base -c conda-forge tmux rsync make`). Both added to HANDOFF Phase 2a. The first tmux launch died silently: tmux's shell had no conda, and
   `| tee` returned 0, so `&&` ran the second command too (two 39-byte logs). The launch line now sets PATH
   inside tmux and ends with `exec bash`. Phase 2a started 2026-11-09 from runs/m1/ckpt_last.pt (sha256 matched).
+- **D-77 Phase 2a result: `use_pos` does not restore within-phone movement (2026-11-09).** Both
+  branches finished 20,000 steps (m1_pos 08:27-09:47, m1_cont 09:47-11:05 instance time; exports
+  sha-verified on the laptop). Final val mel L1: m1_pos 0.3751, m1_cont 0.3766 (M1 0.377). `make
+  phone-dyn` (LJ val, GT durations, noise 0.333), inside / middle third relative to LJ:
+  - M1: 0.842x / 0.767x
+  - m1_cont: 0.858x / 0.795x
+  - m1_pos: 0.856x / 0.785x
+  The extra steps help slightly; the position embedding adds nothing. The embedding did learn a
+  small edge-of-phone shape: the largest rows are bins 0, 1 and 15, and the bin-0-to-bin-15 shift
+  in the prior mean is 0.35 (L2). For scale, phone-to-phone changes in the prior mean average 3.1
+  and the prior std is about 12.8, so the model barely uses the embedding. Results in
+  `results/phone_dynamics/`.
+  By the D-76 rule m1_pos does not win. The dev evals of both are running (`m1_cont` is the
+  comparison model for the ablations either way).
