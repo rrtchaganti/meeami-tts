@@ -1,0 +1,5 @@
+# Ablation B on the M1+pos architecture (phase 2a winner candidate, DECISIONS D-78).
+inherit: abl_b.yaml
+exp: abl_b_pos
+model:
+  use_pos: true

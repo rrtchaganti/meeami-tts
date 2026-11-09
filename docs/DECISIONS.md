@@ -789,3 +789,9 @@ docs/HANDOFF.md instead of being worked around.
     1234), each with `0_reference.wav`, `m1.wav`, `m1_cont.wav`, `m1_pos.wav`; `index.csv` lists
     the texts and US probs.
   - Winner decision: the user's, after listening. Recommended: m1_pos.
+- **D-79 Ablation configs for both outcomes.** `configs/abl_a_pos.yaml` and `abl_b_pos.yaml`
+  inherit `abl_a`/`abl_b` and add only `use_pos: true` (test
+  `test_abl_pos_configs_differ_only_in_use_pos`). Either set branches from M1 for 20k steps.
+  - If m1_pos wins: run `abl_*_pos`, with m1_pos as the control.
+  - Otherwise: run `abl_a`/`abl_b`, with m1_cont as the control.
+  This keeps one start point, one step count and one optimizer reset for every phase-2 system.

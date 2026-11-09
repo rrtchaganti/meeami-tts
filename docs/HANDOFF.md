@@ -30,7 +30,7 @@ run phase 2 (`m1_cont`, `abl_a`, `abl_b`, section 3) or not; then `freeze-v1` an
 | T13 | GPU bundle + data check | done | `export/bundle.tar`; check-data PASS on a fresh unpack |
 | T14 | Demo page | done | `out/demo_site/index.html` (M0 only until trained checkpoints exist) |
 
-`make test`: **149 passed** (2026-11-09).
+`make test`: **151 passed** (2026-11-09).
 
 ## 2. Things only you can decide or do
 

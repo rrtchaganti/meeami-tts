@@ -137,3 +137,14 @@ def test_init_from_branch_m1_to_pos():
     assert init_from_branch(build_state(CFG, torch.device("cpu")), ck) == []
     with pytest.raises(RuntimeError):  # an M1+pos checkpoint cannot go into M1
         init_from_branch(build_state(CFG, torch.device("cpu")), state_dict(pos, ""))
+
+
+@pytest.mark.parametrize("x", ["a", "b"])
+def test_abl_pos_configs_differ_only_in_use_pos(x):
+    """D-78: abl_{a,b}_pos = abl_{a,b} + use_pos (and their own exp name)."""
+    from omegaconf import OmegaConf
+    base = OmegaConf.to_container(load_config(REPO_ROOT / "configs" / f"abl_{x}.yaml"))
+    pos = OmegaConf.to_container(load_config(REPO_ROOT / "configs" / f"abl_{x}_pos.yaml"))
+    assert pos.pop("exp") == f"abl_{x}_pos" and base.pop("exp") == f"abl_{x}"
+    assert pos["model"].pop("use_pos") is True and base["model"].pop("use_pos") is False
+    assert pos == base
