@@ -14,8 +14,9 @@ run phase 2 (`m1_cont`, `abl_a`, `abl_b`, section 3) or not; then `freeze-v1` an
 **Update 2026-11-09 (evening): phase 2a and 2b evaluated.** m1_pos beat m1_cont (US prob +0.09).
 abl_a_pos and abl_b_pos do not beat m1_pos on dev; both cost UTMOS, and A costs US prob (D-83,
 `make paired CONTROL=m1_pos SYSTEMS_CMP="abl_a_pos abl_b_pos"`). m1_pos is the main system.
-m1_pos_diph (D-81, section 3 "Phase 2c") is ready and not yet trained. **Open (yours):** train
-m1_pos_diph or not; then `freeze-v1` and the test eval.
+m1_pos_diph (D-81) trained and evaluated (D-84): better MAE, WER, UTMOS and diphthong glides than
+m1_pos, US prob -0.03. **Open (yours):** main system m1_pos_diph or m1_pos (listen to
+`export/listen_p2c/`); then `freeze-v1` and the test eval.
 
 ## 1. Status of the laptop tasks (PLAN.md Section 10)
 

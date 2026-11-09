@@ -1,0 +1,15 @@
+{
+  "name": "m1_pos_diph",
+  "n_clips": 100,
+  "noise_scale": 0.333,
+  "seed": 1234,
+  "n_phones": 2645,
+  "inside": 4.0855,
+  "onset": 6.5424,
+  "onset_over_inside": 1.6013,
+  "inside_thirds": [
+    4.3253,
+    3.4015,
+    4.5712
+  ]
+}

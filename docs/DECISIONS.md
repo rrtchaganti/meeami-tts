@@ -896,3 +896,30 @@ docs/HANDOFF.md instead of being worked around.
     than real L2 pace, which would explain why its US-prob cost is larger than B's.
   - Decision: m1_pos stays the main system. Ablations A and B are reported as negative results
     and still go into the test eval after freeze-v1 (the PLAN's claim is about held-out accents).
+- **D-84 Phase 2c result: m1_pos_diph vs m1_pos (2026-11-09).** 20k steps from M1, diphthong split
+  (D-81). Paired, 1200 dev refs, Holm-adjusted (`results/paired/dev_m1_pos_diph_vs_m1_pos.csv`):
+
+  | metric | M1 | m1_pos | m1_pos_diph | p (vs m1_pos) |
+  |---|---|---|---|---|
+  | word-boundary MAE ms | 23.67 | 24.16 | **23.48** | < 1e-6 |
+  | WER | 0.035 | 0.039 | **0.027** | < 1e-6 |
+  | CER | | 0.020 | **0.012** | < 1e-6 |
+  | pause F1 | | 0.829 | 0.830 | 0.66 |
+  | UTMOS | 4.20 | 4.18 | **4.20** | 2e-4 |
+  | US prob | 0.718 | **0.769** | 0.738 | 1e-4 |
+  | LJ speaker sim | | 0.804 | 0.801 | < 1e-4 |
+
+  - The MAE and WER gains hold in every accent and every stretch tercile (largest at high stretch:
+    MAE -1.0 ms, WER -0.016).
+  - Diphthong glides (LJ val, D-80 probe): mean |dF2| 389 Hz (LJ 396, m1_pos 321, M1 307), |dF1| 82
+    (LJ 89). AW F2 -115 (LJ -316, m1_pos -49); EY +198 (LJ +167); AY +28 (LJ +90, m1_pos +139).
+    'cry' AY1: F1 864 -> 528, F2 +215 Hz (reference F1 737 -> 554, F2 +285): the glide to /ɪ/ is
+    now present.
+  - Phone dynamics: inside 0.864 x LJ, middle third 0.792 (m1_pos 0.856 / 0.785).
+  - D-81's criteria: glide, MAE, WER, UTMOS met; **"US prob does not drop" is not met** (-0.031,
+    still above M1). The classifier is near-binary per utterance (softmax x30): diph is higher on
+    44% of refs, and the mean drop comes from a few 0.98 -> 0.01 flips. Listening set
+    `export/listen_p2c/` (not in git) holds those 4 flips, the 'cry' ref and the 12 refs of
+    listen_p2a.
+  - Recommendation: m1_pos_diph as the main system, subject to the user's listening; the final
+    system set is the user's call before freeze-v1.
