@@ -102,3 +102,22 @@ def test_paired_compare_holm_and_bins():
     u = df[(df.group == "all") & (df.metric == "us_prob")].iloc[0]
     assert np.isnan(u.p) and not u.better       # identical -> no test
     assert set(df.group) == {"all", "accent=x", "accent=y", "stretch=s0", "stretch=s1", "stretch=s2"}
+
+
+def test_word_log_rho_and_final_system_set():
+    from tts.config import REPO_ROOT, load_config
+    from tts.eval.plots import word_log_rho
+
+    mu = {"K": {"mean": np.log(5.0)}, "AE1": {"mean": np.log(10.0)}, "T": {"mean": np.log(5.0)}}
+    lex = {"cat": ["K", "AE1", "T"]}
+    hop = 0.01
+    t = {"ref_words": [{"word": "cat", "start": 0.0, "end": 0.40},      # 40 frames / 20 -> x2
+                       {"word": "unknown", "start": 0.4, "end": 0.6},   # not in lexicon: skipped
+                       {"word": "cat", "start": 0.6, "end": 0.6}]}      # zero length: skipped
+    assert word_log_rho(t, lex, mu, hop) == pytest.approx([np.log(2.0)])
+
+    cfg = load_config(REPO_ROOT / "configs" / "inference.yaml")
+    assert cfg.main_system in cfg.demo.systems and cfg.demo.systems[0] == "m0"
+    mk = (REPO_ROOT / "Makefile").read_text()
+    assert f"MAIN ?= {cfg.main_system}" in mk
+    assert "SYSTEMS ?= " + " ".join(cfg.demo.systems) in mk

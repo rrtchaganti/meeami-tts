@@ -923,3 +923,16 @@ docs/HANDOFF.md instead of being worked around.
     listen_p2a.
   - Recommendation: m1_pos_diph as the main system, subject to the user's listening; the final
     system set is the user's call before freeze-v1.
+- **D-85 Final system set and pre-freeze changes (user, 2026-11-09).** The user listened to
+  `export/listen_p2c/`: no audible difference on the four largest US-prob drops, "cry" fixed. So
+  the D-84 US-prob drop is read as accent-classifier flips, and **m1_pos_diph is the main
+  system** (`main_system` in base.yaml, `MAIN` in the Makefile).
+  - Test-eval set (`make eval-all` SYSTEMS, `demo.systems`): m0, m1, m1_pos, m1_pos_diph,
+    abl_a_pos, abl_b_pos. m1_cont (lost phase 2a) and m1_partial (a mid-run snapshot) are left out.
+  - Demo: systems now come from `demo.systems` (it used to take every export), main marked.
+  - Plot 8 added before the freeze: utterance mean log rho per reference, PLAN Section 7's
+    definition, from the reference MFA word times in `results/<eval.rho_from>/<split>/wav`
+    (identical for every system) and the lexicon phones; dev mean 0.131 (Ablation B's
+    stats/l2_dev_pace.json: 0.159 over all dev utterances).
+  - `make edge` with m1_pos_diph: 21/21 on cuda and on cpu.
+  - Profile and phone-dyn default to the main checkpoint.

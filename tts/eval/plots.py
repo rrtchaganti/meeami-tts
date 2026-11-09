@@ -222,13 +222,67 @@ def plot_training(out: Path):
     plt.close(fig)
 
 
+def word_log_rho(timings: dict, lex: dict, mu: dict, hop_s: float) -> list[float]:
+    """PLAN Section 7 rho per reference word: MFA word duration in frames / sum_p exp(mu_p) over
+    the word's lexicon phones (mu_p = LJ mean log frames). Words missing from the lexicon skipped."""
+    out = []
+    for w in timings.get("ref_words", []):
+        pron = lex.get(w["word"])
+        if not pron or w["end"] <= w["start"]:
+            continue
+        expect = sum(np.exp(mu[p]["mean"]) for p in pron)
+        out.append(float(np.log(max((w["end"] - w["start"]) / hop_s, 1.0) / expect)))
+    return out
+
+
+def rho_by_split(cfg, splits=("dev", "test")) -> dict[str, list[float]]:
+    """{split: [utterance mean log rho]} from results/<eval.rho_from>/<split>/wav/*/timings.json."""
+    from tts.text.lexicon import load_lexicon
+
+    lex = load_lexicon(repo_path(cfg.paths.lexicon))
+    mu = json.loads((repo_path(cfg.paths.stats) / "phone_logdur.json").read_text())["phones"]
+    hop_s = cfg.audio.hop_length / cfg.audio.sample_rate
+    out = {}
+    for sp in splits:
+        d = repo_path("results") / cfg.eval.rho_from / sp / "wav"
+        vals = []
+        for t in sorted(d.glob("*/timings.json")) if d.exists() else []:
+            r = word_log_rho(json.loads(t.read_text()), lex, mu, hop_s)
+            if r:
+                vals.append(float(np.mean(r)))
+        if vals:
+            out[sp] = vals
+    return out
+
+
+def plot_rho(cfg, out: Path):
+    """Plot 8: dev vs test utterance mean log rho (drawn once both splits exist, i.e. after freeze)."""
+    r = rho_by_split(cfg)
+    if len(r) < 2:
+        return
+    fig, ax = plt.subplots(figsize=(7, 4))
+    bins = np.linspace(min(min(v) for v in r.values()), max(max(v) for v in r.values()), 40)
+    for i, (sp, v) in enumerate(r.items()):
+        ax.hist(v, bins, alpha=0.55, color=COLORS[i], density=True,
+                label=f"{sp} (n {len(v)}, median rho x{np.exp(np.median(v)):.2f})")
+    ax.axvline(0, color="#555", lw=0.8, ls="--")
+    ax.set_xlabel("utterance mean log rho (0 = LJ pace; > 0 slower)")
+    ax.set_ylabel("density")
+    ax.legend()
+    ax.set_title("Plot 8: reference pace, dev vs test accents")
+    fig.tight_layout()
+    fig.savefig(out / "08_rho_dev_test.png", dpi=120)
+    plt.close(fig)
+
+
 def make_plots(cfg, split: str = "dev") -> None:
     out = repo_path("results") / "plots"
     out.mkdir(parents=True, exist_ok=True)
     per = _per_utt(split)
     for fn in (lambda: plot_mfa_error(cfg, out), lambda: plot_per_accent(per, split, out),
                lambda: plot_vs_stretch(per, split, out), lambda: plot_boundaries(per, split, out),
-               lambda: plot_tuning(out), lambda: plot_efficiency(out), lambda: plot_training(out)):
+               lambda: plot_tuning(out), lambda: plot_efficiency(out), lambda: plot_training(out),
+               lambda: plot_rho(cfg, out)):
         try:
             fn()
         except Exception as e:  # a missing/odd input must not abort evaluation

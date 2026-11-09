@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Efficiency profile (docs/PLAN.md Section 8 "Efficiency metrics"; `make profile`).
 
-    python scripts/profile.py --ckpt export/m1/ckpt_last.pt --device cuda|cpu [--threads N]
+    python scripts/profile.py --ckpt export/m1_pos_diph/ckpt_last.pt --device cuda|cpu [--threads N]
 
 Parameters per module (inference path vs training-only), MACs (ptflops) for 1 s and 5 s outputs
 as GMACs per second of audio plus one decoder layer worked by hand, per-stage latency

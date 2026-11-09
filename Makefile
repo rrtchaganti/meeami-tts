@@ -119,7 +119,8 @@ aug-filter:
 SYSTEM ?= m0
 SPLIT ?= dev
 CKPT_EVAL ?=
-SYSTEMS ?= m0 m1 abl_a abl_b
+MAIN ?= m1_pos_diph
+SYSTEMS ?= m0 m1 m1_pos m1_pos_diph abl_a_pos abl_b_pos   # final set (D-85)
 .PHONY: eval eval-all tune
 eval:
 	$(TTS_RUN) python scripts/evaluate.py --system $(SYSTEM) --split $(SPLIT) \
@@ -132,7 +133,7 @@ eval-all:
 	  else echo "eval-all: skipping $$s (no export/$$s/ckpt_last.pt)"; fi; \
 	done
 
-PD_CKPTS ?= export/m1/ckpt_last.pt
+PD_CKPTS ?= export/$(MAIN)/ckpt_last.pt
 .PHONY: phone-dyn
 phone-dyn:   # within-phone spectral movement vs LJ (D-76); PD_CKPTS="export/m1_pos/ckpt_last.pt ..."
 	$(TTS_RUN) python -m tts.eval.phone_dynamics $(foreach c,$(PD_CKPTS),--ckpt $(c)) --device $(DEVICE)
@@ -144,7 +145,7 @@ tune:     # dev only: grid over cap x noise_scale (+ transfer variants); writes 
 	$(TTS_RUN) python -m tts.eval.tune --split $(SPLIT) $(ARGS)
 
 # --- T12: profiling ----------------------------------------------------------------------
-CKPT_PROF ?= export/m1/ckpt_last.pt
+CKPT_PROF ?= export/$(MAIN)/ckpt_last.pt
 .PHONY: profile
 profile:
 	$(TTS_RUN) python scripts/profile.py --ckpt $(if $(filter-out m0,$(CKPT)),$(CKPT),$(CKPT_PROF)) --device $(DEVICE) $(ARGS)

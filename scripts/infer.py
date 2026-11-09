@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """Time-aligned TTS inference (docs/PLAN.md Sections 5, 9).
 
-    python scripts/infer.py --text "..." --ref ref.wav --out out/ --ckpt export/m1/ckpt_last.pt
-    python scripts/infer.py --pairs_dir their_files/ --out out/ --ckpt export/m1/ckpt_last.pt
+    python scripts/infer.py --text "..." --ref ref.wav --out out/ --ckpt export/m1_pos_diph/ckpt_last.pt
+    python scripts/infer.py --pairs_dir their_files/ --out out/ --ckpt export/m1_pos_diph/ckpt_last.pt
 
 --ckpt m0 runs the FastSpeech2 baseline. Options: --config configs/inference.yaml,
 --aligner mfa|ctc, --transfer elastic|proportional|phone_copy, --cap, --noise_scale,

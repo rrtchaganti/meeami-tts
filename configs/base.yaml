@@ -227,10 +227,13 @@ augment:
     n_listen: 20               # random kept clips listed in the report
 
 # --- T11: evaluation (Section 8) -----------------------------------------------------------
+# --- final system set (D-85): main system and the ones evaluated on test ------------------------
+main_system: m1_pos_diph
 eval:
   min_pause_s: 0.1             # pause = silence >= 100 ms between two words
   bootstrap: 1000              # resamples over utterances, 95% CI
   boundary_tolerances_ms: [20, 50]
+  rho_from: m1                  # plot 8: reference word timings from results/<this>/<split>/wav (D-85)
 
 # --- T12: profiling (Section 8 "Efficiency metrics") ---------------------------------------
 profile:
@@ -251,5 +254,6 @@ tune:
 # --- T14: demo page (Section 9) ------------------------------------------------------------
 demo:
   n_per_accent: 2
+  systems: [m0, m1, m1_pos, m1_pos_diph, abl_a_pos, abl_b_pos]   # m0 or export/<name>/ckpt_last.pt (D-85)
   suitcase_speakers: [BWC, NJS, TNI]   # dev speakers; test-speaker clips only after freeze-v1
   own_recordings: demo/own_recordings  # optional: <name>.wav + <name>.txt, labelled "stress test"

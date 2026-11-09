@@ -3,7 +3,7 @@
 
     python scripts/make_demo.py [--n_per_accent 2] [--out out/demo_site]
 
-Systems: M0 plus every export/<exp>/ckpt_last.pt. Samples: test accents only after the freeze tag,
+Systems: `demo.systems` (configs/base.yaml); `main_system` is marked. Samples: test accents only after the freeze tag,
 otherwise dev accents (labelled "dev"); suitcase clips of allowed speakers and own recordings
 (demo/own_recordings/*.wav + .txt) labelled "stress test". For each sample and system the pipeline
 output (out.wav, timings.json, timing.png) is kept under out/demo_site/samples/ — these are also
@@ -26,13 +26,16 @@ from tts.config import REPO_ROOT, load_config, repo_path  # noqa: E402
 from tts.guard import accent_of, freeze_tag_exists  # noqa: E402
 
 
-def systems() -> list[tuple[str, str]]:
-    out = [("m0", "m0")]
-    exp = repo_path("export")
-    if exp.exists():
-        for d in sorted(exp.iterdir()):
-            if (d / "ckpt_last.pt").exists():
-                out.append((d.name, str(d / "ckpt_last.pt")))
+def systems(cfg) -> list[tuple[str, str]]:
+    """cfg.demo.systems in order: m0, or export/<name>/ckpt_last.pt when it exists."""
+    out = []
+    for name in cfg.demo.systems:
+        if name == "m0":
+            out.append(("m0", "m0"))
+        elif (repo_path("export") / name / "ckpt_last.pt").exists():
+            out.append((name, str(repo_path("export") / name / "ckpt_last.pt")))
+        else:
+            print(f"[demo] skipping {name}: no export/{name}/ckpt_last.pt")
     return out
 
 
@@ -79,7 +82,7 @@ def main(argv=None) -> int:
     from tts.infer.systems import load_system
 
     smp = samples(cfg, n)
-    syss = systems()
+    syss = systems(cfg)
     status = {}
     for name, ckpt in syss:
         pipe = Pipeline(cfg, load_system(ckpt, cfg, a.device))
@@ -121,7 +124,8 @@ def main(argv=None) -> int:
                     mean, (lo, hi) = v["mean"], v["ci95"]
                     cells.append("<td>-</td>" if mean != mean else
                                  f"<td>{mean:.3f}<br><small>[{lo:.3f}, {hi:.3f}]</small></td>")
-                h.append(f"<tr><td>{name}</td>{''.join(cells)}</tr>")
+                lab = f"<b>{name}</b> (main)" if name == cfg.main_system else name
+                h.append(f"<tr><td>{lab}</td>{''.join(cells)}</tr>")
             h.append("</table>")
             tables.append(f"<h2>Results ({split}, 95% bootstrap CI)</h2>" + "".join(h))
 
