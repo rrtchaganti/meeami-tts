@@ -723,3 +723,27 @@ docs/HANDOFF.md instead of being worked around.
         and context.
     Remedies: (b) is addressed by `m1_pos` (PLAN change 5). (c) would need a new token or
     embedding, which would be a PLAN deviation. Both await the user's phase-2 decision.
+
+## Phase 2a — M1+pos vs M1-cont (2026-11-09)
+
+- **D-76 Phase 2a design (user decision: "run m1_pos against m1_cont first").** Both runs branch
+  from M1 (`export/m1/ckpt_last.pt`, sha256 `f71428fb…`) with fresh optimizers and step 0, for
+  K = 20,000 steps each at batch 32. On the L40S that is ~80 min each at 0.229 s/step (D-70).
+  Equal K and batch make `use_pos` the only difference. K is chosen to fit the 2026-11-11 deadline
+  with room for the ablations afterwards. `pos_emb` (16x192) is small and zero-initialized, so 20k
+  steps is enough for it to learn and show an effect.
+  - **E-27 fixed before launch:** `--init_from` loaded our checkpoints strictly, so M1 -> m1_pos
+    would have crashed (`Missing key(s): "enc_p.pos_emb.weight"`; reproduced on the laptop).
+    `trainer.init_from_branch` now tolerates only `BRANCH_NEW_KEYS = {enc_p.pos_emb.weight}`; any
+    other missing or unexpected key raises. Test `test_init_from_branch_m1_to_pos`. A 20-step
+    laptop smoke run (batch 4) of m1_pos from the real M1 gave val mel L1 0.381, the same as M1's
+    0.377, which confirms it starts as M1.
+  - **Decision metric module:** `tts/eval/phone_dynamics.py` (`make phone-dyn`; config block
+    `phone_dynamics` in inference.yaml; test `test_phone_dynamics_stats`) is the word-ending probe
+    made reproducible. On LJ val with GT durations and noise 0.333:
+    - LJ: inside 4.729, onset 6.346, thirds [4.81, 4.29, 5.13]
+    - M1: inside 3.982 (0.842x LJ), onset 6.406, thirds [4.19, 3.29, 4.52] (middle 0.767x)
+    Output in `results/phone_dynamics/`.
+  - **Winner rule:** m1_pos wins if its within-phone movement moves toward LJ without losing dev
+    MAE, WER or UTMOS against m1_cont, and if the user's listening agrees. The ablations then
+    branch from the winner. Runbook: HANDOFF "Phase 2a".

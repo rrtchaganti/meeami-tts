@@ -52,6 +52,21 @@ def init_from_pretrained_vits(state: TrainState, path: str) -> dict:
     return {"loaded": len(loaded), "skipped": skipped, "missing": missing}
 
 
+BRANCH_NEW_KEYS = {"enc_p.pos_emb.weight"}  # zero-initialized: M1 -> M1+pos starts as M1
+
+
+def init_from_branch(state: TrainState, ckpt: dict) -> list[str]:
+    """Branching design: generator + discriminator weights from one of our checkpoints; fresh
+    optimizers and step 0. Only BRANCH_NEW_KEYS may be absent (kept at their init); any other
+    missing or unexpected key raises. Returns the keys left at init (D-76)."""
+    res = state.net_g.load_state_dict(ckpt["net_g"], strict=False)
+    bad = [k for k in res.missing_keys if k not in BRANCH_NEW_KEYS] + list(res.unexpected_keys)
+    if bad:
+        raise RuntimeError(f"init_from: incompatible generator keys {bad}")
+    state.net_d.load_state_dict(ckpt["net_d"])
+    return list(res.missing_keys)
+
+
 def state_dict(state: TrainState, cfg_yaml: str) -> dict:
     return {"net_g": state.net_g.state_dict(), "net_d": state.net_d.state_dict(),
             "optim_g": state.optim_g.state_dict(), "optim_d": state.optim_d.state_dict(),

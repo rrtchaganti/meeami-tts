@@ -10,3 +10,10 @@ inference:
     cap: [1.4, 1.6, 1.8, 2.0, 2.5, null]
     noise_scale: [0.333, 0.5, 0.667]
     aligner: [mfa, ctc]
+
+# --- phase 2: within-phone spectral movement, M1+pos vs M1-cont (tts/eval/phone_dynamics.py, D-76)
+phone_dynamics:
+  manifest: data/manifests/lj_val.jsonl    # LJ val, ground-truth MFA durations
+  min_frames: 8                # phones this long or longer (sil/sp excluded)
+  noise_scale: 0.333           # = inference.noise_scale (tuned)
+  out_dir: results/phone_dynamics

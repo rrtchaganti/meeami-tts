@@ -8,6 +8,9 @@ choice are in [DECISIONS.md](DECISIONS.md) (D-n = decision, E-n = error/incident
 eval, profile, edge suite and demo all done; results in section 4 and D-73. **Open decisions (yours):**
 run phase 2 (`m1_cont`, `abl_a`, `abl_b`, section 3) or not; then `freeze-v1` and the test eval.
 
+**Update 2026-11-09: phase 2a decided (D-76).** m1_pos vs m1_cont, 20k steps each from M1 (section
+3, "Phase 2a"); the ablations follow on the winner.
+
 ## 1. Status of the laptop tasks (PLAN.md Section 10)
 
 | # | Task | Status | Acceptance result |
@@ -27,7 +30,7 @@ run phase 2 (`m1_cont`, `abl_a`, `abl_b`, section 3) or not; then `freeze-v1` an
 | T13 | GPU bundle + data check | done | `export/bundle.tar`; check-data PASS on a fresh unpack |
 | T14 | Demo page | done | `out/demo_site/index.html` (M0 only until trained checkpoints exist) |
 
-`make test`: **147 passed** (2026-11-08).
+`make test`: **149 passed** (2026-11-09).
 
 ## 2. Things only you can decide or do
 
@@ -118,6 +121,47 @@ bash scripts/export_run.sh m1                    # export/m1.tar.gz + .sha256
 
 `export/m1/ckpt_last.pt` keeps generator + discriminator, so phase 2 can start from it on any
 later instance. Keep it safe.
+
+### Phase 2a — M1+pos vs M1-cont (decided 2026-11-09, D-76)
+
+There are two equal continuations from the finished M1, each K = 20,000 steps at batch 32, run
+back to back. They have the same start, the same extra steps and the same fresh optimizer, so the
+only difference is `use_pos`. At ~0.23 s/step that is ~80 min each, ~2.7 h in all.
+`pos_emb` starts at zero, so M1+pos begins exactly as M1. The loader accepts only that one
+missing key.
+
+```bash
+# A. same instance as phase 1 (stopped, disk kept): start it, then
+cd ~/meeami-tts && git checkout main && git pull
+sha256sum runs/m1/ckpt_last.pt     # must be f71428fb046da022aeee7fba5627c792927cd60c46723d3dc4e620e3c75f2ee0
+B=runs/m1/ckpt_last.pt
+# B. fresh instance: phase 1 steps 1-2 with bundle_m1.tar + make lj-download + make check-data, then
+#    laptop: rsync -avP ~/meeami-tts/export/m1.tar.gz* user@HOST:~/meeami-tts/export/
+#    instance: sha256sum -c export/m1.tar.gz.sha256 && tar -xzf export/m1.tar.gz ; B=export/m1/ckpt_last.pt
+
+mkdir -p logs
+tmux new -d -s p2a "B=$B; K=20000; R='conda run --no-capture-output -n tts python scripts/train.py'
+  \$R --config configs/m1_pos.yaml --init_from \$B --max_steps \$K               2>&1 | tee logs/m1_pos.log &&
+  \$R --config configs/m1.yaml     --init_from \$B --max_steps \$K --tag m1_cont 2>&1 | tee logs/m1_cont.log"
+#    first log line of each run must say "init_from ...: generator + discriminator weights (step reset)";
+#    for m1_pos it adds "left at init: ['enc_p.pos_emb.weight']". val/mel_l1 at step 0 ~0.38 (= M1).
+#    a crashed run: rerun just that line with --resume (keep --tag m1_cont for the second)
+for e in m1_pos m1_cont; do bash scripts/export_run.sh $e; done
+#    laptop: rsync -avP 'user@HOST:~/meeami-tts/export/m1_*.tar.gz*' ~/meeami-tts/export/
+#            cd ~/meeami-tts && for e in m1_pos m1_cont; do sha256sum -c export/$e.tar.gz.sha256 && tar -xzf export/$e.tar.gz; done
+```
+
+Back on the laptop:
+
+```bash
+make phone-dyn PD_CKPTS="export/m1/ckpt_last.pt export/m1_cont/ckpt_last.pt export/m1_pos/ckpt_last.pt"
+make eval SYSTEM=m1_cont SPLIT=dev && make eval SYSTEM=m1_pos SPLIT=dev
+```
+
+Winner: m1_pos if its within-phone movement moves toward LJ (M1: 0.84x, middle third 0.77x)
+without losing dev MAE, WER or UTMOS against m1_cont, and if word ends sound right. Listening is
+the user's call. The ablations then branch from the winner (phase 2 below, with the winner's
+config).
 
 ### Phase 2 — ablations (only if decided after M1's dev results)
 

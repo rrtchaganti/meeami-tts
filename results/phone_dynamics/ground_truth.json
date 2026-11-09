@@ -1,0 +1,15 @@
+{
+  "name": "ground_truth",
+  "n_clips": 100,
+  "noise_scale": 0.333,
+  "seed": 1234,
+  "n_phones": 2645,
+  "inside": 4.729,
+  "onset": 6.3456,
+  "onset_over_inside": 1.3419,
+  "inside_thirds": [
+    4.8101,
+    4.2947,
+    5.1251
+  ]
+}

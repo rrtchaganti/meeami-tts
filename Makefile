@@ -8,7 +8,7 @@ MFA_RUN := $(CONDA) run --no-capture-output -n mfa
 
 help:
 	@echo "Laptop:  env test data lexicon align-lj stats align-l2-dev align-dev-eval pace-stats-b"
-	@echo "         aug-a aug-b aug-filter m0-demo overfit smoke edge eval eval-all tune profile"
+	@echo "         aug-a aug-b aug-filter m0-demo overfit smoke edge eval eval-all tune phone-dyn profile"
 	@echo "         bundle check-data demo"
 	@echo "GPU:     see docs/HANDOFF.md (setup_gpu.sh, fetch_bundle.sh, check-data, train.py)"
 
@@ -131,6 +131,11 @@ eval-all:
 	    $(TTS_RUN) python scripts/evaluate.py --system $$s --split $(SPLIT) $(ARGS) || exit 1; \
 	  else echo "eval-all: skipping $$s (no export/$$s/ckpt_last.pt)"; fi; \
 	done
+
+PD_CKPTS ?= export/m1/ckpt_last.pt
+.PHONY: phone-dyn
+phone-dyn:   # within-phone spectral movement vs LJ (D-76); PD_CKPTS="export/m1_pos/ckpt_last.pt ..."
+	$(TTS_RUN) python -m tts.eval.phone_dynamics $(foreach c,$(PD_CKPTS),--ckpt $(c)) --device $(DEVICE)
 
 tune:     # dev only: grid over cap x noise_scale (+ transfer variants); writes configs/inference.yaml
 	$(TTS_RUN) python -m tts.eval.tune --split $(SPLIT) $(ARGS)

@@ -8,7 +8,9 @@ from tts.models.vits_mfa.data import ManifestDataset, MixedBucketSampler, collat
 from tts.models.vits_mfa.models import (
     build_generator, duration_loss, duration_path, load_pretrained, position_bins,
 )
-from tts.models.vits_mfa.trainer import build_state, init_from_pretrained_vits, train_step
+from tts.models.vits_mfa.trainer import (
+    build_state, init_from_branch, init_from_pretrained_vits, state_dict, train_step,
+)
 from tts.text.symbols import N_VOCAB, SYMBOL_TO_ID
 
 CFG = load_config(REPO_ROOT / "configs" / "base.yaml",
@@ -120,3 +122,18 @@ def test_mixed_sampler_ratio_and_coverage():
         assert sum(i < 100 for i in b) == 6 and sum(i >= 100 for i in b) == 4
     plain = list(iter(MixedBucketSampler(base, [], batch_size=10)))
     assert sorted(i for b in plain for i in b) == list(range(100))
+
+
+def test_init_from_branch_m1_to_pos():
+    """D-76: an M1 checkpoint branches into M1+pos (pos_emb stays zero) and into M1 itself."""
+    m1 = build_state(CFG, torch.device("cpu"))
+    ck = state_dict(m1, "")
+    pos_cfg = load_config(REPO_ROOT / "configs" / "m1_pos.yaml")
+    pos = build_state(pos_cfg, torch.device("cpu"))
+    assert init_from_branch(pos, ck) == ["enc_p.pos_emb.weight"]
+    assert torch.count_nonzero(pos.net_g.enc_p.pos_emb.weight) == 0
+    w = "enc_p.proj.weight"
+    assert torch.equal(pos.net_g.state_dict()[w], m1.net_g.state_dict()[w])
+    assert init_from_branch(build_state(CFG, torch.device("cpu")), ck) == []
+    with pytest.raises(RuntimeError):  # an M1+pos checkpoint cannot go into M1
+        init_from_branch(build_state(CFG, torch.device("cpu")), state_dict(pos, ""))

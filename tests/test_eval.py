@@ -57,3 +57,21 @@ def test_utmos_weights_pinned(tmp_path):
         utmos_weights(cfg, tmp_path, download=False)
     cfg.eval_models.utmos.weights_sha256 = hashlib.sha256(b"weights").hexdigest()
     assert utmos_weights(cfg, tmp_path, download=False) == f
+
+
+def test_phone_dynamics_stats():
+    """D-76: inside/onset/thirds of within-phone spectral change; sil/sp and short phones skipped."""
+    import numpy as np
+
+    from tts.eval.phone_dynamics import frame_change, phone_stats, summarize
+    m = np.zeros((2, 20))
+    m[0, 10:] = 3.0                      # one step of size 3 at frame 10 (onset of phone 2)
+    m[1, 13] = 4.0                       # a bump inside phone 2: change 4 at 13 and at 14
+    dm = frame_change(m)
+    assert dm[0] == 0 and dm[10] == 3 and dm[13] == 4 and dm[14] == 4
+    s = phone_stats(dm, ["sil", "AA1", "B", "IY1"], [2, 8, 9, 1], min_frames=8)
+    assert len(s["inside"]) == 2 and s["onset"] == [0.0, 3.0]
+    assert s["inside"][1] == 1.0         # frames 11..18 of phone B: 8 / 8
+    assert [t[1] for t in s["thirds"]] == [4 / 3, 4 / 3, 0.0]  # thirds 11-13, 14-16, 17-18
+    r = summarize(s)
+    assert r["n_phones"] == 2 and r["onset_over_inside"] == 3.0

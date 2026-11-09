@@ -34,8 +34,8 @@ from tts.models.vits_mfa.data import (  # noqa: E402
     ManifestDataset, MixedBucketSampler, collate, fixed_val_rows, read_manifest,
 )
 from tts.models.vits_mfa.trainer import (  # noqa: E402
-    build_state, init_from_pretrained_vits, load_state, set_decoder_frozen, state_dict,
-    train_step, val_losses,
+    build_state, init_from_branch, init_from_pretrained_vits, load_state, set_decoder_frozen,
+    state_dict, train_step, val_losses,
 )
 
 
@@ -140,9 +140,9 @@ def main(argv=None) -> int:
         if src:
             ck = torch.load(repo_path(src), map_location="cpu", weights_only=True)
             if "net_g" in ck:  # one of ours: weights only (branching design)
-                state.net_g.load_state_dict(ck["net_g"])
-                state.net_d.load_state_dict(ck["net_d"])
-                log.info(f"init_from {src}: generator + discriminator weights (step reset)")
+                kept = init_from_branch(state, ck)
+                log.info(f"init_from {src}: generator + discriminator weights (step reset)"
+                         + (f"; left at init: {kept}" if kept else ""))
             else:
                 info = init_from_pretrained_vits(state, str(repo_path(src)))
                 log.info(f"init_from {src}: loaded {info['loaded']} tensors; skipped "
