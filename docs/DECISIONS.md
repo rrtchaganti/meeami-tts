@@ -750,4 +750,6 @@ docs/HANDOFF.md instead of being worked around.
 - **E-28 `conda: command not found` after restarting the stopped instance.** `setup_gpu.sh`
   exports `~/miniconda3/bin` into PATH only for its own process and never runs `conda init`, so a
   fresh login shell can't find conda. The env itself was intact. Fix: `export
-  PATH="$HOME/miniconda3/bin:$PATH"` (optionally `conda init bash`). Added to HANDOFF Phase 2a.
+  PATH="$HOME/miniconda3/bin:$PATH"` (optionally `conda init bash`). The restart also dropped the apt packages
+  (`tmux: command not found`); only `/home/jovyan` persists. Reinstall: `apt-get install -y tmux
+  rsync make wget git` (fallback `conda install -n base -c conda-forge tmux rsync make`). Both added to HANDOFF Phase 2a.

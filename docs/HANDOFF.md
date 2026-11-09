@@ -133,6 +133,7 @@ missing key.
 ```bash
 # A. same instance as phase 1 (stopped, disk kept): start it, then (new shells lack conda, E-28)
 export PATH="$HOME/miniconda3/bin:$PATH" && conda env list   # must list tts
+apt-get update && apt-get install -y tmux rsync make wget git   # system packages are lost on restart (E-28)
 cd ~/meeami-tts && git checkout main && git pull
 sha256sum runs/m1/ckpt_last.pt     # must be f71428fb046da022aeee7fba5627c792927cd60c46723d3dc4e620e3c75f2ee0
 B=runs/m1/ckpt_last.pt
