@@ -698,3 +698,28 @@ docs/HANDOFF.md instead of being worked around.
   - **Assumption kept (LJ convention):** title abbreviations carry their period. No rule was added
     for bare forms ("Dr" is ambiguous; LJ never uses it). Test inputs (ARCTIC) contain none.
     Probe scripts: session scratchpad (`punct_invariance.py`, `punct_diff.py`).
+
+- **D-75 Audit of the MAS -> MFA replacement (2026-11-09, user request; no code change).**
+  Checked against the standard checklist (token matching, boundary rounding, >= 1 frame,
+  frozen-alignment errors, inference):
+  - Token matching: the model's tokens are exactly MFA's 69 ARPAbet phones + `sil`/`sp`
+    (D-24, tested). There are no blanks (`add_blank` false), spaces or punctuation tokens, so no
+    token lacks a duration. Leading/trailing `sil` may have 0 frames (D-34); that is harmless.
+  - Boundaries: cumulative rounding, sum = spectrogram length exactly (D-35); every speech phone
+    gets >= 1 frame (D-33).
+  - Frozen mistakes: no OOVs reach MFA (the lexicon covers every word, D-27). Word-sequence
+    mismatches are dropped (none occurred, D-36). The 27 rows with a phone > 0.5 s are dropped
+    (D-31 results).
+  - Gradient paths are the same as in VITS: training computes the KL in z_p = flow(enc_q(spec))
+    space against the expanded prior. m_p and logs_p never go through the flow or the posterior
+    encoder during training, in the original VITS as well. MAS is non-differentiable, so the only
+    change is the value of the alignment A, not which modules get gradients.
+  - Real differences from pretrained VITS that matter for word endings:
+    (a) A is external, not chosen to fit the model's latent space;
+    (b) there are no blank tokens, so each phone has one constant prior over all its frames
+        (D-74 investigation, -14% within-phone movement);
+    (c) there are no word-boundary tokens (the original input had spaces and punctuation), so the
+        encoder cannot tell a word-final phone from a word-internal one except through `sp`
+        and context.
+    Remedies: (b) is addressed by `m1_pos` (PLAN change 5). (c) would need a new token or
+    embedding, which would be a PLAN deviation. Both await the user's phase-2 decision.
