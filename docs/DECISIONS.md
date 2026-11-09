@@ -820,3 +820,9 @@ docs/HANDOFF.md instead of being worked around.
     branch from M1. Logged as the leading follow-up, with the word-boundary token (D-75 c).
   - Script: session scratchpad `glide.py`. LPC formants are noisy: OY has n = 3, and medians are
     used.
+- **E-29 `git pull`: "detected dubious ownership" on the instance after the aug upload.** The
+  laptop's `rsync -avP --relative ./data/aug ...` carried the laptop's uid 1000 onto the files and,
+  through the implied `./`, onto the repo root itself. Git (running as root) then refused the repo.
+  Fix on the instance: `chown -R root:root ~/meeami-tts`. The `safe.directory` exception was not
+  used, because it would have left the wrong owner in place. Upload commands from now on add
+  `--no-o --no-g`.
