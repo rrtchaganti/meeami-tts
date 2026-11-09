@@ -1,0 +1,110 @@
+{
+ "ckpt": "export/m1_pos_diph/ckpt_last.pt",
+ "step": 20000,
+ "device": "cpu",
+ "threads": 12,
+ "gpu": null,
+ "cpu": "x86_64",
+ "torch": "2.8.0",
+ "params": {
+  "modules": {
+   "text_encoder": 6312384,
+   "duration_predictor": 345857,
+   "flow": 7102080,
+   "decoder": 14327424,
+   "posterior_encoder (train only)": 7238016,
+   "discriminators (train only)": 46747132
+  },
+  "inference_path": 28087745,
+  "training_only": 53985148
+ },
+ "macs": {
+  "1s": {
+   "text_encoder_dp_gmacs": 0.079547916,
+   "flow_decoder_gmacs": 27.09437568,
+   "total_gmacs": 27.173923596,
+   "gmacs_per_audio_second": 27.173923596
+  },
+  "5s": {
+   "text_encoder_dp_gmacs": 0.41764614,
+   "flow_decoder_gmacs": 135.78692928,
+   "total_gmacs": 136.20457542,
+   "gmacs_per_audio_second": 27.240915084
+  },
+  "hand_worked_decoder_conv_pre": {
+   "layer": "dec.conv_pre Conv1d(192 -> 512, kernel 7) on 1 s of frames",
+   "formula": "K x C_in x C_out x L_out",
+   "K": 7,
+   "C_in": 192,
+   "C_out": 512,
+   "L_out": 86,
+   "macs": 59179008,
+   "gmacs": 0.059179008
+  }
+ },
+ "latency_ms": {
+  "normalize_g2p": {
+   "p50": 0.09391549974679947,
+   "p90": 0.0985637991107069,
+   "mean": 0.0951854995219037,
+   "runs": 50,
+   "warmup": 10
+  },
+  "mfa_align_one": {
+   "p50": 3604.672510002274,
+   "p90": 3870.075765995716,
+   "mean": 3515.0908327981597,
+   "runs": 5,
+   "warmup": 1
+  },
+  "text_encoder_durations": {
+   "p50": 5.271077498036902,
+   "p90": 8.078173503599828,
+   "mean": 5.839129899832187,
+   "runs": 50,
+   "warmup": 10
+  },
+  "flow_decoder": {
+   "p50": 776.7334094969556,
+   "p90": 836.2506065022899,
+   "mean": 786.3835021600244,
+   "runs": 50,
+   "warmup": 10
+  }
+ },
+ "reference": {
+  "wav": "data/raw/l2arctic/ASI/wav/arctic_a0003.wav",
+  "output_seconds": 3.7151927437641725
+ },
+ "rtf": {
+  "model_only": 0.21048826828905742,
+  "end_to_end": 1.1807653640204974
+ },
+ "rtf_vs_length": [
+  {
+   "seconds": 1.0,
+   "p50_ms": 244.85655500393477,
+   "rtf_model": 0.24485655500393477
+  },
+  {
+   "seconds": 2.0,
+   "p50_ms": 451.68781350002973,
+   "rtf_model": 0.22584390675001487
+  },
+  {
+   "seconds": 5.0,
+   "p50_ms": 1035.827348001476,
+   "rtf_model": 0.2071654696002952
+  },
+  {
+   "seconds": 10.0,
+   "p50_ms": 2060.593049001909,
+   "rtf_model": 0.20605930490019092
+  },
+  {
+   "seconds": 20.0,
+   "p50_ms": 3951.0845049990166,
+   "rtf_model": 0.19755422524995084
+  }
+ ]
+}

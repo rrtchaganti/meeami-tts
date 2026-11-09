@@ -936,3 +936,42 @@ docs/HANDOFF.md instead of being worked around.
     stats/l2_dev_pace.json: 0.159 over all dev utterances).
   - `make edge` with m1_pos_diph: 21/21 on cuda and on cpu.
   - Profile and phone-dyn default to the main checkpoint.
+- **D-86 Test results (held-out Arabic, Korean, Vietnamese; 1248 refs; after freeze-v1).** All six
+  systems 1248/1248 ok, length error 0. Means with 95% bootstrap CI in
+  `results/<system>/test/summary.json`; paired tests in `results/paired/test_*`.
+
+  | system | word-boundary MAE ms | within 20 ms % | pause F1 | WER | US prob | UTMOS | spk sim LJ |
+  |---|---|---|---|---|---|---|---|
+  | references | | | | 0.063 | 0.486 | | |
+  | M0 | 31.9 | 55.3 | 0.726 | 0.093 | 0.746 | 3.96 | 0.766 |
+  | M1 | 24.2 | 69.3 | 0.822 | 0.038 | 0.734 | 4.19 | 0.805 |
+  | m1_pos | 24.6 | 68.3 | 0.826 | 0.044 | 0.781 | 4.17 | 0.806 |
+  | **m1_pos_diph (main)** | **23.9** | **69.6** | **0.835** | **0.029** | 0.762 | **4.20** | 0.800 |
+  | abl_a_pos | 24.7 | 68.3 | 0.825 | 0.039 | 0.665 | 4.06 | 0.801 |
+  | abl_b_pos | 24.7 | 68.3 | 0.826 | 0.045 | 0.767 | 4.08 | 0.796 |
+
+  LJ test ground truth: WER 0.019, UTMOS 4.36.
+  - The dev conclusions replicate. m1_pos_diph vs m1_pos (Holm): MAE -0.70 ms, WER -0.015, CER
+    -0.007, UTMOS +0.03, within-20 ms +1.2 pt, pause F1 +0.009 (p 0.04); US prob -0.019
+    (p 0.02); spk sim -0.006. MAE and WER gains hold in all three accents.
+  - m1_pos_diph vs M1: WER -0.009 (p < 1e-6); MAE, pause F1, US prob (+0.027) and UTMOS n.s.
+  - Ablations vs m1_pos: no timing or WER gain; UTMOS -0.11 (A) and -0.09 (B); US prob -0.12 (A).
+    Ablation B's dev pace statistics did not transfer into a gain on held-out accents.
+  - Plot 8: median reference pace x1.12 LJ (dev) vs x1.16 (test); similar spread.
+  - Efficiency (main checkpoint, laptop): 28.1 M inference parameters (decoder 14.3 M), 27.2
+    GMACs per audio second; RTX 4060 model RTF 0.012, end-to-end 0.90 (MFA align_one 3.3 s p50
+    dominates); CPU 12 threads flow+decoder 777 ms for 3.7 s of audio. No data-center GPU profile
+    (E-26: not runnable on the instance; the instance is now deleted).
+- **D-87 Slides (`slides/meeami-tts.pptx`, source `slides/build.js`).** 14 slides following PLAN
+  Section 9's outline, numbers from D-72..D-86, speaker notes on every slide. Built with pptxgenjs
+  in a separate tool-only conda env `slides` (nodejs 20, python-pptx; not a project env, no sudo):
+  neither node nor python-pptx existed on the laptop. Visual QA by exporting every slide to PNG
+  through the Windows PowerPoint COM interface. Rebuild:
+  `NODE_PATH=<dir with pptxgenjs> SKILL=<pptx skill dir> CPU1_MS=1.78 node slides/build.js out.pptx`.
+- **E-31 First deck build would not open in PowerPoint** ("PowerPoint could not open the file"),
+  although the OOXML validator passed. Cause: a connector line on slide 6 drawn with a negative
+  height. Fix: positive height plus `flipV`. Found by opening the file through PowerPoint COM
+  (a minimal deck from the same toolchain opened, which isolated it to the deck's own content).
+- **D-88 Demo rebuilt from an empty `out/demo_site`.** `make_demo.py` reuses any existing
+  `out.wav`, so outputs from pre-freeze builds (older inference settings) could have survived.
+  Profile, 1 CPU thread: flow + decoder 1.78 s p50 for 3.7 s of audio (model RTF 0.48).

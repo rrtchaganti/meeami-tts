@@ -15,8 +15,14 @@ run phase 2 (`m1_cont`, `abl_a`, `abl_b`, section 3) or not; then `freeze-v1` an
 abl_a_pos and abl_b_pos do not beat m1_pos on dev; both cost UTMOS, and A costs US prob (D-83,
 `make paired CONTROL=m1_pos SYSTEMS_CMP="abl_a_pos abl_b_pos"`). m1_pos is the main system.
 m1_pos_diph (D-81) trained and evaluated (D-84): better MAE, WER, UTMOS and diphthong glides than
-m1_pos, US prob -0.03. **Open (yours):** main system m1_pos_diph or m1_pos (listen to
-`export/listen_p2c/`); then `freeze-v1` and the test eval.
+m1_pos, US prob -0.03.
+
+**Update 2026-11-09 (night): frozen and finished.** User chose m1_pos_diph as the main system
+(D-85). `freeze-v1` on 5889ecf (checkpoint hashes in `results/checkpoints.sha256`). Test eval of
+all six systems done (D-86, README "Systems and results"); profile, plot 8, demo (rebuilt clean,
+D-88) and slides (`slides/meeami-tts.pptx`, D-87) done. GPU instance no longer needed.
+**Still open (yours):** checkpoint hosting for the README links (exports are on the laptop only),
+a fresh-clone `make env` check on another machine, rehearsal with the live demo.
 
 ## 1. Status of the laptop tasks (PLAN.md Section 10)
 

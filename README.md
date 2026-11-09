@@ -6,11 +6,12 @@ pauses, total length) of a reference recording of the same text by a non-US spea
 - Specification: [docs/PLAN.md](docs/PLAN.md) (code comments cite its sections).
 - Every decision and error, with reasons: [docs/DECISIONS.md](docs/DECISIONS.md).
 - Current status, blockers and the GPU runbook: **[docs/HANDOFF.md](docs/HANDOFF.md)**.
+- Slides: [slides/meeami-tts.pptx](slides/meeami-tts.pptx); demo page: `make demo` -> `out/demo_site/index.html`.
 
 | Output property | Source |
 | --- | --- |
 | Words, pronunciation | input text -> normalizer -> `data/lexicon/lexicon.txt` (cmudict first pron., g2p_en OOVs) |
-| Voice, accent, intonation | model trained on LJSpeech only (M1: VITS with MFA durations; M0: FastSpeech2 baseline) |
+| Voice, accent, intonation | model trained on LJSpeech only (main: `m1_pos_diph`, VITS with MFA durations; M0: FastSpeech2 baseline) |
 | Word times, pauses, length | reference audio aligned with MFA `english_us_arpa` (MMS_FA CTC fallback) |
 
 ## Setup
@@ -34,6 +35,33 @@ QC). L2-ARCTIC is split by accent: **dev** Hindi, Mandarin, Spanish (tuning, Abl
 statistics); **test** Arabic, Korean, Vietnamese, locked until the git tag `freeze-v1`
 (`tts/guard.py`: code reading test-speaker audio refuses without it). Evaluation set = utterances
 with manual annotations for every speaker of the split: dev 100 x 12, test 104 x 12.
+
+## Systems and results
+
+| System | What it is |
+| --- | --- |
+| M0 | FastSpeech2 + HiFi-GAN (pretrained LJSpeech), durations injected |
+| M1 | VITS fine-tuned with MFA durations instead of MAS (114k steps, D-70) |
+| m1_pos | M1 + 20k steps with a position-in-phone embedding (D-76) |
+| **m1_pos_diph** | **main system**: m1_pos with each diphthong split into two tokens (D-81) |
+| abl_a_pos / abl_b_pos | m1_pos + 40% pace-augmented clips, LJ-derived (A) or dev-accent-derived (B) pace (D-79) |
+
+Held-out test accents (Arabic, Korean, Vietnamese), 1,248 references, after `freeze-v1`
+(full CIs in `results/<system>/test/summary.json`, paired tests in `results/paired/`, D-86):
+
+| System | Word-boundary MAE (ms) | Pause F1 | WER | US prob | UTMOS | Spk sim LJ |
+| --- | --- | --- | --- | --- | --- | --- |
+| L2 references | | | 0.063 | 0.486 | | |
+| M0 | 31.9 | 0.726 | 0.093 | 0.746 | 3.96 | 0.766 |
+| M1 | 24.2 | 0.822 | 0.038 | 0.734 | 4.19 | 0.805 |
+| m1_pos | 24.6 | 0.826 | 0.044 | 0.781 | 4.17 | 0.806 |
+| **m1_pos_diph** | **23.9** | **0.835** | **0.029** | 0.762 | **4.20** | 0.800 |
+| abl_a_pos | 24.7 | 0.825 | 0.039 | 0.665 | 4.06 | 0.801 |
+| abl_b_pos | 24.7 | 0.826 | 0.045 | 0.767 | 4.08 | 0.796 |
+
+Output length equals the reference length exactly for every system and reference. LJ test
+ground truth: WER 0.019, UTMOS 4.36. Ablation B used pace statistics from dev-accent speakers;
+all reported numbers are on held-out accents. Neither ablation improved timing; both lowered UTMOS.
 
 ## Commands in run order
 
@@ -69,23 +97,33 @@ tmux new -d -s train 'conda run --no-capture-output -n tts python scripts/train.
 #   after a crash: add --resume. Ablations (optional): branching from export/m1, HANDOFF.md phase 2
 bash scripts/export_run.sh m1        # -> export/m1.tar.gz ; rsync to the laptop
 
+# --- GPU instance, phase 2: branches from M1, 20k steps each, fresh optimizer (HANDOFF.md) ---
+for e in m1_cont m1_pos; do conda run -n tts python scripts/train.py --config configs/$e.yaml \
+    --init_from runs/m1/ckpt_last.pt --max_steps 20000; done          # 2a: +pos vs plain continuation
+for e in abl_a_pos abl_b_pos m1_pos_diph; do ... same command ...; done # 2b ablations, 2c diphthong split
+for e in m1_pos m1_cont abl_a_pos abl_b_pos m1_pos_diph; do bash scripts/export_run.sh $e; done
+
 # --- laptop, days 3-5 -----------------------------------------------------------------------
-for e in m1 abl_a abl_b; do tar -xzf export/$e.tar.gz; done
-make tune SPLIT=dev                  # writes cap / noise_scale into configs/inference.yaml
-make eval-all SPLIT=dev
-git tag freeze-v1                    # code, configs and checkpoints frozen
-make eval-all SPLIT=test
-make profile CKPT=export/m1/ckpt_last.pt DEVICE=cuda
-make demo                            # out/demo_site/index.html (+ backup outputs)
-python scripts/infer.py --text "..." --ref ref.wav --out out/ --ckpt export/m1/ckpt_last.pt
+for e in m1 m1_pos m1_pos_diph abl_a_pos abl_b_pos; do sha256sum -c export/$e.tar.gz.sha256 && tar -xzf export/$e.tar.gz; done
+make tune SPLIT=dev                  # writes cap / noise_scale into configs/inference.yaml (D-72)
+make eval-all SPLIT=dev              # SYSTEMS = m0 m1 m1_pos m1_pos_diph abl_a_pos abl_b_pos
+make phone-dyn PD_CKPTS="export/m1_pos/ckpt_last.pt ..."   # within-phone movement vs LJ (D-76)
+make paired CONTROL=m1_pos SYSTEMS_CMP="abl_a_pos abl_b_pos m1_pos_diph"   # paired tests (D-82)
+make edge CKPT=export/m1_pos_diph/ckpt_last.pt DEVICE=cuda   # and DEVICE=cpu: 21/21
+git tag freeze-v1                    # code, configs and checkpoints frozen (results/checkpoints.sha256)
+make eval-all SPLIT=test             # held-out accents; also draws plot 8 (dev vs test pace)
+make paired CONTROL=m1_pos SYSTEMS_CMP="abl_a_pos abl_b_pos m1_pos_diph" SPLIT=test
+make profile DEVICE=cuda ; make profile DEVICE=cpu ; make profile DEVICE=cpu ARGS="--threads 1"
+make demo                            # out/demo_site/index.html (+ backup outputs per sample)
+python scripts/infer.py --text "..." --ref ref.wav --out out/ --ckpt export/m1_pos_diph/ckpt_last.pt
 ```
 
 ## Inference
 
 ```bash
 python scripts/infer.py --text "For the 20th time that evening..." --ref ref.wav --out out/ \
-    --ckpt export/m1/ckpt_last.pt            # or --ckpt m0 for the FastSpeech2 baseline
-python scripts/infer.py --pairs_dir their_files/ --out out/ --ckpt export/m1/ckpt_last.pt
+    --ckpt export/m1_pos_diph/ckpt_last.pt   # main system; --ckpt m0 for the FastSpeech2 baseline
+python scripts/infer.py --pairs_dir their_files/ --out out/ --ckpt export/m1_pos_diph/ckpt_last.pt
 ```
 
 Options: `--config configs/inference.yaml`, `--aligner mfa|ctc`,
@@ -99,7 +137,17 @@ Options: `--config configs/inference.yaml`, `--aligner mfa|ctc`,
 - `mfa align_one` takes ~10-15 s per reference (model load); it dominates end-to-end latency.
 - If MFA fails, returns `spn` or misses a word, word boundaries come from the MMS_FA CTC aligner,
   which is coarser (~53 ms word-boundary MAE vs ~21 ms for MFA on dev references).
-- Extreme stretches are capped (default 2x the native word duration); the excess becomes a pause.
+- Extreme stretches are capped (2.5x the native word duration, tuned on dev, D-72); the excess
+  becomes a pause.
+- Part of an accent lives in timing: speech forced onto an L2 reference's word timing sounds less American
+  than it could (dev US prob: L2 references 0.30, main-system outputs 0.74).
+- ARPAbet diphthongs are single tokens, so the plain VITS-MFA model flattened them ("cry" heard
+  as "cra", D-80). The main system splits each diphthong into two tokens with a fixed 50/50
+  duration split (D-81); short unstressed diphthongs get only 1-2 frames per half.
+- The accent-ID US probability is near-binary per utterance and flips on inaudible changes (D-84);
+  read it as a population average, not per sample.
+- Pace augmentation (Ablations A/B) with a WSOLA stretcher lowered UTMOS and did not improve
+  timing on dev (D-83): the stretched clips carry artifacts the model learns.
 - `phone_copy` needs MFA phone durations; with the CTC fallback it runs as `elastic`.
 - Reference audio is decoded with libsndfile, then ffmpeg; anything neither can read fails cleanly.
 
