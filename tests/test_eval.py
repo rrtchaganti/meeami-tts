@@ -75,3 +75,30 @@ def test_phone_dynamics_stats():
     assert [t[1] for t in s["thirds"]] == [4 / 3, 4 / 3, 0.0]  # thirds 11-13, 14-16, 17-18
     r = summarize(s)
     assert r["n_phones"] == 2 and r["onset_over_inside"] == 3.0
+
+
+def test_paired_compare_holm_and_bins():
+    import pandas as pd
+
+    from tts.eval.paired import compare, holm, stretch_bins
+
+    assert holm([0.01, 0.04, float("nan"), 0.03]) == pytest.approx([0.03, 0.06, float("nan"), 0.06],
+                                                                    nan_ok=True)
+    r = pd.Series([1.0, 1.02, 0.9, 1.2, 0.7, 1.6, None])
+    b = stretch_bins(r, [0.3333, 0.6667])
+    assert b.iloc[0] == "s0" and b.iloc[5] == "s2" and b.iloc[6] is None
+
+    rng = np.random.default_rng(0)
+    n = 60
+    ctl = pd.DataFrame({"id": [f"u{i}" for i in range(n)], "status": "ok",
+                        "accent": ["x", "y"] * (n // 2), "stretch_ratio": rng.uniform(0.7, 1.4, n),
+                        "wb_mae_ms": rng.uniform(10, 40, n), "us_prob": rng.uniform(0, 1, n)})
+    sysd = ctl.copy()
+    sysd["wb_mae_ms"] -= 2.0              # uniformly better (lower)
+    sysd.loc[0, "status"] = "fail"        # dropped from the pairing
+    df = compare(sysd, ctl, ["wb_mae_ms", "us_prob"], ["wb_mae_ms"], [0.3333, 0.6667])
+    a = df[(df.group == "all") & (df.metric == "wb_mae_ms")].iloc[0]
+    assert a.n == n - 1 and a.mean_diff == pytest.approx(-2.0) and a.better and a.p_holm < 1e-6
+    u = df[(df.group == "all") & (df.metric == "us_prob")].iloc[0]
+    assert np.isnan(u.p) and not u.better       # identical -> no test
+    assert set(df.group) == {"all", "accent=x", "accent=y", "stretch=s0", "stretch=s1", "stretch=s2"}

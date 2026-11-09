@@ -17,3 +17,10 @@ phone_dynamics:
   min_frames: 8                # phones this long or longer (sil/sp excluded)
   noise_scale: 0.333           # = inference.noise_scale (tuned)
   out_dir: results/phone_dynamics
+
+# --- phase 2: paired per-utterance comparison against a control system (tts/eval/paired.py, D-82)
+paired:
+  metrics: [wb_mae_ms, wb_within20, pause_f1, wer, cer, us_prob, utmos, spk_sim_lj]
+  lower_is_better: [wb_mae_ms, wer, cer]
+  stretch_quantiles: [0.3333, 0.6667]   # bins of |log stretch_ratio| (near 1.0x .. far from it)
+  out_dir: results/paired

@@ -1,0 +1,15 @@
+{
+  "name": "abl_a_pos",
+  "n_clips": 100,
+  "noise_scale": 0.333,
+  "seed": 1234,
+  "n_phones": 2645,
+  "inside": 3.9683,
+  "onset": 6.4049,
+  "onset_over_inside": 1.614,
+  "inside_thirds": [
+    4.147,
+    3.3087,
+    4.5037
+  ]
+}

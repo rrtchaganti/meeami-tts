@@ -858,3 +858,41 @@ docs/HANDOFF.md instead of being worked around.
     - MAE, WER and UTMOS are not worse;
     - the user's listening agrees ("cry").
   `make test`: 157 passed.
+- **E-30 Queued abl_b_pos eval never started (lost ~45 min).** The chained background job waited
+  with `while pgrep -f "evaluate.py --system abl_a_pos"`. `pgrep -f` matches full command lines,
+  including the waiting shell's own, so the loop waited on itself after abl_a_pos finished.
+  Fix: killed it and ran the remaining steps directly in sequence. Rule: wait on a PID
+  (`wait`/`tail --pid`) or a result file, never `pgrep -f` with a pattern that appears in the
+  waiting command.
+- **D-82 Paired comparison against each system's own control (`tts/eval/paired.py`,
+  `make paired CONTROL=m1_pos SYSTEMS_CMP="abl_a_pos abl_b_pos"`).** `evaluate.py` compares with M1
+  only, but D-79 makes m1_pos the ablations' control. Paired Wilcoxon per metric, overall, per
+  accent and per tercile of |log stretch_ratio| (the PLAN Section 6 hypothesis is about high
+  stretch, with no loss near 1.0x). Holm-adjusted within each group's family of 8 metrics.
+  Parameters in `configs/inference.yaml: paired`. Writes `results/paired/<split>_<sys>_vs_<ctl>.csv`.
+  Test `test_paired_compare_holm_and_bins`.
+- **D-83 Phase 2b results: neither ablation beats m1_pos on dev (2026-11-09).** Both branch from M1
+  for 20k steps with use_pos (D-79), 40% augmented rows. Paired vs m1_pos, 1200 dev refs,
+  Holm-adjusted (`results/paired/dev_abl_*_pos_vs_m1_pos.csv`):
+
+  | metric | m1_pos | abl_a_pos | abl_b_pos |
+  |---|---|---|---|
+  | word-boundary MAE ms | 24.16 | 24.04 (p 0.10) | 24.21 (p 1) |
+  | pause F1 | 0.829 | 0.835 (p 0.39) | 0.840 (p 0.11) |
+  | WER | 0.039 | 0.034 (p 0.15) | 0.039 (p 1) |
+  | US prob | 0.769 | **0.642** (p < 1e-10) | 0.747 (p 1) |
+  | UTMOS | 4.18 | **4.07** (p < 1e-10) | **4.10** (p < 1e-5) |
+  | LJ speaker sim | 0.804 | 0.801 (p 0.002) | 0.796 (p < 1e-5) |
+
+  - PLAN Section 6 hypothesis (gain at high stretch, no loss near 1.0x) is not supported on dev:
+    in the furthest stretch tercile (|log r| 0.15-0.43) MAE, pause F1 and WER differences are
+    all n.s.; the UTMOS and US prob costs are the same in every tercile.
+  - B's pace statistics come from the dev accents, so dev is B's most favourable split, and it
+    still shows no timing gain. Only Spanish pause F1 improves (+0.025, Holm p 0.03).
+  - Phone dynamics (inside / middle third vs LJ): abl_a_pos 0.839/0.770, abl_b_pos 0.838/0.767,
+    m1_pos 0.856/0.785. Diphthong glides (LJ val, D-80 probe): no consistent change.
+  - Likely cause: the stretched clips carry WSOLA artifacts (filter-time UTMOS drop, D-67);
+    training on 40% of them lowers naturalness. A's z_u ~ U(-1.5, 1.5) pace is also far wider
+    than real L2 pace, which would explain why its US-prob cost is larger than B's.
+  - Decision: m1_pos stays the main system. Ablations A and B are reported as negative results
+    and still go into the test eval after freeze-v1 (the PLAN's claim is about held-out accents).

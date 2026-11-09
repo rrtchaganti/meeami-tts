@@ -11,6 +11,12 @@ run phase 2 (`m1_cont`, `abl_a`, `abl_b`, section 3) or not; then `freeze-v1` an
 **Update 2026-11-09: phase 2a decided (D-76).** m1_pos vs m1_cont, 20k steps each from M1 (section
 3, "Phase 2a"); the ablations follow on the winner.
 
+**Update 2026-11-09 (evening): phase 2a and 2b evaluated.** m1_pos beat m1_cont (US prob +0.09).
+abl_a_pos and abl_b_pos do not beat m1_pos on dev; both cost UTMOS, and A costs US prob (D-83,
+`make paired CONTROL=m1_pos SYSTEMS_CMP="abl_a_pos abl_b_pos"`). m1_pos is the main system.
+m1_pos_diph (D-81, section 3 "Phase 2c") is ready and not yet trained. **Open (yours):** train
+m1_pos_diph or not; then `freeze-v1` and the test eval.
+
 ## 1. Status of the laptop tasks (PLAN.md Section 10)
 
 | # | Task | Status | Acceptance result |
@@ -30,7 +36,7 @@ run phase 2 (`m1_cont`, `abl_a`, `abl_b`, section 3) or not; then `freeze-v1` an
 | T13 | GPU bundle + data check | done | `export/bundle.tar`; check-data PASS on a fresh unpack |
 | T14 | Demo page | done | `out/demo_site/index.html` (M0 only until trained checkpoints exist) |
 
-`make test`: **157 passed** (2026-11-09).
+`make test`: **158 passed** (2026-11-09).
 
 ## 2. Things only you can decide or do
 
