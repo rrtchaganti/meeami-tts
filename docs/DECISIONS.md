@@ -769,3 +769,23 @@ docs/HANDOFF.md instead of being worked around.
   `results/phone_dynamics/`.
   By the D-76 rule m1_pos does not win. The dev evals of both are running (`m1_cont` is the
   comparison model for the ablations either way).
+- **D-78 Phase 2a dev results (1,200 refs, tuned inference; 2026-11-09).** Each eval took ~20 min
+  on the laptop. Paired Wilcoxon, m1_pos vs m1_cont (the fair pair):
+  - US probability: 0.769 vs 0.680, +0.089, p = 5e-31. Higher in all three accents (hindi
+    0.708/0.604, mandarin 0.825/0.757, spanish 0.774/0.679) and on 66% of utterances.
+  - Word-boundary MAE: 24.16 vs 24.03 ms (+0.14 ms, p = 0.04).
+  - Within 20 ms, pause F1, WER (3.9% / 3.8%), UTMOS (4.177 / 4.185) and LJ similarity (0.804 /
+    0.803): no significant difference.
+  - Against M1: m1_cont is slightly worse (MAE +0.2 ms, US prob 0.680 vs 0.718, UTMOS -0.02, all
+    p < 0.005). This is read as the fresh-optimizer restart, not a reason to change the
+    comparison. m1_pos's US prob of 0.769 is also above M1's 0.718 (p = 1e-10).
+  - **Reading:** the proxy chosen in D-76 (within-phone movement) did not move, but the
+    accent-ID metric, which is the user's actual complaint, did, by a large and consistent margin
+    at no cost elsewhere. The position embedding's learned effect sits at phone edges (D-77),
+    i.e. in transitions, which the within-phone metric excludes by design (onset frame dropped,
+    long phones only). Per-utterance US prob is bimodal (softmax x30), so the decision rests on
+    the 1,200-utterance mean and the user's listening.
+  - **Listening set:** `export/listen_p2a/` (not in git), 4 random dev refs per accent (seed
+    1234), each with `0_reference.wav`, `m1.wav`, `m1_cont.wav`, `m1_pos.wav`; `index.csv` lists
+    the texts and US probs.
+  - Winner decision: the user's, after listening. Recommended: m1_pos.
