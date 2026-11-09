@@ -11,6 +11,8 @@ Adapted from jaywalnut310/vits `models.py` @ 2e561ba (MIT, see LICENSE.vits). Ch
  5. use_pos: expand the encoder hidden states by durations first, add a learned embedding of
     each frame's relative position in its phone (n_pos_bins bins of (k + 0.5) / d), then the
     1x1 projection to (m, logs). use_pos=false keeps the original order (project, then expand).
+ 6. diph_split (DECISIONS D-81, opt-in, PLAN deviation): n_vocab 87; diphthongs become two
+    tokens (tts/text/diph.py).
 Generator, posterior encoder, flow and discriminators are unchanged.
 """
 from __future__ import annotations
@@ -325,11 +327,12 @@ class SynthesizerMFA(nn.Module):
 
 
 def build_generator(cfg) -> SynthesizerMFA:
+    from tts.text.diph import N_VOCAB_SPLIT
     from tts.text.symbols import N_VOCAB
 
     m = cfg.model
     return SynthesizerMFA(
-        n_vocab=N_VOCAB, spec_channels=cfg.audio.filter_length // 2 + 1,
+        n_vocab=N_VOCAB_SPLIT if m.get("diph_split", False) else N_VOCAB, spec_channels=cfg.audio.filter_length // 2 + 1,
         segment_size=cfg.train.segment_size // cfg.audio.hop_length,
         inter_channels=m.inter_channels, hidden_channels=m.hidden_channels,
         filter_channels=m.filter_channels, n_heads=m.n_heads, n_layers=m.n_layers,

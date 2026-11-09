@@ -17,6 +17,7 @@ from torch.utils.data import Dataset, Sampler
 
 from tts.audio import load_wav, spectrogram
 from tts.config import REPO_ROOT, repo_path
+from tts.text.diph import split_tokens, to_ids_split
 from tts.text.symbols import SIL, SYMBOL_TO_ID, to_ids
 
 
@@ -38,6 +39,8 @@ class ManifestDataset(Dataset):
         self.hop = int(cfg.audio.hop_length)
         self.sr = int(cfg.audio.sample_rate)
         self.root = root
+        self.diph = bool(cfg.model.get("diph_split", False))  # D-81
+        self.diph_frac = float(cfg.model.get("diph_first_frac", 0.5))
 
     def __len__(self):
         return len(self.rows)
@@ -58,9 +61,16 @@ class ManifestDataset(Dataset):
         wav = wav[: n * self.hop]
         if wav.numel() < n * self.hop:
             wav = torch.nn.functional.pad(wav, (0, n * self.hop - wav.numel()))
-        ids = torch.tensor(to_ids(r["phones"]), dtype=torch.long)
-        dur = torch.tensor(r["durations"], dtype=torch.long)
+        if self.diph:
+            toks, durs, _ = split_tokens(r["phones"], r["durations"], self.diph_frac)
+            ids = torch.tensor(to_ids_split(toks), dtype=torch.long)
+        else:
+            durs = r["durations"]
+            ids = torch.tensor(to_ids(r["phones"]), dtype=torch.long)
+        dur = torch.tensor(durs, dtype=torch.long)
         dmask = (ids != SYMBOL_TO_ID[SIL]).float() * (0.0 if r.get("is_aug") else 1.0)
+        if self.diph:
+            dmask = dmask * (dur > 0).float()  # a 0-frame second part has no duration target
         return {"id": r["id"], "ids": ids, "dur": dur, "dmask": dmask, "spec": spec, "wav": wav,
                 "is_aug": bool(r.get("is_aug"))}
 

@@ -1,0 +1,6 @@
+# M1+pos with diphthongs split into two tokens (DECISIONS D-80/D-81; deviation from PLAN Section 4
+# change 3: n_vocab 87). Branches from M1 like the other phase-2 systems; control = m1_pos.
+inherit: m1_pos.yaml
+exp: m1_pos_diph
+model:
+  diph_split: true

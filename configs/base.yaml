@@ -141,6 +141,8 @@ model:
   dp_dropout: 0.5
   use_pos: false               # change 5 (M1+pos only)
   n_pos_bins: 16
+  diph_split: false            # D-81 (m1_pos_diph only): AW AY EY OW OY -> two tokens each
+  diph_first_frac: 0.5         # share of a diphthong's frames given to its first part
   add_blank: false             # change 2
 
 pretrained:

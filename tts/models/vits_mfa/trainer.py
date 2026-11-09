@@ -58,8 +58,17 @@ BRANCH_NEW_KEYS = {"enc_p.pos_emb.weight"}  # zero-initialized: M1 -> M1+pos sta
 def init_from_branch(state: TrainState, ckpt: dict) -> list[str]:
     """Branching design: generator + discriminator weights from one of our checkpoints; fresh
     optimizers and step 0. Only BRANCH_NEW_KEYS may be absent (kept at their init); any other
-    missing or unexpected key raises. Returns the keys left at init (D-76)."""
-    res = state.net_g.load_state_dict(ckpt["net_g"], strict=False)
+    missing or unexpected key raises. A 72-row text embedding is expanded for diph_split models
+    (each X+ row copies X, D-81). Returns the keys left at init (D-76)."""
+    sd = dict(ckpt["net_g"])
+    k = "enc_p.emb.weight"
+    own = state.net_g.state_dict()[k]
+    if sd[k].shape != own.shape:  # M1 (72 symbols) -> diph_split model (87), D-81
+        from tts.text.diph import expand_embedding
+        sd[k] = expand_embedding(sd[k])
+        if sd[k].shape != own.shape:
+            raise RuntimeError(f"init_from: embedding {tuple(sd[k].shape)} != {tuple(own.shape)}")
+    res = state.net_g.load_state_dict(sd, strict=False)
     bad = [k for k in res.missing_keys if k not in BRANCH_NEW_KEYS] + list(res.unexpected_keys)
     if bad:
         raise RuntimeError(f"init_from: incompatible generator keys {bad}")

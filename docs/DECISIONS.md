@@ -826,3 +826,35 @@ docs/HANDOFF.md instead of being worked around.
   Fix on the instance: `chown -R root:root ~/meeami-tts`. The `safe.directory` exception was not
   used, because it would have left the wrong owner in place. Upload commands from now on add
   `--no-o --no-g`.
+- **D-81 `m1_pos_diph`: diphthongs as two tokens (user request "work on m1_pos_diph"; training
+  date to be decided by the user). PLAN deviation:** change 3 fixes n_vocab at 72; this
+  experiment has 87. It is opt-in (`model.diph_split`, default false) and leaves every other
+  system unchanged.
+  - **Design (`tts/text/diph.py`):** AW, AY, EY, OW, OY (x3 stresses) each become `X` + `X+`.
+    The split happens only at the model boundary: the VITS dataset and `VitsSystem`. Manifests,
+    lexicon, MFA alignments, stats/phone_logdur.json, the elastic pipeline and evaluation all keep
+    the 72-symbol tokens.
+  - **Durations:** first part = max(1, round(d x `diph_first_frac`)), capped at d - 1, with
+    fraction 0.5. MFA gives no boundary inside a diphthong, so the split is fixed. Training and
+    inference use the same rule.
+  - **0-frame parts:** when d = 1 the second part gets 0 frames and is masked out of the duration
+    loss.
+  - **Duration prediction:** the pipeline gets one prediction per original token,
+    log(exp(a) + exp(b)) over the two parts.
+  - **Init:** branched from M1 like every phase-2 system. `init_from_branch` expands the 72-row
+    embedding to 87, each `X+` row a copy of `X`. `pos_emb` is zero. The control is m1_pos (same
+    start, same K, same fresh optimizer).
+  - **Checks:**
+    - `tests/test_diph.py`, 6 tests: split/merge arithmetic, ids, embedding copy, the config
+      differs from m1_pos only in `diph_split`, the dataset, a branch + train step, and the
+      wrapper's exact length.
+    - Laptop smoke run from the real M1, 20 steps at batch 4: val mel L1 0.379 (M1 0.377);
+      val dur 0.11 (M1 0.093; the two parts are new targets).
+    - `scripts/infer.py` on TNI_arctic_a0137 with the smoke checkpoint: exact length (error 0),
+      MFA aligner, 33 pipeline tokens.
+  - **Success criteria:** compared with m1_pos,
+    - the AY/AW F2 glide moves toward LJ (D-80 probe; LJ AY +90 Hz, AW -316 Hz);
+    - US prob does not drop;
+    - MAE, WER and UTMOS are not worse;
+    - the user's listening agrees ("cry").
+  `make test`: 157 passed.

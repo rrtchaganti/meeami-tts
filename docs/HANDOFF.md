@@ -30,7 +30,7 @@ run phase 2 (`m1_cont`, `abl_a`, `abl_b`, section 3) or not; then `freeze-v1` an
 | T13 | GPU bundle + data check | done | `export/bundle.tar`; check-data PASS on a fresh unpack |
 | T14 | Demo page | done | `out/demo_site/index.html` (M0 only until trained checkpoints exist) |
 
-`make test`: **151 passed** (2026-11-09).
+`make test`: **157 passed** (2026-11-09).
 
 ## 2. Things only you can decide or do
 
@@ -167,6 +167,18 @@ Winner: m1_pos if its within-phone movement moves toward LJ (M1: 0.84x, middle t
 without losing dev MAE, WER or UTMOS against m1_cont, and if word ends sound right. Listening is
 the user's call. The ablations then branch from the winner (phase 2 below, with the winner's
 config).
+
+### Phase 2c — m1_pos_diph (optional, D-81; user decides when)
+
+One 20k-step branch from M1, the same as the others (~80 min at batch 32). The control is m1_pos.
+
+```bash
+cd ~/meeami-tts && git pull
+tmux new -d -s p2c "export PATH=$HOME/miniconda3/bin:\$PATH; cd ~/meeami-tts; R='conda run --no-capture-output -n tts python scripts/train.py'
+  \$R --config configs/m1_pos_diph.yaml --init_from runs/m1/ckpt_last.pt --max_steps 20000 2>&1 | tee logs/m1_pos_diph.log; exec bash"
+#    expect: "left at init: ['enc_p.pos_emb.weight']"; step-0 val mel ~0.38, val dur ~0.11
+bash scripts/export_run.sh m1_pos_diph
+```
 
 ### Phase 2 — ablations (only if decided after M1's dev results)
 
