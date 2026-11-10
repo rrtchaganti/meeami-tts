@@ -66,7 +66,7 @@ It also has to keep sounding natural when a word is forced to be much slower or 
 
 | Requirement | Metric (§9) | Final result, main system, test accents |
 | --- | --- | --- |
-| Exact words | WER/CER by Whisper large-v3 | WER 2.9% (references 6.3%; LJ ground truth 1.9%) |
+| Exact words | WER/CER by Whisper large-v3, both texts normalized the same way (§9.1) | WER 2.9%. For comparison: Whisper on the L2 input recordings themselves, 6.3%; on LJSpeech recordings, 1.9% |
 | US accent | Accent-ID US probability | 0.76 (references 0.49) |
 | LJSpeech voice | ECAPA cosine to LJ | 0.80 (to the reference speaker: 0.11) |
 | Exact length | Output samples − expected samples | **0 on all 1,248 references** |
@@ -109,16 +109,18 @@ Sources: [`results/<system>/test/summary.json`](../results) (means with 95% boot
 
 ## 3. Design principle: one source per output property
 
-The pipeline has one rule: every property of the output has exactly one source. Nothing comes from two places, so no property can leak into another.
+The pipeline has one rule: every property of the output has exactly one source. "Exactly one source" means that one input decides the property and no other input may influence it. Nothing is averaged or mixed between the reference and the model, so no property can leak into another.
 
-| Output property | Single source | Where in code |
-| --- | --- | --- |
-| Words | Input text → normalizer | [`normalize.py#L247`](../tts/text/normalize.py#L247) |
-| Pronunciation (phone sequence) | `data/lexicon/lexicon.txt`: first CMUdict pronunciation; g2p_en for OOV words | [`lexicon.py#L102`](../tts/text/lexicon.py#L102) |
-| Voice, accent, intonation, phone timing inside a word | The model, trained on LJSpeech only | [`models.py#L274`](../tts/models/vits_mfa/models.py#L274) |
-| Word start/end times, pauses, total length | The reference audio, aligned with MFA | [`pipeline.py#L216`](../tts/infer/pipeline.py#L216) |
+| Output property | Its only source | Deliberately **not** taken from | Where in code |
+| --- | --- | --- | --- |
+| Words | Input text → normalizer | the reference audio, an ASR transcript | [`normalize.py#L247`](../tts/text/normalize.py#L247) |
+| Pronunciation (phone sequence) | `data/lexicon/lexicon.txt`: first CMUdict pronunciation; g2p_en for OOV words | the reference's pronunciation | [`lexicon.py#L102`](../tts/text/lexicon.py#L102) |
+| Voice, accent, intonation | The model, trained on LJSpeech only | the reference: no accented audio is ever used for training | [`models.py#L274`](../tts/models/vits_mfa/models.py#L274) |
+| Word start/end times, pauses, total length | The reference audio, aligned with MFA | the model's own durations | [`pipeline.py#L216`](../tts/infer/pipeline.py#L216) |
+| Phone timing inside each word | The model's native LJ durations, fitted to the word's span (§8) | the reference's phone timing, which carries the L2 accent | [`pipeline.py#L112`](../tts/infer/pipeline.py#L112) |
 
 **Why this matters:**
+- **Each failure has one place to look.** A wrong word is a text or lexicon problem, a wrong voice is a model problem, and a mistimed word is an alignment or fitting problem.
 - **The pronunciation never comes from the reference.** The reference's phone durations and its mispronunciations are part of its accent.
 - **The pipeline copies word boundaries only.** Inside each word it redistributes time with LJSpeech's own elasticity (§8).
 - **Evidence:** the transfer-variant test (D-72). Copying the reference's *phone* durations (`phone_copy`, the assignment's suggested approach) gave the worst WER: 10.6%, against 2.5% for `elastic`.
@@ -130,7 +132,7 @@ The pipeline has one rule: every property of the output has exactly one source. 
 | Dataset | Use |
 | --- | --- |
 | LJSpeech 1.1: 13,100 clips, one US female speaker, 22.05 kHz | Training. The original VITS filelists (12,500 / 100 / 500), so the pretrained checkpoint never saw val or test. |
-| L2-ARCTIC v5: 24 speakers, 6 L1s × 4 | References for dev and test |
+| L2-ARCTIC v5: 24 speakers, 6 L1s × 4 (2 male, 2 female each) | References for dev and test |
 | L2-ARCTIC suitcase corpus | Stress-test demo clips only, not in metrics |
 
 **Split by accent, not by sentence** ([`configs/splits.yaml`](../configs/splits.yaml)):
@@ -212,7 +214,10 @@ One deliberate deviation is the **possessive rule** ([`lexicon.py#L95`](../tts/t
    - **Matching the spectrogram:** the target frame count comes from the training spectrogram function itself ([`audio.py#L61`](../tts/audio.py#L61)). The last token absorbs the difference, which was exactly +1 for all 13,100 files (D-35).
 4. **Every speech phone gets ≥ 1 frame** ([`textgrid.py#L165`](../tts/align/textgrid.py#L165), D-33). MFA's 10 ms phones are shorter than one 11.6 ms frame, which left 382 phones at 0 frames. A 0-frame phone breaks the log-duration loss (log(0 + 1e-6) = −13.8).
 
-**How accurate is MFA on accented speech?** ([`l2.py#L92`](../tts/align/l2.py#L92), [`reports/mfa_l2_dev.md`](../reports/mfa_l2_dev.md), plot 3). MFA was compared with the manual annotations on all 1,800 annotated dev utterances:
+**How accurate is MFA on accented speech?** ([`l2.py#L92`](../tts/align/l2.py#L92), [`reports/mfa_l2_dev.md`](../reports/mfa_l2_dev.md), plot 3).
+- **The ground truth:** L2-ARCTIC ships hand-corrected word and phone tiers for about 150 utterances per speaker (`annotation/*.TextGrid`). The phone labels carry error tags.
+- **Matching:** words are matched by label sequence. Phones are matched inside matched words by canonical label, with error tags and stress ignored and added phones excluded. Only interval times are used.
+- MFA was compared with the manual annotations on all 1,800 annotated dev utterances:
 
 | Accent | Word MAE | Word ≤ 20 ms | Phone MAE | Phone ≤ 20 ms |
 | --- | --- | --- | --- | --- |
@@ -272,7 +277,24 @@ One deliberate deviation is the **possessive rule** ([`lexicon.py#L95`](../tts/t
 | 5 | `use_pos`: expand the hidden states by duration, add a position-in-phone embedding, then project | [`models.py#L74-L83`](../tts/models/vits_mfa/models.py#L74-L83), [`models.py#L248`](../tts/models/vits_mfa/models.py#L248) | Lets the prior change inside a phone (§10.3). |
 | 6 | Data loader reads the project manifests | [`data.py#L35`](../tts/models/vits_mfa/data.py#L35) | One manifest format for all data |
 
-**Loading the pretrained checkpoint** (D-44):
+**Original VITS (V0) vs VITS-MFA at a glance:**
+
+| | Original VITS (V0) | VITS-MFA (ours) |
+| --- | --- | --- |
+| Alignment in training | MAS, searched every step | Fixed one-hot expansion of MFA frame counts per phone |
+| Input tokens | 178: espeak IPA characters + punctuation, a blank between every token | 72: 69 ARPAbet phones + `sil`, `sp`, `pad`, no blanks; 87 with the diphthong split |
+| Duration model | Stochastic, flow-based ([`v0.py#L131`](../tts/models/vits_mas/v0.py#L131)), 1.32 M parameters, trained on MAS durations | Deterministic, two convolutions, 0.35 M parameters, MSE on log frames |
+| Prior inside a phone | One constant mean and scale per token | + position-in-phone embedding (`m1_pos` onward) |
+| Weights | — | Warm start: every pretrained tensor whose name and shape match (553) is loaded |
+| Unchanged | Posterior encoder, flow, HiFi-GAN decoder, losses | Same, + L_dur |
+
+**Why a deterministic duration predictor** (change 4, [`models.py#L32-L47`](../tts/models/vits_mfa/models.py#L32-L47), [`models.py#L265`](../tts/models/vits_mfa/models.py#L265)):
+- **What the original does:** VITS's stochastic duration predictor is a normalizing flow conditioned on the text states. It learns the whole distribution of MAS durations through a variational lower bound. At inference it draws noise (scale 0.8), so the same sentence gets a different rhythm each time.
+- **What the pipeline needs:** the reference fixes each word's total length. The model only has to say how LJ would share that length among the word's phones, which is one native value per phone, not a sample. Sampling would only add random rhythm inside a word, which the fit then squeezes back into the span.
+- **The loss:** L_dur = mean over phones of (log d̂ᵢ − log dᵢ)², with dᵢ the MFA frame count. Error on the log scale is relative: being 2× off costs the same for a 3-frame stop and a 20-frame vowel. The minimizer is the typical (geometric-mean) duration, which is the natural centre for the multiplicative elastic fit (§8).
+- **Masking and detaching:** the loss ignores `sil` (its length comes from the reference), padding and augmented clips. The input is detached, as in VITS, so the duration loss cannot distort the text encoder.
+
+**Loading the pretrained checkpoint** (D-44). "Warm start" means the fine-tune starts from the pretrained LJSpeech VITS wherever the architecture still matches:
 - 553 tensors loaded.
 - Skipped: the 178-symbol embedding and the 284 stochastic-duration-predictor tensors.
 - `test_pretrained_loads_only_expected_skips` asserts exactly this list, so an unexpected skip would fail the tests.
@@ -320,6 +342,29 @@ L_G = 45·L_mel + L_KL + L_dur + L_adv + 2·L_fm
   - each new diphthong-second-half embedding is a copy of its base token's ([`diph.py#L65`](../tts/text/diph.py#L65)).
 - **Check:** a 20-step smoke run from M1 gave val mel L1 0.381 (m1_pos) and 0.379 (m1_pos_diph), against M1's 0.377.
 
+### 7.4 Theory: what a fixed external alignment takes away
+
+VITS trains its prior through the KL term ([`losses.py#L46`](../tts/models/vits_mfa/losses.py#L46)), in the flow's output space:
+
+L_KL = log q(z | x) − log N( f(z) ; μ_A(c), σ_A(c) )
+
+Here μ and σ are the text-encoder prior, copied onto frames by the alignment A.
+- **MAS (original VITS):** A* = argmax_A Σₜ log N( f(zₜ) ; μ_A(t), σ_A(t) ). The alignment is re-chosen every step, by the model's own prior and flow output. Alignment and latent space adapt to each other, in a hard-EM loop.
+- **MFA (ours):** A is fixed before training by an HMM–GMM acoustic model on MFCCs. It never sees f(z), μ or σ.
+
+**Not lost: the gradients.** MAS is not differentiable. So the KL still trains the flow and the prior encoder through exactly the same paths; only the value of A changed (D-75 audit). Replacing MAS does not remove the loss contribution through the flow or the prior encoder.
+
+**Lost: the feedback from the latent space to the alignment.**
+1. **Boundary mismatch is irreducible.** Frames that MFA assigns to the wrong phone stay in the KL for the whole of training, and the prior learns the average of the frames it is given. Its targets blur.
+2. **No blanks.** With one token per phone, each phone has one constant prior over all its frames. In the original, transitions could sit on blank tokens; here they have nowhere to go, and the flow must create all movement inside a phone.
+3. **Frozen errors and conventions.** MFA's errors are frozen into the training targets, and the duration predictor learns MFA's segmentation conventions, not the model's.
+
+**Evidence** ([`results/phone_dynamics/`](../results/phone_dynamics), D-76): on 100 LJ val clips resynthesized with ground-truth MFA durations, every MFA-trained model moves 14–16% less inside phones than the LJ recordings: M1 0.84×, m1_cont 0.86×, m1_pos 0.86×, m1_pos_diph 0.86×. Their change is piled up at phone onsets: onset/inside ratio 1.61 against 1.34 for LJ. The audible case is the flattened diphthong ("cry" heard as "cra", §10.5). The split fixed that case; the position embedding nudged the average only slightly (§10.3). V0 is not on this probe: driven with phone durations, its boundaries move (§10.6), which would confound the measure.
+
+**What it buys.** Controllable durations: the MFA-trained systems render given durations with ~1 ms bias and ~11 ms scatter, against V0's −21 ms and 27.7 ms (§10.6).
+
+**The natural next step** is to get the feedback loop back without losing control: learn the alignment with MAS again, but only *inside* MFA's word spans, with the word boundaries fixed (§15).
+
 ---
 
 ## 8. Inference pipeline: transferring word timing
@@ -358,7 +403,35 @@ text ─► normalize ─► lexicon phones ─► token timeline: sil · word p
 - Phones LJ keeps steady (stops, low σ) barely move.
 - This is "native elasticity": the word fills the reference's slot the way the LJ speaker would say it slower or faster.
 
-**Step 7, the stretch cap.** Beyond 2.5× its native length a word is not stretched further; the excess becomes a pause after it. A slow word then sounds like a word followed by a pause, not like a drawl.
+**The three fit variants** for a word of reference length D frames ([`pipeline.py#L154-L157`](../tts/infer/pipeline.py#L154-L157), [`pipeline.py#L299-L302`](../tts/infer/pipeline.py#L299-L302)):
+
+| Variant | Rule | What it keeps |
+| --- | --- | --- |
+| `elastic` (used) | dᵢ = exp(log d̂ᵢ + z·σᵢ), one z per word so that Σ dᵢ = D | LJ's rhythm, stretched the way LJ itself varies |
+| `proportional` | dᵢ = d̂ᵢ · D / Σ d̂ | LJ's proportions, every phone scaled by the same factor |
+| `phone_copy` | dᵢ = the reference's own MFA phone durations | the L2 speaker's phone timing (and with it, accent) |
+
+**Worked example** ("cry", from the LJ averages in [`stats/phone_logdur.json`](../stats/phone_logdur.json)):
+- **Native durations:** K 8.7, R 5.4, AY1 12.6 frames, 26.7 in total. σ is 0.32, 0.51 and 0.40.
+- **Reference span twice that** (D = 53.3 frames):
+  - `proportional` gives 17.3 / 10.9 / 25.1 (all ×2.0);
+  - `elastic` gives 15.2 / 13.1 / 25.1 (×1.75 / ×2.4 / ×2.0).
+- So the stop K stretches least and the highly variable R most, as LJ would when speaking slowly.
+
+"Keeping LJ's rhythm" means exactly this: the relative phone durations come from LJ, and only the word's total comes from the reference.
+
+**Step 7, the stretch cap.** Beyond 2.5× its native length a word is not stretched further; the excess becomes a pause after it, and the next word still starts on time.
+- **What it prevents:** L2 readers are slower than LJ (median ×1.12–1.16, plot 8) and hesitate, so some words last 3–4× what LJ would need. Stretching every phone that far gives drawled, held vowels far outside what the model saw in training. With the cap, a slow word sounds like a word followed by a pause.
+- **How 2.5 was chosen** (dev tuning grid, elastic, noise 0.333, 120 dev references, [`results/tune/grid.json`](../results/tune/grid.json)):
+
+| Cap | 1.4× | 1.6× | 1.8× | 2.0× | **2.5×** | none |
+| --- | --- | --- | --- | --- | --- | --- |
+| Word-boundary MAE (ms) | 26.1 | 23.8 | 23.0 | 22.9 | **21.9** | 21.5 |
+| UTMOS | 4.200 | 4.183 | 4.194 | 4.189 | **4.215** | 4.207 |
+
+  - A tight cap ends words early and costs timing.
+  - 2.5× is 0.4 ms behind no cap and has the best UTMOS, which is what the pre-stated rule picks.
+- **How often it acts:** on test it caps 148 words in 128 of 1,248 references (10%; `n_capped` in `results/m1_pos_diph/test/per_utt.csv`).
 
 **Step 8, quantize.** Cumulative rounding keeps every word boundary within half a frame and makes the total **exactly** the reference length. That is why length error is 0 for every output. It is an invariant, asserted on every call, not a statistic.
 
@@ -403,6 +476,14 @@ The evaluation models are pinned by version and hash, and loaded offline from lo
 | LJ voice | **Speaker similarity** | ECAPA cosine, output vs the mean embedding of 100 LJ test clips (should be high) and vs the reference speaker (should be low) | [`scorers.py#L39`](../tts/eval/scorers.py#L39), [`evaluate.py#L149-L168`](../scripts/evaluate.py#L149-L168) |
 | Naturalness | **UTMOS** | SpeechMOS `utmos22_strong` on every output; LJ test ground truth is the ceiling | [`scorers.py#L14`](../tts/eval/scorers.py#L14) |
 | Stretch | **Stretch ratio** | Speech frames ÷ the model's native predicted frames; used for binning | [`pipeline.py#L314-L316`](../tts/infer/pipeline.py#L314-L316) |
+
+**WER normalization, in detail** ([`asr.py#L14-L22`](../tts/eval/asr.py#L14-L22), [`asr.py#L45`](../tts/eval/asr.py#L45)):
+- Whisper's `EnglishTextNormalizer` runs on **both** the input text and the ASR transcript. It lower-cases, removes punctuation, expands contractions, maps spelled-out numbers and digits to one form, and maps British to US spelling.
+- Example: "For the twentieth time, that evening!" and "For the 20th time that evening." both become "for the 20th time that evening".
+- No dev or test evaluation sentence contains a digit or symbol (L2-ARCTIC writes numbers out). So number formats can only differ on the ASR side, where the normalizer handles them.
+- Known gap: currency is not equalized ("$5.50" vs "five dollars fifty"). No evaluation sentence contains currency.
+
+**Reading the references' 6.3% WER.** It is Whisper on the L2 input recordings themselves: human speech, no model involved. It measures how hard accented speech is for ASR, so it is a reference point, not a drawback of the system. The outputs (2.9%) are in a US voice and accent, so they are easier to recognize; the LJ recordings score 1.9%. Do not confuse it with output WERs such as phase 2c's 4.4% → 2.9%, which are Whisper on the synthesized speech of the same sentences.
 
 **Probes added during the project:**
 
@@ -485,6 +566,7 @@ What *did* differ was spectral movement **inside** phones: 14% below LJ, and 20%
 
 **Experiment:**
 - **Systems:** `m1_pos` (PLAN change 5: frames get a position-in-phone embedding *before* the projection, [`models.py#L76-L79`](../tts/models/vits_mfa/models.py#L76-L79)) against `m1_cont` (the same 20k extra steps without the change).
+- **How the embedding works:** frame k of a phone of d frames gets bin ⌊16·(k + 0.5)/d⌋, from 0 at the phone's start to 15 at its end ([`models.py#L248`](../tts/models/vits_mfa/models.py#L248)). A learned 192-dim vector per bin is added to the phone's encoder state before it is projected to the prior mean and scale. So the prior can differ at the start, middle and end of a phone. The table is zero-initialized, so at step 0 the model is exactly M1.
 - **Rule, fixed before running:** m1_pos wins if within-phone movement moves toward LJ without losing MAE, WER or UTMOS.
 
 **Result:**
@@ -572,7 +654,7 @@ Across LJ val (median F2 change), every model flattens diphthongs, AW worst:
 - **Split:** each of AW, AY, EY, OW, OY (× 3 stresses) becomes `X` + `X+` (72 → 87 symbols) ([`diph.py#L33`](../tts/text/diph.py#L33)).
 - **Durations:** MFA gives no boundary inside a diphthong, so its duration is split 50/50, each part ≥ 1 frame when d ≥ 2. A 0-frame second part (d = 1) is masked out of the duration loss ([`data.py#L73`](../tts/models/vits_mfa/data.py#L73)).
 - **Duration prediction:** the two parts are merged back as log(exp a + exp b) ([`diph.py#L57`](../tts/text/diph.py#L57)). Timing control is unchanged.
-- **Initialization:** each `X+` embedding copies `X` ([`diph.py#L65`](../tts/text/diph.py#L65), [`trainer.py#L64-L70`](../tts/models/vits_mfa/trainer.py#L64-L70)), so the model starts as M1.
+- **Initialization:** each `X+` embedding copies `X` ([`diph.py#L65`](../tts/text/diph.py#L65), [`trainer.py#L64-L70`](../tts/models/vits_mfa/trainer.py#L64-L70)), so the model starts as M1. `X+` is a real token, not a dummy copy: after the copy it trains to its own target, the end of the glide (for AY, toward /ɪ/). Example: "cry" `K R AY1` → `K R AY1 AY1+`.
 - **Scope:** the split lives **only at the model boundary**, in the VITS dataset and `VitsSystem`. Lexicon, MFA, manifests, statistics and the pipeline keep 72 symbols. The change is opt-in (`model.diph_split`) and leaves every other system untouched.
 - **Tests:** 6 in [`tests/test_diph.py`](../tests/test_diph.py) (split and merge arithmetic, ids, embedding copy, one-key config difference, a branch plus train step, exact output length).
 
@@ -774,14 +856,18 @@ Main checkpoint, from [`scripts/profile.py`](../scripts/profile.py) → [`result
 - **No word-boundary token.** The encoder input is a bare phone stream ("a name" = "an aim"), so word-final phones are distinguishable only through context and `sp` (D-75c).
 - **End-to-end latency is MFA-bound.** It takes 3.3 s per reference on the laptop, while the model itself runs 80× faster than real time.
 - **V0 needs an adapter.** It reads lexicon pronunciations in espeak-style IPA instead of espeak's own output (function words keep full stress), and it needs a blank-ownership rule. Even with the better rule, a −21 ms bias remains. An adapter that learned to place V0's blanks could narrow the timing gap. It would still have to fight MAS's model-internal alignment.
+- **Fixed alignments flatten phones** (§7.4): every MFA-trained model moves 14–16% less inside phones than LJ. V0 keeps slightly better WER and UTMOS (§10.6).
 - **The ablations were branched late (20k steps from M1),** so they test late-stage augmentation, not augmentation from the start of fine-tuning.
 
 **Future work, ranked by expected value:**
-1. A word-boundary or word-final flag on the encoder input (D-75c).
-2. Learned diphthong split points, e.g. from formant trajectories, instead of 50/50.
-3. Splitting other dynamic phones (CH, JH, ER) the same way.
-4. A listening test (MOS or MUSHRA, plus accent ratings) to replace the classifier as the accent judge.
-5. A faster aligner for live use: keep MFA loaded in memory, or use a stronger CTC aligner.
+1. Learn the alignment again inside MFA's word spans: MAS within each word, with the word boundaries fixed. This restores the alignment–latent feedback (§7.4) and keeps timing control.
+2. A word-boundary or word-final flag on the encoder input (D-75c).
+3. Learned diphthong split points, e.g. from formant trajectories, instead of 50/50.
+4. Splitting other dynamic phones (CH, JH, ER) the same way.
+5. A listening test (MOS or MUSHRA, plus accent ratings) to replace the classifier as the accent judge.
+6. A faster aligner for live use: keep MFA loaded in memory, or use a stronger CTC aligner.
+
+**Takeaway.** Make durations an input, copy word timing (not phone timing), and check the tokens before adding data. Replacing MAS cut word error from 40.5 to 24 ms; the biggest later gain came from a two-token diphthong, not from more training data.
 
 ---
 
@@ -794,6 +880,8 @@ Main checkpoint, from [`scripts/profile.py`](../scripts/profile.py) → [`result
 | Replacing MAS with MFA makes timing follow the reference (vs V0: −16.5 ms MAE, every accent) at a cost of +0.8 pt WER and −0.12 UTMOS | `results/paired/test_m1_pos_diph_vs_v0.csv`, `results/v0/test/summary.json` | [`v0.py`](../tts/models/vits_mas/v0.py), [`paired.py`](../tts/eval/paired.py) |
 | V0 renders its given durations ~20 ms early and scattered; the MFA-trained systems do not | `results/fidelity/test.json` | [`fidelity.py#L62`](../tts/eval/fidelity.py#L62) |
 | CTC has a +38 ms start bias on natural speech, so its MAE is not a ranking | `results/fidelity/calibration_dev.json` | [`fidelity.py#L83`](../tts/eval/fidelity.py#L83) |
+| MFA-trained models move 14–16% less inside phones than LJ (fixed-alignment cost, §7.4) | `results/phone_dynamics/*.json` | [`phone_dynamics.py#L32`](../tts/eval/phone_dynamics.py#L32) |
+| The 2.5× cap costs 0.4 ms against no cap, has the best UTMOS, and acts on 10% of test references | `results/tune/grid.json`, `n_capped` in `results/m1_pos_diph/test/per_utt.csv` | [`pipeline.py#L150-L153`](../tts/infer/pipeline.py#L150-L153) |
 | M1 beats M0 on timing, WER and UTMOS | `results/dev_comparison.csv`, `results/test_comparison.csv` | [`evaluate.py#L270`](../scripts/evaluate.py#L270) |
 | Copying phone durations hurts intelligibility | `results/tune/grid.json`, plot 7 | [`pipeline.py#L299-L302`](../tts/infer/pipeline.py#L299-L302) |
 | The position embedding does not restore within-phone movement | `results/phone_dynamics/*.json` | [`phone_dynamics.py#L32`](../tts/eval/phone_dynamics.py#L32) |

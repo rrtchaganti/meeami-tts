@@ -1081,3 +1081,16 @@ docs/HANDOFF.md instead of being worked around.
     the 2.5x cap acts on 148 words in 128/1,248 references.
   - QA: validator passed; every slide rendered through PowerPoint COM and inspected (titles kept
     to one line, no overlaps).
+- **D-92 REPORT and README brought in line with deck v2 (user request; documentation only).**
+  Added what the slides explained and the docs did not:
+  - "exactly one source" spelled out, with a "deliberately not taken from" column;
+  - WER normalization in detail, and what the references' 6.3% WER is;
+  - L2-ARCTIC speakers (2 male, 2 female per L1) and the manual word/phone ground truth;
+  - an original-VITS-vs-VITS-MFA table and the reasoning for deterministic durations;
+  - the position-bin formula, and `X+` as a real token;
+  - the proportional/phone_copy formulas, a worked "cry" example, and the cap rationale with
+    the dev cap sweep and its 10% usage on test;
+  - new REPORT §7.4 on the theory of fixed alignments, with the within-phone evidence;
+  - future work: MAS inside MFA word spans; the takeaway; 2 claim-index rows.
+
+  README points to the v2 deck. Link check: 259 links, 0 bad.
