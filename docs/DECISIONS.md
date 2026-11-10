@@ -1058,3 +1058,26 @@ docs/HANDOFF.md instead of being worked around.
   - Docs: REPORT §2, §7.0, §9.1, §9.3, §10.6, §11, §13–16 and README (results table, Stage 15,
     commands, layout) updated; 242 relative links and line anchors checked. `make test`: 166
     passed, 1 skipped (158 + 7 V0 tests + 1 fidelity test).
+
+- **D-91 Slide deck v2 (`slides/meeami-tts_v2.pptx`, source `slides/build_v2.js`; user review of
+  v1, 2026-11-10).** v1 (`meeami-tts.pptx`, `build.js`) is kept unchanged; versions are kept until
+  the user picks one. 23 slides, reordered so every term is defined before use: problem (task,
+  design rule explained, how each metric is computed incl. WER normalization and what the L2
+  references' 6.3% WER is), approach (V0 as the starting point, architecture changes table,
+  stochastic -> deterministic durations, position embedding and diphthong split explained,
+  system glossary with dev/test and why the ablations carry `_pos`), data (how the accent split
+  was made; manual phone ground truth), training, inference (fit variants with a worked "cry"
+  example from LJ statistics; why a 2.5x cap, with the dev cap sweep), findings, results (V0
+  added; per accent; what replacing MAS bought and cost), theory slide near the end, efficiency,
+  limitations, demo.
+  - **Theory slide wording, corrected from the request.** The request said the loss through the
+    flow and prior encoder is absent with fixed alignments. It is not: MAS is non-differentiable,
+    so the KL trains the flow and prior encoder by the same paths (D-75 audit). What is lost is
+    the alignment's dependence on the flow output and prior (MAS re-chooses A in f(z) space every
+    step); the slide states that, with the within-phone movement evidence (0.84-0.86x LJ).
+  - Facts checked for the deck: no dev/test evaluation sentence contains digits or symbols; the
+    normalizer maps "twentieth"/"20th" and "It's"/"it is" to one form (currency is not
+    equalized); L2-ARCTIC manual annotation has word and phone tiers (~150 utts/speaker); on test
+    the 2.5x cap acts on 148 words in 128/1,248 references.
+  - QA: validator passed; every slide rendered through PowerPoint COM and inspected (titles kept
+    to one line, no overlaps).
