@@ -1094,3 +1094,12 @@ docs/HANDOFF.md instead of being worked around.
   - future work: MAS inside MFA word spans; the takeaway; 2 claim-index rows.
 
   README points to the v2 deck. Link check: 259 links, 0 bad.
+- **D-93 REPORT §7.0: how V0 is driven, space vs pause (user question; documentation only).**
+  Added the step-by-step of how V0 gets its durations: the reference's word spans, V0's own
+  rhythm inside words, the same elastic fit, frames split back over characters and blanks.
+  Added where its 40.5 ms comes from and why given durations are not enough for a MAS model.
+  Answered "space vs pause":
+  - `sp` exists only for a reference silence of at least 3 frames between words (`min_sp_frames`);
+    V0 writes it as ", ", and a plain space is a boundary with no pause;
+  - measured on the dev references (MFA word times): 78.9% of word junctions have no silence,
+    21.1% have one of at least 3 frames, 12.2% of at least 100 ms (the pause-F1 threshold).

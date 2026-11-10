@@ -255,6 +255,25 @@ One deliberate deviation is the **possessive rule** ([`lexicon.py#L95`](../tts/t
 - **The one adapter choice** ([`v0.py#L92`](../tts/models/vits_mas/v0.py#L92)) is which phone a blank token belongs to. It was chosen on dev. When each blank was credited to the character *before* it, words came out about 35 ms early (dev MAE 50.8 ms). Crediting it to the character *after* it gave 40.7 ms, and that is the setting used (E-32).
 - **Why have it:** the question "did replacing MAS help?" needs the model before the replacement, under the same conditions. FastSpeech2 (M0) answers a different question.
 
+**How V0 is driven, step by step.** MAS runs only during training, to find the alignment the model learns from; at inference every VITS takes durations from its duration predictor. V0's predicted durations are replaced by durations built from the reference's **word** boundaries, not from MFA phone boundaries:
+1. **Reference → word spans.** MFA aligns the L2 recording, and only word starts, ends and pauses are kept, as for every system. Each word gets a span of D frames.
+2. **Text → V0's input.** Lexicon phones are written in espeak-style IPA characters, with a blank token between every character, as V0 was trained.
+3. **V0's own rhythm inside a word.** V0's stochastic duration predictor gives a duration to every character and blank; these are summed per phone into native phone durations.
+4. **The same fit as every system** (elastic, one z per word, cap 2.5×, §8) spreads D over the word's phones. The total comes from the reference; the split comes from V0.
+5. **Back to V0's tokens.** Each phone's frames are split over its characters and blanks in V0's predicted proportions, with exact totals. So word boundaries and output length match the other systems frame for frame.
+6. **Synthesis.** These per-token durations replace the predictor's output when the prior is expanded; then the inverse flow and the decoder run as usual.
+
+**Space vs pause.** Both the space and the comma are tokens, but they mean different things:
+- **The rule:** the token timeline has an `sp` token only where the reference has a silence of at least 3 frames (~35 ms) between two words (`align.min_sp_frames`, [`pipeline.py#L83`](../tts/infer/pipeline.py#L83)). A shorter gap goes to the preceding word. V0 writes `sp` as ", ", because in its LJSpeech training text a comma is where the speaker pauses. A plain space marks a word boundary with no pause.
+- **Why words are usually not separated by silence:** in connected speech, words mostly run into each other. A stop's closure silence is part of the stop, not a gap between words. In the dev references, 78.9% of word junctions have no silence at all; the other 21.1% have one of at least 3 frames (12.2% at least 100 ms).
+- **Two thresholds:** the 3-frame rule decides the tokens. The pause F1 metric counts only silences of at least 100 ms (§9.1).
+
+**Where V0's 40.5 ms comes from.** The metric aligns V0's output with MFA and compares each word's start and end with the manual annotation of the reference. Two errors add up:
+- **MFA's own error on the reference,** about 19–20 ms (§6). It is the same for every system, which is why even the main system is at 23.9 ms.
+- **How faithfully the model renders the durations it is given.** This is where V0 fails: its words land 21 ms early on average, with 27.7 ms scatter around that shift. The main system lands about 0 ms off, with 11.2 ms scatter (§10.6).
+
+**Why giving V0 the durations is not enough.** MAS learned, inside the model, which tokens carry which sound. A blank, for example, may carry the start of the next sound or the tail of the previous one. Imposed durations have to guess that mapping. Crediting each blank to the character before or after it moved the error from 52.0 to 40.5 ms, and the better choice still leaves a 21 ms early shift. The fine-tuned systems were trained on MFA durations, so for them "these frames are this phone" holds by construction. This tests V0 with the best adapter chosen on dev, not every possible adapter (§15).
+
 ### 7.1 M0: FastSpeech2 + HiFi-GAN baseline (inference only)
 
 - **Model:** ming024's pretrained LJSpeech FastSpeech2 and its bundled HiFi-GAN, at the same frame rate as ours ([`tts/models/fastspeech2/m0.py`](../tts/models/fastspeech2/m0.py)).
