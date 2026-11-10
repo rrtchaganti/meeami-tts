@@ -6,7 +6,7 @@ Chaganti Raja Ravi Teja · November 2026 · code frozen at git tag `freeze-v1` (
 
 How to read this report:
 - Each claim points to the code that implements it and to the result file that measures it.
-- Line links point to the frozen code.
+- Line links point to the frozen code. The one exception is V0, the immediate baseline (the original VITS with MAS). It was added after the freeze as new files (§7.0, §10.6, D-90), and its links point to those files.
 - `D-n` and `E-n` are entries in [DECISIONS.md](DECISIONS.md), the running log of every decision and error.
 - The original specification is [PLAN.md](PLAN.md). Section 13 lists every deviation from it.
 
@@ -82,12 +82,13 @@ It also has to keep sounding natural when a word is forced to be much slower or 
 - a position-in-phone embedding;
 - each diphthong split into two tokens.
 
-**Held-out test accents** (Arabic, Korean, Vietnamese; 12 speakers × 104 sentences = 1,248 references, evaluated once, after `freeze-v1`; D-86):
+**Held-out test accents** (Arabic, Korean, Vietnamese; 12 speakers × 104 sentences = 1,248 references, evaluated once, after `freeze-v1`; D-86. V0 was added after the freeze, D-90):
 
 | System | Word-boundary MAE (ms) | Within 20 ms | Pause F1 | WER | US prob | UTMOS | Spk sim LJ |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | L2 references | | | | 0.063 | 0.486 | | |
-| M0: FastSpeech2 baseline | 31.9 | 55.3% | 0.726 | 0.093 | 0.746 | 3.96 | 0.766 |
+| **V0: original VITS with MAS** (immediate baseline) | 40.5 | 41.2% | 0.815 | **0.021** | 0.649 | **4.31** | 0.802 |
+| M0: FastSpeech2 (second baseline) | 31.9 | 55.3% | 0.726 | 0.093 | 0.746 | 3.96 | 0.766 |
 | M1: VITS-MFA | 24.2 | 69.3% | 0.822 | 0.038 | 0.734 | 4.19 | 0.805 |
 | m1_pos | 24.6 | 68.3% | 0.826 | 0.044 | 0.781 | 4.17 | 0.806 |
 | **m1_pos_diph (main)** | **23.9** | **69.6%** | **0.835** | **0.029** | 0.762 | **4.20** | 0.800 |
@@ -96,12 +97,13 @@ It also has to keep sounding natural when a word is forced to be much slower or 
 
 Sources: [`results/<system>/test/summary.json`](../results) (means with 95% bootstrap CIs) and [`results/paired/`](../results/paired) (paired tests).
 
-**Five findings:**
-1. **VITS with MFA durations beats the FastSpeech2 baseline on every axis but accent.** Against M0: −8 ms word-boundary error, WER 9.3% → 3.8%, UTMOS +0.23. US probability is level.
-2. **Splitting diphthongs fixed a diagnosed defect.** It came from a listening report ("cry" heard as "cra", §10.5). It also lowered test WER from 4.4% to 2.9% and improved timing, against its control.
-3. **Pace augmentation (ablations A and B) is a negative result.** Neither improved timing or WER in any stretch range, and both lowered UTMOS.
-4. **Output length is exact for every system and reference.** This holds by construction, not by tuning (§8).
-5. **The dev conclusions replicated on the unseen test accents.** The test split was read only after every model and setting was fixed.
+**Six findings:**
+1. **Replacing MAS with MFA durations is what makes the output follow the reference timing.** V0 is the same pretrained VITS before the swap, given the same word timing. Against V0, the main system's word boundaries are 16.5 ms closer (40.5 → 23.9 ms; within 20 ms 41% → 70%; p ≈ 1e-192). The gain holds in every accent and every stretch range. V0 renders its given durations about 20 ms early and scattered; the fine-tuned systems render them on time (§10.6). **The cost:** against V0, WER is +0.8 points and UTMOS −0.12. US probability is +0.11.
+2. **VITS with MFA durations also beats the FastSpeech2 baseline on every axis but accent.** Against M0: −8 ms word-boundary error, WER 9.3% → 3.8%, UTMOS +0.23. US probability is level.
+3. **Splitting diphthongs fixed a diagnosed defect.** It came from a listening report ("cry" heard as "cra", §10.5). It also lowered test WER from 4.4% to 2.9% and improved timing, against its control.
+4. **Pace augmentation (ablations A and B) is a negative result.** Neither improved timing or WER in any stretch range, and both lowered UTMOS.
+5. **Output length is exact for every system and reference.** This holds by construction, not by tuning (§8).
+6. **The dev conclusions replicated on the unseen test accents.** The test split was read only after every model and setting was fixed.
 
 ---
 
@@ -233,12 +235,27 @@ One deliberate deviation is the **possessive rule** ([`lexicon.py#L95`](../tts/t
 
 ## 7. Models
 
+### 7.0 V0: the original VITS with MAS (immediate baseline, inference only; added after the freeze)
+
+- **What it is:** the official pretrained LJSpeech VITS checkpoint, exactly as released, and not retrained. It is the checkpoint M1 is fine-tuned from (§7.2). So V0 is the system before the MAS → MFA swap, and V0 vs M1 measures what the swap did. It has MAS-learned alignment, the stochastic duration predictor (SDP), blank tokens and IPA character input ([`v0.py`](../tts/models/vits_mas/v0.py), [`configs/v0.yaml`](../configs/v0.yaml), D-90).
+- **Same pipeline:** V0 runs through the same pipeline and settings (§8) as every other system. It gets the same word timing and the same exact output length.
+- **Input text** ([`v0.py#L51-L89`](../tts/models/vits_mas/v0.py#L51-L89)):
+  - The original model reads espeak IPA. The lexicon is the only allowed pronunciation source, so each ARPAbet phone is written in the IPA characters espeak en-us uses in the VITS training lists (for example `AH0` → ə, `ER1` → ˈɜː, `R` → ɹ).
+  - The stress mark goes before the vowel, as in those lists.
+  - Words are separated by spaces; `sp` becomes ", " and the final `sil` becomes ".".
+- **Durations** ([`v0.py#L115`](../tts/models/vits_mas/v0.py#L115), [`v0.py#L216-L230`](../tts/models/vits_mas/v0.py#L216-L230)):
+  - The SDP gives each character and blank a native duration (noise 0.8, VITS's own default, seeded).
+  - A phone's native duration is the sum over the characters and blanks it owns.
+  - At synthesis, each phone's frames are split back over its characters in the same proportions, with exact totals.
+- **The one adapter choice** ([`v0.py#L92`](../tts/models/vits_mas/v0.py#L92)) is which phone a blank token belongs to. It was chosen on dev. When each blank was credited to the character *before* it, words came out about 35 ms early (dev MAE 50.8 ms). Crediting it to the character *after* it gave 40.7 ms, and that is the setting used (E-32).
+- **Why have it:** the question "did replacing MAS help?" needs the model before the replacement, under the same conditions. FastSpeech2 (M0) answers a different question.
+
 ### 7.1 M0: FastSpeech2 + HiFi-GAN baseline (inference only)
 
 - **Model:** ming024's pretrained LJSpeech FastSpeech2 and its bundled HiFi-GAN, at the same frame rate as ours ([`tts/models/fastspeech2/m0.py`](../tts/models/fastspeech2/m0.py)).
 - **Duration injection:** reference durations are passed as `d_targets` to the variance adaptor, the model's training-time code path ([`m0.py#L78-L85`](../tts/models/fastspeech2/m0.py#L78-L85)). Pitch and energy stay predicted.
 - **Symbol mapping:** our tokens map onto its symbol table, kept in the original order. An unknown symbol raises ([`m0.py#L28`](../tts/models/fastspeech2/m0.py#L28)).
-- **Why have it:** it is a strong, standard non-autoregressive baseline that accepts durations directly. It also gave a working demo before any training.
+- **Why have it:** it is a strong, standard non-autoregressive baseline that accepts durations directly. It also gave a working demo before any training. It is the second baseline; V0 (§7.0) is the immediate one.
 
 ### 7.2 M1: VITS with MFA durations (VITS-MFA)
 
@@ -248,7 +265,7 @@ One deliberate deviation is the **possessive rule** ([`lexicon.py#L95`](../tts/t
 
 | # | Change | Code | Reason |
 | --- | --- | --- | --- |
-| 1 | Remove MAS; the alignment is a one-hot expansion of MFA durations | [`models.py#L242`](../tts/models/vits_mfa/models.py#L242) | The durations must be **controllable** at inference. MAS learns its own alignment, which a reference could not override. |
+| 1 | Remove MAS; the alignment is a one-hot expansion of MFA durations | [`models.py#L242`](../tts/models/vits_mfa/models.py#L242) | The durations must be **controllable** at inference. MAS learns its own alignment, which a reference could not override. Measured after the freeze: V0 renders given durations ~20 ms early and scattered (§10.6). |
 | 2 | `add_blank: false` | [`data.py#L60-L73`](../tts/models/vits_mfa/data.py#L60-L73) | Blank tokens have no MFA duration. |
 | 3 | 72 symbols; text embedding re-initialized, every other matching weight loaded | [`models.py#L348`](../tts/models/vits_mfa/models.py#L348) | The pretrained model used espeak IPA characters (178 symbols). |
 | 4 | Deterministic duration predictor on the **detached** encoder output, MSE on log frames, masked on `sil`, padding and augmented rows | [`models.py#L32-L47`](../tts/models/vits_mfa/models.py#L32-L47), [`models.py#L265`](../tts/models/vits_mfa/models.py#L265), [`data.py#L71`](../tts/models/vits_mfa/data.py#L71) | Durations come from the reference, so the predictor only supplies *native relative* durations inside a word (§8). It needs to be deterministic, not stochastic. Detaching keeps it from distorting the encoder. |
@@ -379,7 +396,7 @@ The evaluation models are pinned by version and hash, and loaded offline from lo
 | --- | --- | --- | --- |
 | Timing | **Length error** | Output samples − round(N_ref·22050/sr_ref); must be 0 | [`pipeline.py#L333-L334`](../tts/infer/pipeline.py#L333-L334) |
 | Timing | **Word-boundary MAE, % within 20/50 ms** | Each word's start and end. Reference times come from the **manual** annotation word tier ([`evaluate.py#L53`](../scripts/evaluate.py#L53)). Output times come from MFA on the output with the input text ([`evaluate.py#L107-L125`](../scripts/evaluate.py#L107-L125)). Words are matched by sequence alignment. | [`metrics.py#L16`](../tts/eval/metrics.py#L16), [`metrics.py#L24`](../tts/eval/metrics.py#L24) |
-| Timing | **Word-boundary MAE (CTC)** | Same, with MMS_FA times on the output: a second-aligner cross-check | [`evaluate.py#L188-L193`](../scripts/evaluate.py#L188-L193) |
+| Timing | **Word-boundary MAE (CTC)** | Same, with MMS_FA times on the output: a second-aligner cross-check. CTC has its own +38 ms start bias on real speech, so it checks the direction of a shift, not the ranking of systems (§9.3). | [`evaluate.py#L188-L193`](../scripts/evaluate.py#L188-L193) |
 | Timing | **Pause F1** | A pause is a silence ≥ 100 ms between two matched words. F1 of output vs reference pauses per word boundary; no pauses on either side counts as F1 = 1. | [`metrics.py#L38`](../tts/eval/metrics.py#L38) |
 | Exact words | **WER, CER** | faster-whisper large-v3 transcript vs the input text, both through Whisper's `EnglishTextNormalizer`, scored by `jiwer`. Also run on the references and on LJ test ground truth. | [`asr.py#L45`](../tts/eval/asr.py#L45) |
 | US accent | **US probability** | CommonAccent ECAPA accent ID. softmax(30·cosine) over the classes; the 30 is the training recipe's angular-margin scale (D-65). | [`scorers.py#L55-L70`](../tts/eval/scorers.py#L55-L70) |
@@ -392,6 +409,8 @@ The evaluation models are pinned by version and hash, and loaded offline from lo
 | Probe | What it measures | Code |
 | --- | --- | --- |
 | **Phone dynamics** (D-76) | Mean L2 distance between consecutive log-mel frames *inside* phones of ≥ 8 frames (overall and by thirds) vs at phone onsets, for LJ val resynthesized with ground-truth durations against the LJ recordings | [`phone_dynamics.py#L27-L49`](../tts/eval/phone_dynamics.py#L27-L49) |
+| **Duration fidelity** (D-90, `make fidelity`) | For each word, the signed difference between where the aligner finds it in the output and where the pipeline placed it. Reported as bias (start, end), MAE, and MAE with the bias removed, for MFA and CTC. This separates the model's rendering error from the shared reference-alignment error. | [`fidelity.py#L31-L48`](../tts/eval/fidelity.py#L31-L48), [`fidelity.py#L62`](../tts/eval/fidelity.py#L62) |
+| **Aligner calibration** (D-90, `make fidelity SPLIT=dev`) | The same statistics for MFA and CTC on the natural dev recordings against the manual annotation: each judge's own zero point | [`fidelity.py#L83`](../tts/eval/fidelity.py#L83) |
 | **Diphthong glide** (D-80) | LPC formants (order 12, 11.025 kHz). F1/F2 change between 20–35% and 65–80% of each diphthong ≥ 8 frames. | ad-hoc probe script (session scratchpad, not a repo module); numbers in D-80 and D-84 |
 | **Pace ρ** (plot 8, D-85) | Per word: reference frames ÷ Σ exp(μₚ) over its lexicon phones, with μₚ the LJ mean log duration; per utterance: the mean log ρ | [`plots.py#L225-L276`](../tts/eval/plots.py#L225-L276) |
 
@@ -408,6 +427,8 @@ The evaluation models are pinned by version and hash, and loaded offline from lo
 
 - **The accent-ID US probability is near-binary per utterance**, because of the softmax ×30. It flips on changes nobody can hear (D-84, §10.5), so read it as a population mean, never per sample.
 - **UTMOS chose the WSOLA stretcher's parameters** (D-67), on LJ ground-truth clips only, while UTMOS is also an evaluation metric.
+- **CTC is a weak second judge** (D-90). On natural dev speech it places word starts 38 ms late and has 47.8 ms MAE. MFA has no bias and 20.0 ms MAE ([`results/fidelity/calibration_dev.json`](../results/fidelity/calibration_dev.json)). A system that renders words *early* can therefore score a *lower* CTC MAE. V0 does: 45.6 ms against 49.1 for M1. CTC MAE is read only against its own zero point (§10.6).
+- **MFA judges systems trained on MFA durations.** M1 and its branches learned MFA's segmentation of LJ, and MFA then measures them. That may favour them. CTC confirms V0's early shift independently, but it is too coarse to confirm the difference in scatter (§10.6).
 - **M1's dev numbers are slightly optimistic,** because 120 of the 1,200 dev references were used for tuning (D-73). The test numbers have no such bias.
 
 ---
@@ -419,6 +440,7 @@ The project ran in stages:
 - **One GPU run:** M1.
 - **Three phase-2 rounds:** each was triggered by a listening observation and decided by a pre-stated rule.
 - **The freeze**, then the single test evaluation.
+- **After the freeze:** V0, the immediate baseline, was added at review (§10.6).
 
 ### 10.1 Build and verification (T1–T14)
 
@@ -593,9 +615,61 @@ Across LJ val (median F2 change), every model flattens diphthongs, AW worst:
 
 ---
 
+### 10.6 After the freeze: the immediate baseline V0 (D-90)
+
+**The question raised at review:** M1 replaces MAS with MFA durations, so its immediate baseline is the original VITS with MAS, not FastSpeech2. V0 (§7.0) is that checkpoint, given the same word timing through the same pipeline. It is inference only, so it could be added after the freeze without touching any frozen system.
+
+**Protocol:**
+- V0's one free choice (blank ownership) was made on dev.
+- Test was then run once with that choice.
+- The first chained run had already evaluated test with the rejected choice. Both test results are kept: 52.0 ms rejected, 40.5 ms chosen (E-32). The choice changes no conclusion.
+
+**Result** (test; paired vs V0, Holm; [`results/paired/test_*_vs_v0.csv`](../results/paired)):
+
+| Main system − V0 | Mean difference | p (Holm) |
+| --- | --- | --- |
+| Word-boundary MAE | −16.5 ms (40.5 → 23.9) | 5e-192 |
+| Within 20 ms | +28.4 pt | 1e-185 |
+| US probability | +0.113 | 8e-20 |
+| WER | +0.8 pt (2.1% → 2.9%) | 0.004 |
+| UTMOS | −0.12 (4.31 → 4.20) | 3e-28 |
+| Pause F1, speaker similarity | n.s. | |
+
+- **Consistent across conditions:** the timing gain holds in all three accents (−15.9 / −17.4 / −16.2 ms). It grows with the stretch ratio (−15.9, −16.4, −17.4 ms by tercile). Dev shows the same pattern (−17.2 ms).
+- **M1 vs V0:** the same picture. MAE −16.3 ms; WER +1.7 pt; UTMOS −0.12; US probability +0.086.
+
+**Why V0 misses the timing: duration fidelity** (test, MFA on the output vs where the pipeline put each word; [`results/fidelity/test.json`](../results/fidelity/test.json)):
+
+| System | Bias, starts / ends | MAE | MAE without the bias |
+| --- | --- | --- | --- |
+| V0 | −21.3 / −15.1 ms | 32.6 ms | 27.7 ms |
+| M0 (FastSpeech2) | +0.4 / −0.5 ms | 19.9 ms | 19.9 ms |
+| M1 | −1.3 / −0.4 ms | 11.5 ms | 11.4 ms |
+| main | −1.0 / 0.0 ms | 11.3 ms | 11.2 ms |
+
+- **V0's words are both early and scattered.** The MAS-trained model's internal alignment does not put a word's sound where its given frames are. Its blanks have no defined phonetic owner, and no adapter choice removes that: the rejected choice was worse, at −36 ms.
+- **The fine-tuned systems render their durations almost exactly where they were placed.** This is direct evidence for PLAN change 1: with MFA durations, the reference timing becomes controllable.
+
+**Is the judge fair?** (aligner calibration on natural dev speech, [`results/fidelity/calibration_dev.json`](../results/fidelity/calibration_dev.json))
+- MFA: bias 0.0 / 0.0 ms, MAE 20.0 ms.
+- CTC: bias +38.2 / −11.9 ms, MAE 47.8 ms.
+- Against CTC's own zero point, CTC also finds V0 early: starts +5.3 against +38.2 for natural speech, ends −25.7 against −11.9. It finds M1 much closer: +26.4 / −14.6.
+- So two independent judges agree on the direction and rough size of V0's shift.
+- CTC's own scatter (40 ms) is too large to rank the systems' scatter. That part of the evidence rests on MFA, which M1 was trained on (§9.3).
+
+**The trade-off, stated plainly:** V0 is the stronger system on WER and UTMOS. Fine-tuning on MFA durations without blanks bought:
+- controllable timing;
+- a more US-like accent (+0.11 US probability, a population mean; §9.3).
+
+It cost about 0.8 points of WER and 0.12 UTMOS. The diphthong split (§10.5) already won back half of M1's WER gap to V0: M1 is +1.7 points, the main system +0.8.
+
+---
+
 ## 11. Final results on held-out accents
 
 The table is in §2. Paired tests on test (D-86, [`results/paired/`](../results/paired)):
+
+- **m1_pos_diph vs V0 (the immediate baseline; D-90, §10.6):** MAE −16.5 ms; within 20 ms +28.4 pt; US prob +0.113; WER +0.8 pt; UTMOS −0.12. All significant after Holm. Pause F1 and speaker similarity are not significant.
 
 - **m1_pos_diph vs m1_pos (its control):**
   - MAE −0.70 ms; WER −1.5 pt; CER −0.7 pt; UTMOS +0.03; within 20 ms +1.2 pt; pause F1 +0.009 (p 0.04). All significant after Holm.
@@ -610,11 +684,11 @@ The table is in §2. Paired tests on test (D-86, [`results/paired/`](../results/
 
 **Per accent, test** ([`results/*/test/summary.json`](../results); plot 6):
 
-| Accent | Reference US prob | M1 MAE / WER | m1_pos_diph MAE / WER | m1_pos_diph US prob |
-| --- | --- | --- | --- | --- |
-| Arabic | 0.455 | 24.9 ms / 4.3% | 24.6 ms / 3.4% | 0.721 |
-| Korean | 0.595 | 22.2 ms / 3.3% | 21.8 ms / 2.2% | 0.793 |
-| Vietnamese | 0.406 | 25.4 ms / 4.0% | 25.4 ms / 3.2% | 0.771 |
+| Accent | Reference US prob | V0 MAE / WER | M1 MAE / WER | m1_pos_diph MAE / WER | m1_pos_diph US prob |
+| --- | --- | --- | --- | --- | --- |
+| Arabic | 0.455 | 40.5 ms / 2.6% | 24.9 ms / 4.3% | 24.6 ms / 3.4% | 0.721 |
+| Korean | 0.595 | 39.3 ms / 1.5% | 22.2 ms / 3.3% | 21.8 ms / 2.2% | 0.793 |
+| Vietnamese | 0.406 | 41.6 ms / 2.2% | 25.4 ms / 4.0% | 25.4 ms / 3.2% | 0.771 |
 
 **Pace check (plot 8,** [`08_rho_dev_test.png`](../results/plots/08_rho_dev_test.png)**):**
 - The median reference is 1.12× LJ's pace on dev and 1.16× on test, with a similar spread.
@@ -622,7 +696,7 @@ The table is in §2. Paired tests on test (D-86, [`results/paired/`](../results/
 
 **Other test facts:**
 - **Aligner:** all 1,248 test references were aligned by MFA; no CTC fallback was needed.
-- **Second-aligner cross-check:** CTC on the outputs gives MAE 49.5 ms for the main system. At CTC's coarser resolution it separates M0 (52.0 ms) from the VITS systems (49.1–49.5 ms), but not the VITS systems from each other.
+- **Second-aligner cross-check:** CTC on the outputs gives MAE 49.5 ms for the main system, 52.0 ms for M0, 49.1–49.5 ms for the VITS-MFA systems and 45.6 ms for V0. CTC's own +38 ms start bias on real speech makes these numbers unreliable as a ranking. V0's *early* shift cancels part of that bias, which is why V0 scores lowest. Read against CTC's zero point, CTC agrees with MFA (§10.6, §9.3). (An earlier version of this report read the CTC MAE as separating M0 from the VITS systems; that reading is withdrawn, D-90.)
 
 ---
 
@@ -659,6 +733,8 @@ Main checkpoint, from [`scripts/profile.py`](../scripts/profile.py) → [`result
 | Data-center GPU profile | Laptop GPU and CPU only | Not runnable on the instance | E-26 |
 | n_vocab = 72 | 87 for `m1_pos_diph` only (opt-in) | Diagnosed diphthong flattening | D-80, D-81 |
 | UTMOS via `torch.hub` defaults | sha256-pinned weights loaded with `weights_only=True` | The hub path did a full pickle load of unhashed weights | E-13, D-66 |
+| Baselines: M0 (FastSpeech2) only | + V0, the original pretrained VITS with MAS, inference only, added after the freeze | The immediate baseline for the MAS → MFA swap (raised at review). No frozen system or config changed. | D-90 |
+| (V0) the original VITS reads espeak IPA | Lexicon pronunciations written in espeak-style IPA | `lexicon.txt` is the only pronunciation source (CLAUDE.md) | D-90 |
 | Bundle includes LJ WAVs | M1 bundle without them; the instance downloads LJ, verified against the laptop's hashes | 1 MB/s upload | D-69 |
 
 ---
@@ -667,7 +743,7 @@ Main checkpoint, from [`scripts/profile.py`](../scripts/profile.py) → [`result
 
 **Integrity:**
 - **Test lock in code.** `tts/guard.py` blocks test-speaker audio until `freeze-v1` exists (§4).
-- **Freeze discipline.** After the tag, no model code or experiment config changed. Checkpoint hashes are committed.
+- **Freeze discipline.** After the tag, no model code or experiment config changed. Checkpoint hashes are committed. V0 and the fidelity probe (D-90) were added after the tag as new files, with new configs. The only shared code change is the pipeline passing word positions to systems that ask for them, which only V0 does. Every other system gets the identical call.
 - **Decision rules before results.** The tuning rule (D-64), the phase-2a winner rule (D-76) and the diphthong success criteria (D-81) were written down before each run.
 - **Nothing silently substituted:**
   - pinned environments (`envs/*.yml`, plus full lock exports in `envs/lock/`);
@@ -684,7 +760,7 @@ Main checkpoint, from [`scripts/profile.py`](../scripts/profile.py) → [`result
   - alignment failures (an unspoken word, a false start, a forced CTC path).
   - Pass means exact length or a clean fallback. **21/21 on GPU and CPU** with the main checkpoint.
 - **Failure handling.** Any failure in `scripts/infer.py --pairs_dir` prints a one-line reason and continues with the next pair.
-- **Unit tests.** `make test` gives 158 passed, 1 skipped. The skip is the pre-freeze lock test, which skips by design once the tag exists. Every module has a test and a make target.
+- **Unit tests.** `make test` gives 166 passed, 1 skipped (158 at the freeze; V0 and the fidelity probe added 8). The skip is the pre-freeze lock test, which skips by design once the tag exists. Every module has a test and a make target.
 - **Backup outputs for the live demo.** The demo page ([`scripts/make_demo.py`](../scripts/make_demo.py)) stores every sample's outputs and timing plots. It was rebuilt from an empty folder after the freeze (D-88).
 
 ---
@@ -697,6 +773,7 @@ Main checkpoint, from [`scripts/profile.py`](../scripts/profile.py) → [`result
 - **The 50/50 diphthong split is fixed.** MFA gives no internal boundary, and short unstressed diphthongs get only 1–2 frames per half.
 - **No word-boundary token.** The encoder input is a bare phone stream ("a name" = "an aim"), so word-final phones are distinguishable only through context and `sp` (D-75c).
 - **End-to-end latency is MFA-bound.** It takes 3.3 s per reference on the laptop, while the model itself runs 80× faster than real time.
+- **V0 needs an adapter.** It reads lexicon pronunciations in espeak-style IPA instead of espeak's own output (function words keep full stress), and it needs a blank-ownership rule. Even with the better rule, a −21 ms bias remains. An adapter that learned to place V0's blanks could narrow the timing gap. It would still have to fight MAS's model-internal alignment.
 - **The ablations were branched late (20k steps from M1),** so they test late-stage augmentation, not augmentation from the start of fine-tuning.
 
 **Future work, ranked by expected value:**
@@ -714,6 +791,9 @@ Main checkpoint, from [`scripts/profile.py`](../scripts/profile.py) → [`result
 | --- | --- | --- |
 | Output length is exact for every output | `length_error` column = 0 in every `results/*/test/per_utt.csv` | [`pipeline.py#L176`](../tts/infer/pipeline.py#L176), [`pipeline.py#L322`](../tts/infer/pipeline.py#L322) |
 | MFA error on accented speech is about 19 ms (words) | [`reports/mfa_l2_dev.md`](../reports/mfa_l2_dev.md), plot 3 | [`l2.py#L92`](../tts/align/l2.py#L92) |
+| Replacing MAS with MFA makes timing follow the reference (vs V0: −16.5 ms MAE, every accent) at a cost of +0.8 pt WER and −0.12 UTMOS | `results/paired/test_m1_pos_diph_vs_v0.csv`, `results/v0/test/summary.json` | [`v0.py`](../tts/models/vits_mas/v0.py), [`paired.py`](../tts/eval/paired.py) |
+| V0 renders its given durations ~20 ms early and scattered; the MFA-trained systems do not | `results/fidelity/test.json` | [`fidelity.py#L62`](../tts/eval/fidelity.py#L62) |
+| CTC has a +38 ms start bias on natural speech, so its MAE is not a ranking | `results/fidelity/calibration_dev.json` | [`fidelity.py#L83`](../tts/eval/fidelity.py#L83) |
 | M1 beats M0 on timing, WER and UTMOS | `results/dev_comparison.csv`, `results/test_comparison.csv` | [`evaluate.py#L270`](../scripts/evaluate.py#L270) |
 | Copying phone durations hurts intelligibility | `results/tune/grid.json`, plot 7 | [`pipeline.py#L299-L302`](../tts/infer/pipeline.py#L299-L302) |
 | The position embedding does not restore within-phone movement | `results/phone_dynamics/*.json` | [`phone_dynamics.py#L32`](../tts/eval/phone_dynamics.py#L32) |

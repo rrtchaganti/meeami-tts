@@ -44,13 +44,18 @@ never used for tuning and were only readable after the git tag `freeze-v1`.
 | System | What it is | Word-boundary MAE | Pause F1 | WER | US prob | UTMOS | Spk sim LJ |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | L2 references | the input recordings | | | 6.3% | 0.486 | | |
-| M0 | FastSpeech2 + HiFi-GAN, reference durations injected | 31.9 ms | 0.726 | 9.3% | 0.746 | 3.96 | 0.766 |
+| **V0** | **immediate baseline:** the original pretrained VITS (MAS, stochastic durations), same word timing injected | 40.5 ms | 0.815 | **2.1%** | 0.649 | **4.31** | 0.802 |
+| M0 | second baseline: FastSpeech2 + HiFi-GAN, reference durations injected | 31.9 ms | 0.726 | 9.3% | 0.746 | 3.96 | 0.766 |
 | M1 | VITS fine-tuned with MFA durations instead of MAS | 24.2 ms | 0.822 | 3.8% | 0.734 | 4.19 | 0.805 |
 | m1_pos | M1 + position-in-phone embedding | 24.6 ms | 0.826 | 4.4% | 0.781 | 4.17 | 0.806 |
 | **m1_pos_diph** | **main system:** m1_pos with each diphthong split into two tokens | **23.9 ms** | **0.835** | **2.9%** | 0.762 | **4.20** | 0.800 |
 | abl_a_pos | m1_pos + 40% pace-augmented clips (pace from LJ statistics) | 24.7 ms | 0.825 | 3.9% | 0.665 | 4.06 | 0.801 |
 | abl_b_pos | m1_pos + 40% pace-augmented clips (pace from dev-accent statistics) | 24.7 ms | 0.826 | 4.5% | 0.767 | 4.08 | 0.796 |
 
+- **The main comparison: V0 vs the main system.** V0 is the model before MAS was replaced with MFA
+  durations, given the same reference timing. The main system's word boundaries are 16.5 ms closer
+  (p ≈ 1e-192, every accent), and its US probability is 0.11 higher. The cost is WER +0.8 points and
+  UTMOS −0.12. V0 renders the durations it is given ~20 ms early and scattered (Stage 15).
 - **Length:** output length equals reference length for every system and every reference (length error 0).
 - **Ceilings:** LJ ground truth scores WER 1.9% and UTMOS 4.36.
 - **Timing floor:** MFA's own word-boundary error on accented speech is 19.4 ms.
@@ -103,7 +108,7 @@ text ─► normalizer ─► lexicon phones ─► token timeline (sil · phone
 
 ```bash
 make env      # two pinned conda envs: tts (everything) and mfa (Montreal Forced Aligner 3.4.3 only)
-make test     # unit tests: 158 passed, 1 skipped (the pre-freeze lock test skips once freeze-v1 exists)
+make test     # unit tests: 166 passed, 1 skipped (the pre-freeze lock test skips once freeze-v1 exists)
 make help     # every target
 ```
 
@@ -120,6 +125,7 @@ make help     # every target
 python scripts/infer.py --text "..." --ref ref.wav --out out/ --ckpt export/m1_pos_diph/ckpt_last.pt
 python scripts/infer.py --pairs_dir their_files/ --out out/ --ckpt export/m1_pos_diph/ckpt_last.pt  # x.wav + x.txt pairs
 python scripts/infer.py --text "..." --ref ref.wav --out out/ --ckpt m0                             # FastSpeech2 baseline
+python scripts/infer.py --text "..." --ref ref.wav --out out/ --ckpt v0                             # original VITS (MAS) baseline
 ```
 
 **Options:**
@@ -203,6 +209,9 @@ how it was checked. The stages are in the order they were built. Full reasoning 
 
 ### Stage 5: M0, the FastSpeech2 baseline (T6)
 
+M0 was the planned baseline. The immediate baseline for the MAS → MFA swap, the original VITS
+(V0), was added after the freeze (Stage 15).
+
 - **Method:** pretrained FastSpeech2 + HiFi-GAN. The reference durations are passed as
   `d_targets` to its variance adaptor.
 - **Code:** [`tts/models/fastspeech2/m0.py`](tts/models/fastspeech2/m0.py).
@@ -266,7 +275,7 @@ then scores every output and writes:
 | --- | --- | --- |
 | Length error | Output samples − round(N_ref·22050/sr_ref), must be 0 | [`pipeline.py`](tts/infer/pipeline.py#L333-L334) |
 | Word-boundary MAE, % within 20 / 50 ms | Every word start and end. Output words come from MFA on the output; reference words come from the **manual** annotation. | [`metrics.py`](tts/eval/metrics.py#L16-L30) |
-| Word-boundary MAE (CTC) | The same, with MMS_FA on the output (second-aligner cross-check) | [`evaluate.py`](scripts/evaluate.py#L188-L193) |
+| Word-boundary MAE (CTC) | The same, with MMS_FA on the output (second-aligner cross-check; CTC has a +38 ms start bias on real speech, so it is not a ranking, Stage 15) | [`evaluate.py`](scripts/evaluate.py#L188-L193) |
 | Pause F1 | Pauses (silence ≥ 100 ms) at word boundaries, output vs reference | [`metrics.py`](tts/eval/metrics.py#L38) |
 | WER, CER | faster-whisper large-v3 + Whisper text normalizer + jiwer | [`asr.py`](tts/eval/asr.py#L45) |
 | US probability | CommonAccent ECAPA accent ID, softmax(30·cosine), US class | [`scorers.py`](tts/eval/scorers.py#L55-L70) |
@@ -345,6 +354,31 @@ Full story and numbers:
   tests, plot 8 (dev vs test pace: ×1.12 vs ×1.16 LJ), the profiles, the clean demo build and the
   slides.
 
+### Stage 15: The immediate baseline V0, added after the freeze (D-90)
+
+- **Why:** M1 replaces MAS with MFA durations, so the system to beat is the original VITS with
+  MAS, not only FastSpeech2. V0 is the official pretrained LJSpeech VITS (the checkpoint M1 was
+  fine-tuned from), unchanged and inference only. No frozen system or config was touched.
+- **Method** ([`tts/models/vits_mas/v0.py`](tts/models/vits_mas/v0.py),
+  [`configs/v0.yaml`](configs/v0.yaml)):
+  - lexicon phones are written in espeak-style IPA, with blanks interspersed;
+  - the stochastic duration predictor gives native durations per character, summed per phone;
+  - each phone's frames are split back over its characters at synthesis;
+  - the same pipeline and settings as every system.
+  - One adapter choice, which character a blank belongs to, was made on dev (50.8 vs 40.7 ms).
+- **New probe: duration fidelity and aligner calibration**
+  ([`tts/eval/fidelity.py`](tts/eval/fidelity.py), `make fidelity`):
+  - Fidelity is how far each output word lands from where the pipeline placed it (bias, MAE, and
+    MAE without the bias).
+  - Calibration measures each aligner's own bias on real speech.
+  - Test: V0 −21 / −15 ms (starts / ends), 27.7 ms scatter; main system −1 / 0 ms, 11.2 ms.
+  - CTC's own start bias on real speech is +38 ms; MFA has none.
+- **Commands:** `make v0-demo`; `make eval SYSTEM=v0 SPLIT=dev|test`;
+  `make paired CONTROL=v0 SYSTEMS_CMP="m1 m1_pos_diph m0" SPLIT=test`;
+  `make fidelity SPLIT=dev` (also calibrates) and `SPLIT=test`.
+- **Result:** see the results table and
+  [REPORT §10.6](docs/REPORT.md#106-after-the-freeze-the-immediate-baseline-v0-d-90).
+
 ---
 
 ## Commands in run order
@@ -399,6 +433,10 @@ make eval-all SPLIT=test             # held-out accents; also draws plot 8 (dev 
 make paired CONTROL=m1_pos SYSTEMS_CMP="abl_a_pos abl_b_pos m1_pos_diph" SPLIT=test
 make profile DEVICE=cuda ; make profile DEVICE=cpu ; make profile DEVICE=cpu ARGS="--threads 1"
 make demo                            # out/demo_site/index.html (+ backup outputs per sample)
+# --- after the freeze: immediate baseline V0 (D-90; new files only) ----------------------------
+make eval SYSTEM=v0 SPLIT=dev ; make eval SYSTEM=v0 SPLIT=test
+make paired CONTROL=v0 SYSTEMS_CMP="m1 m1_pos_diph m0" SPLIT=test
+make fidelity SPLIT=dev ; make fidelity SPLIT=test   # duration fidelity + aligner calibration
 ```
 
 On the GPU instance, prefix the training commands with `conda run -n tts`, inside tmux.
@@ -413,16 +451,16 @@ configs/    base.yaml (all shared parameters) · splits.yaml · inference.yaml (
 tts/
   text/       normalize.py · lexicon.py · symbols.py · diph.py (diphthong split, main system)
   align/      mfa.py (MFA wrapper) · textgrid.py (parsing rules) · lj.py · l2.py (MFA vs manual)
-  models/     vits_mfa/ (VITS-MFA: models, trainer, data) · fastspeech2/ (M0, vendored)
+  models/     vits_mfa/ (VITS-MFA: models, trainer, data) · fastspeech2/ (M0, vendored) · vits_mas/ (V0 adapter)
   augment/    generate.py (A/B plans) · pace_b.py · core.py · wsola.py · verify.py · filter.py
   infer/      pipeline.py (Section 5 steps 1-10) · systems.py · ctc.py · edge_cases.py · batch.py
-  eval/       metrics.py · scorers.py · asr.py · paired.py · phone_dynamics.py · tune.py · plots.py
+  eval/       metrics.py · scorers.py · asr.py · paired.py · phone_dynamics.py · fidelity.py · tune.py · plots.py
   guard.py    test-split lock          splits.py · stats.py · audio.py · config.py
 scripts/    train.py · infer.py · evaluate.py · profile.py · make_demo.py · GPU bundle/setup/export
 tests/      unit tests (one per module) + edge_cases/ (21 committed WAV/TXT cases)
 stats/      phone_logdur.json (LJ per-phone log-duration mean, σ) · l2_dev_pace.json (Ablation B)
 reports/    data splits, lexicon, LJ alignment QC, MFA error on accented speech, augmentation
-results/    <system>/<split>/{per_utt.csv, summary.json} · paired/ · phone_dynamics/ · tune/ · plots/ · profile_*.json
+results/    <system>/<split>/{per_utt.csv, summary.json} · paired/ · phone_dynamics/ · fidelity/ · tune/ · plots/ · profile_*.json · _rejected/
 docs/       REPORT.md · PLAN.md · DECISIONS.md · HANDOFF.md
 slides/     meeami-tts.pptx + build.js
 data/ runs/ export/ out/   git-ignored (datasets, training runs, checkpoints, demo)

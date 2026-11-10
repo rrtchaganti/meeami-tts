@@ -1,6 +1,6 @@
 """Run the inference pipeline over L2 reference rows (m0-demo, evaluation; Sections 5, 8).
 
-    python -m tts.infer.batch --system m0|<ckpt> --split dev [--n 5] [--eval_set] --out DIR
+    python -m tts.infer.batch --system m0|v0|<ckpt> --split dev [--n 5] [--eval_set] --out DIR
 
 References are pre-aligned in one `mfa align --single_speaker` pass (same acoustic model, lexicon
 and beam as `mfa align_one`, and like align_one without speaker adaptation; D-51), then each row
@@ -88,7 +88,7 @@ def run_batch(pipe, rows: list[dict], out_root: Path, prealigned: dict[str, Path
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--system", required=True, help="m0 or a VITS-MFA checkpoint")
+    ap.add_argument("--system", required=True, help="m0, v0 or a VITS-MFA checkpoint")
     ap.add_argument("--split", default="dev", choices=["dev", "test"])
     ap.add_argument("--n", type=int, default=0)
     ap.add_argument("--out", required=True)

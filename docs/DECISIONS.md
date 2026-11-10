@@ -986,3 +986,75 @@ docs/HANDOFF.md instead of being worked around.
     that does not exist; m1_cont is `configs/m1.yaml --tag m1_cont` (HANDOFF launch line).
   - Every relative link and `#Ln` anchor in both files was checked to exist (204 links).
   No code or config changed.
+
+## After the freeze — the immediate baseline V0 (2026-11-10)
+
+- **D-90 V0: the original pretrained VITS (MAS + stochastic duration predictor) as the immediate
+  baseline (user request: "Shouldn't we compare with the original VITS with MAS model's word
+  boundaries? That's what we're replacing").** M0 (FastSpeech2) answers "is VITS-MFA a good
+  duration-controlled TTS?". It does not answer "did replacing MAS with MFA help?". The system
+  M1 changes is the official LJSpeech VITS checkpoint itself (D-44), so that checkpoint, unchanged
+  and not retrained, is V0.
+  - **Adapter** (`tts/models/vits_mas/v0.py`, `configs/v0.yaml`, `make v0-demo`,
+    `tests/test_v0.py`). V0 goes through the same Section 5 pipeline and settings (elastic, cap
+    2.5, noise 0.333) as every system, so it gets the same word timing and exact length.
+    - Text: CLAUDE.md allows only `lexicon.txt`, so no espeak. ARPAbet is written in the IPA
+      characters espeak en-us uses in the VITS LJ `.cleaned` filelists (`AH0`->ə, `AH1`->ˈʌ,
+      `ER0`->ɚ, `ER1`->ˈɜː, `IY0`->i, `R`->ɹ...), stress mark before the vowel as in those
+      lists. Words are separated by spaces, `sp` -> ", ", final `sil` -> ".". Blanks interspersed.
+    - Durations: the SDP (noise 0.8, VITS's default; seeded per call) gives a duration per
+      character or blank; a token's native duration is the sum over what it owns. At synthesis
+      each token's frames are split over its characters and blanks in proportion, with
+      cumulative rounding inside the token (exact totals).
+    - Wiring: `systems.V0System` (`--ckpt v0` or a V0 yaml); `pipeline.py` passes word ids
+      only to systems with `uses_word_ids` (V0). The helper sits at the end of the file and the
+      other systems get the identical call, so frozen behaviour and the report's line links are
+      unchanged. No frozen model code or experiment config changed.
+  - **One adapter choice, made on dev:** which character a blank token belongs to. "after"
+    (first run) put output words ~35 ms early at both start and end (dev MAE 50.8 ms); "before"
+    gave 40.7 ms (means of per-utterance MAE, as in every table). Chosen: "before" (`v0.blank_owner`). The "after" run is kept as
+    `results/_rejected/v0_blank_after` (`configs/v0_blank_after.yaml`); see E-32.
+  - **Results (test, 1,248 refs; dev in brackets):** word-boundary MAE 40.5 ms [40.7] (pooled 40.8), within
+    20 ms 41.2% [40.5], pause F1 0.815 [0.820], WER 2.1% [1.9], US prob 0.649 [0.648], UTMOS 4.31
+    [4.31], spk sim LJ 0.802. Per accent MAE: Arabic 40.5, Korean 39.3, Vietnamese 41.6.
+  - **Paired vs V0 (Holm, `make paired CONTROL=v0`):** main system MAE −16.5 ms (p 5e-192),
+    within 20 ms +28.4 pt, US prob +0.113 (p 8e-20), WER +0.8 pt (p 0.004), CER +0.4 pt,
+    UTMOS −0.12 (p 3e-28), pause F1 and spk sim n.s. M1 vs V0: MAE −16.3, WER +1.7 pt, UTMOS
+    −0.12, US prob +0.086. The MAE gain holds in every accent and every stretch tercile and grows
+    with stretch (−15.9 / −16.4 / −17.4 ms). Same pattern on dev.
+  - **Why V0 is worse on timing: duration fidelity** (`tts/eval/fidelity.py`, `make fidelity`,
+    `configs/fidelity.yaml`, `results/fidelity/`). Signed difference between where MFA finds
+    each word in the output and where the pipeline placed it (test): V0 bias −21.3 ms (starts) /
+    −15.1 (ends), MAE 32.6, 27.7 after removing the bias; M1 −1.3 / −0.4, 11.5; main −1.0 / 0.0,
+    11.3; M0 +0.4 / −0.5, 19.9. So V0 is both shifted early and scattered: the MAS-trained model
+    does not render the durations it is given at the boundaries a phonetic aligner finds.
+  - **Aligner calibration** (natural dev references vs the manual annotation): MFA bias 0.0 / 0.0
+    ms, MAE 20.0; CTC bias +38.2 / −11.9 ms, MAE 47.8 (40.3 without bias). Read against this zero
+    point, CTC also finds V0 early (starts +5.3 vs +38.2 natural, ends −25.7 vs −11.9) and M1
+    much less so (+26.4 / −14.6). CTC's own scatter (40 ms) is larger than the differences
+    between systems, so CTC cannot rank the systems' scatter (V0 32.0 vs M1 35.8 without bias).
+    This also explains why CTC MAE vs the manual annotation came out *lower* for V0 (45.6 ms)
+    than for M1 (49.1): V0's early shift cancels part of CTC's +38 ms start bias. The REPORT's
+    earlier reading of CTC MAE as a second ranking is withdrawn.
+  - **Caveat (home advantage):** M1 learned MFA's segmentation of LJ, and the primary timing
+    metric uses MFA as the judge. The independent judge (CTC) confirms V0's early shift but is
+    too coarse to confirm the scatter difference.
+  - **Trade-off, stated:** V0 is slightly better on WER and UTMOS. Fine-tuning on MFA durations
+    bought controllable timing (−16.5 ms, +28 pt within 20 ms) and a more US-like accent at a
+    small cost in intelligibility and predicted naturalness.
+  - Also: plot palette extended to 8 colours (`plots.py`; V0 shared a colour with abl_a_pos).
+- **E-32 First V0 test run used the rejected blank setting.** Dev and test were chained in one
+  job before the dev result was read, so test was evaluated once with `blank_owner: after`.
+  The setting was then chosen on dev only, and test was run again with it. Both test results are
+  kept and reported (`results/_rejected/v0_blank_after/test`, 52.0 ms; `results/v0/test`,
+  40.5 ms); the choice does not change any conclusion.
+- **E-33 First "before" dev run failed on all 1,200 utterances** ("token 0 owns no
+  characters"): with "before" the leading blank went to the first phone, leaving the opening
+  `sil` without any sub-token. The new unit test had encoded the same mistake. Fix: the leading
+  blank always belongs to token 0; the test now checks that every token owns a sub-token under
+  both settings.
+  - Makefile `SYSTEMS` (eval-all) stays the frozen final set: `test_word_log_rho_and_final_system_set`
+    ties it to `demo.systems` in the frozen base.yaml. V0 runs with `make eval SYSTEM=v0`.
+  - Docs: REPORT §2, §7.0, §9.1, §9.3, §10.6, §11, §13–16 and README (results table, Stage 15,
+    commands, layout) updated; 242 relative links and line anchors checked. `make test`: 166
+    passed, 1 skipped (158 + 7 V0 tests + 1 fidelity test).

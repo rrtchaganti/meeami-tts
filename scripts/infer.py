@@ -36,7 +36,7 @@ def main(argv=None) -> int:
     ap.add_argument("--ref")
     ap.add_argument("--pairs_dir")
     ap.add_argument("--out", required=True)
-    ap.add_argument("--ckpt", required=True, help="VITS-MFA checkpoint, or 'm0'")
+    ap.add_argument("--ckpt", required=True, help="VITS-MFA checkpoint, or 'm0' / 'v0'")
     ap.add_argument("--config", default="configs/inference.yaml")
     ap.add_argument("--aligner", choices=["mfa", "ctc"])
     ap.add_argument("--transfer", choices=["elastic", "proportional", "phone_copy"])

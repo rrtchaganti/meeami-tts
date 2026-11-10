@@ -83,7 +83,7 @@ def main(argv=None) -> int:
     from tts.text.normalize import Normalizer, words
 
     name = a.tag or a.system
-    ckpt = "m0" if a.system == "m0" else (a.ckpt or f"export/{a.system}/ckpt_last.pt")
+    ckpt = a.ckpt or (a.system if a.system in ("m0", "v0") else f"export/{a.system}/ckpt_last.pt")
     res = repo_path("results") / name / a.split
     wav_root = res / "wav"
     res.mkdir(parents=True, exist_ok=True)

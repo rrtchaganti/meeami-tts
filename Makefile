@@ -91,6 +91,11 @@ aug-b:
 m0-demo:
 	$(TTS_RUN) python -m tts.infer.batch --system m0 --split dev --n 5 --out out/m0_demo
 
+# --- D-90: V0 (original pretrained VITS, MAS + SDP) demo on 5 dev references ---------------
+.PHONY: v0-demo
+v0-demo:
+	$(TTS_RUN) python -m tts.infer.batch --system v0 --split dev --n 5 --out out/v0_demo
+
 # --- T8: smoke runs (every config 200 steps at batch 4, resume, benchmark) -----------
 .PHONY: smoke
 smoke:
@@ -120,7 +125,7 @@ SYSTEM ?= m0
 SPLIT ?= dev
 CKPT_EVAL ?=
 MAIN ?= m1_pos_diph
-SYSTEMS ?= m0 m1 m1_pos m1_pos_diph abl_a_pos abl_b_pos   # final set (D-85)
+SYSTEMS ?= m0 m1 m1_pos m1_pos_diph abl_a_pos abl_b_pos   # final set (D-85); V0 (D-90): make eval SYSTEM=v0
 .PHONY: eval eval-all tune
 eval:
 	$(TTS_RUN) python scripts/evaluate.py --system $(SYSTEM) --split $(SPLIT) \
@@ -128,7 +133,7 @@ eval:
 
 eval-all:
 	@for s in $(SYSTEMS); do \
-	  if [ "$$s" = m0 ] || [ -f export/$$s/ckpt_last.pt ]; then \
+	  if [ "$$s" = m0 ] || [ "$$s" = v0 ] || [ -f export/$$s/ckpt_last.pt ]; then \
 	    $(TTS_RUN) python scripts/evaluate.py --system $$s --split $(SPLIT) $(ARGS) || exit 1; \
 	  else echo "eval-all: skipping $$s (no export/$$s/ckpt_last.pt)"; fi; \
 	done
@@ -140,6 +145,12 @@ phone-dyn:   # within-phone spectral movement vs LJ (D-76); PD_CKPTS="export/m1_
 
 paired:   # paired Wilcoxon vs a control (D-82); CONTROL=m1_pos SYSTEMS_CMP="abl_a_pos abl_b_pos"
 	$(TTS_RUN) python -m tts.eval.paired --control $(CONTROL) $(foreach s,$(SYSTEMS_CMP),--system $(s)) --split $(SPLIT)
+
+FID_SYSTEMS ?= v0 _rejected/v0_blank_after m0 m1 m1_pos_diph
+.PHONY: fidelity
+fidelity:   # duration fidelity (output vs intended word times) + aligner calibration on dev (D-90)
+	$(TTS_RUN) python -m tts.eval.fidelity $(foreach s,$(FID_SYSTEMS),--system $(s)) --split $(SPLIT) \
+	  $(if $(filter dev,$(SPLIT)),--calibrate,) --device $(DEVICE)
 
 tune:     # dev only: grid over cap x noise_scale (+ transfer variants); writes configs/inference.yaml
 	$(TTS_RUN) python -m tts.eval.tune --split $(SPLIT) $(ARGS)

@@ -299,10 +299,10 @@ class Pipeline:
         if transfer_used == "phone_copy":
             tokens, wids, durs = parsed.phones, parsed.word_ids, list(parsed.durations)
             capped = []
-            logd = self.system.predict_log_durations(tokens)
+            logd = self.system.predict_log_durations(tokens, **_word_kw(self.system, wids))
         else:
             tl, spans = build_timeline(wt, phones, total, self.cfg)
-            logd = self.system.predict_log_durations(tl.tokens)
+            logd = self.system.predict_log_durations(tl.tokens, **_word_kw(self.system, tl.word_ids))
             sig = np.array([self.sigma.get(p, 0.0) for p in tl.tokens])
             fitted = fit_words(tl, spans, logd, sig, transfer_used,
                                None if cap in (None, "none") else float(cap))
@@ -317,7 +317,7 @@ class Pipeline:
 
         # 9
         t = time.perf_counter()
-        audio = self.system.synthesize(tokens, durs, noise_scale)
+        audio = self.system.synthesize(tokens, durs, noise_scale, **_word_kw(self.system, wids))
         lat["synthesis"] = time.perf_counter() - t
         audio = audio[:n_out] if len(audio) >= n_out else np.pad(audio, (0, n_out - len(audio)))
         out_sr = self.system.sample_rate
@@ -348,3 +348,8 @@ class Pipeline:
             except Exception as e:  # plotting must never fail a synthesis
                 info["notes"].append(f"timing.png failed: {e}")
         return info
+
+
+def _word_kw(system, word_ids) -> dict:
+    """Word ids only for systems that ask for them (V0, D-90); the others get the frozen call."""
+    return {"word_ids": list(word_ids)} if getattr(system, "uses_word_ids", False) else {}

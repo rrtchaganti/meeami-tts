@@ -1,0 +1,9 @@
+# V0 variant (D-90): blanks belong to the preceding character. First V0 run; rejected on dev
+# (words ~35 ms early). Kept to reproduce results/_rejected/v0_blank_after.
+inherit: base.yaml
+exp: v0_blank_after
+v0:
+  source: jaywalnut310/vits@2e561ba   # checkpoint: pretrained.vits_lj (base.yaml, sha256-pinned)
+  sdp_noise_scale: 0.8                # VITS's own inference default (noise_scale_w)
+  sdp_seed: 1234                      # = base seed; same native durations in both pipeline calls
+  blank_owner: after                  # which character a blank token belongs to (D-90)

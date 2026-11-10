@@ -39,6 +39,10 @@ __pycache__/
 /results/*/*/scores.jsonl
 /results/*/*/mfa_out.log
 /results/_ref/
+/results/_rejected/*/*/wav/
+/results/_rejected/*/*/align_out/
+/results/_rejected/*/*/scores.jsonl
+/results/_rejected/*/*/mfa_out.log
 /results/tune/*/*/wav/
 /results/tune/*/*/align_out/
 /results/tune/*/*/scores.jsonl

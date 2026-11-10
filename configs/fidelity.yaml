@@ -1,0 +1,6 @@
+# Duration fidelity + aligner calibration (tts/eval/fidelity.py, D-90). Evaluation-only; added
+# after freeze-v1 in its own file so no frozen config changes.
+inherit: inference.yaml
+fidelity:
+  out_dir: results/fidelity
+  ref_timings_from: results/m1   # any system's dev timings.json: ref_words = MFA on the reference

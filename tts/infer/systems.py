@@ -86,8 +86,39 @@ class M0System:
         return y
 
 
+class V0System:
+    """Original pretrained VITS (MAS-trained, SDP), inference only (D-90). Needs word ids, because
+    its input text separates words with spaces."""
+
+    name = "v0"
+    uses_word_ids = True
+
+    def __init__(self, cfg: DictConfig, device: str = "cuda"):
+        from tts.models.vits_mas.v0 import V0
+
+        self.v0 = V0(cfg, device)
+        self.hop, self.sample_rate = self.v0.hop, self.v0.sample_rate
+        self.device = device
+
+    def predict_log_durations(self, tokens, word_ids=None):
+        out = self.v0.predict_log_durations(tokens, word_ids)
+        _sync(self.device)
+        return out
+
+    def synthesize(self, tokens, durations, noise_scale: float = 0.667, word_ids=None):
+        y = self.v0.synthesize(tokens, durations, noise_scale, word_ids)
+        _sync(self.device)
+        return y
+
+
 def load_system(ckpt: str, cfg: DictConfig, device: str):
-    """`--ckpt m0` selects M0; anything else is a VITS-MFA checkpoint path."""
+    """`--ckpt m0` / `v0` select the inference-only baselines; anything else is a VITS-MFA
+    checkpoint path."""
+    if ckpt == "v0" or str(ckpt).endswith(".yaml"):  # a V0 config (configs/v0*.yaml)
+        from tts.config import load_config, REPO_ROOT
+
+        path = REPO_ROOT / "configs" / "v0.yaml" if ckpt == "v0" else repo_path(ckpt)
+        return V0System(load_config(path), device)
     if ckpt == "m0":
         from tts.config import load_config, REPO_ROOT
 

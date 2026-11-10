@@ -1,0 +1,9 @@
+# V0: the official pretrained LJSpeech VITS (MAS + stochastic duration predictor), reference word
+# timing injected through the Section 5 pipeline; inference only (DECISIONS D-90, post-freeze baseline).
+inherit: base.yaml
+exp: v0
+v0:
+  source: jaywalnut310/vits@2e561ba   # checkpoint: pretrained.vits_lj (base.yaml, sha256-pinned)
+  sdp_noise_scale: 0.8                # VITS's own inference default (noise_scale_w)
+  sdp_seed: 1234                      # = base seed; same native durations in both pipeline calls
+  blank_owner: before                 # chosen on dev over "after" (D-90)

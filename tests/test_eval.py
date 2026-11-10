@@ -121,3 +121,18 @@ def test_word_log_rho_and_final_system_set():
     mk = (REPO_ROOT / "Makefile").read_text()
     assert f"MAIN ?= {cfg.main_system}" in mk
     assert "SYSTEMS ?= " + " ".join(cfg.demo.systems) in mk
+
+
+def test_fidelity_signed_errors_and_bias_removal():
+    from tts.eval.fidelity import signed_errors, summarize
+
+    ref = [{"word": "a", "start": 0.10, "end": 0.30}, {"word": "b", "start": 0.40, "end": 0.70}]
+    hyp = [{"word": "a", "start": 0.08, "end": 0.28}, {"word": "b", "start": 0.38, "end": 0.66}]
+    st, en = signed_errors(ref, hyp)
+    assert np.allclose(st, [-0.02, -0.02]) and np.allclose(en, [-0.02, -0.04])
+    s = summarize(st, en)
+    assert s["n_words"] == 2 and abs(s["bias_start_ms"] + 20) < 1e-6
+    assert abs(s["bias_end_ms"] + 30) < 1e-6
+    assert abs(s["mae_ms"] - 25) < 1e-6           # |-20|,|-20|,|-20|,|-40|
+    assert abs(s["mae_unbiased_ms"] - 5) < 1e-6   # start 0,0; end +10,-10
+    assert summarize([], [])["n_words"] == 0
