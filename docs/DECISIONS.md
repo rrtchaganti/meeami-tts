@@ -975,3 +975,14 @@ docs/HANDOFF.md instead of being worked around.
 - **D-88 Demo rebuilt from an empty `out/demo_site`.** `make_demo.py` reuses any existing
   `out.wav`, so outputs from pre-freeze builds (older inference settings) could have survived.
   Profile, 1 CPU thread: flow + decoder 1.78 s p50 for 3.7 s of audio (model RTF 0.48).
+- **D-89 Final report and README (2026-11-10, user request; documentation only, after freeze-v1).**
+  New `docs/REPORT.md`: problem statement, design, every method with the reasoning behind it and
+  line links into the frozen code, the phase-by-phase journey (D-n references), test results,
+  efficiency, deviations from PLAN, limitations, and a claim -> evidence index. `README.md`
+  rewritten for a first-time visitor: what comes from where, results, how it works, setup,
+  inference, the project stage by stage in implementation order (method, code, make target, check),
+  a metric table with code links, commands in run order, layout, failure modes.
+  - Fixed in the README: the phase-2 command used `--config configs/$e.yaml` for m1_cont, a config
+    that does not exist; m1_cont is `configs/m1.yaml --tag m1_cont` (HANDOFF launch line).
+  - Every relative link and `#Ln` anchor in both files was checked to exist (204 links).
+  No code or config changed.

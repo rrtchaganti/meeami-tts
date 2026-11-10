@@ -1,72 +1,356 @@
-# meeami-tts — time-aligned US-English TTS
+# meeami-tts: time-aligned US-English TTS
 
-Speaks the input text in the LJSpeech voice with a US accent, on the word timing (word starts/ends,
-pauses, total length) of a reference recording of the same text by a non-US speaker.
+Give it a sentence and a recording of that sentence read by a **non-US speaker**. It says the
+sentence:
+- in the **LJSpeech voice** (one US female speaker);
+- with a **US accent**;
+- **on the reference's timing**: every word starts and ends at about the reference time, pauses
+  are kept, and the output is **exactly** as long as the reference.
 
-- Specification: [docs/PLAN.md](docs/PLAN.md) (code comments cite its sections).
-- Every decision and error, with reasons: [docs/DECISIONS.md](docs/DECISIONS.md).
-- Current status, blockers and the GPU runbook: **[docs/HANDOFF.md](docs/HANDOFF.md)**.
-- Slides: [slides/meeami-tts.pptx](slides/meeami-tts.pptx); demo page: `make demo` -> `out/demo_site/index.html`.
+```bash
+python scripts/infer.py --text "Will we ever forget it." --ref ref.wav --out out/ \
+    --ckpt export/m1_pos_diph/ckpt_last.pt
+# -> out/out.wav (exact reference length), out/timings.json, out/timing.png
+```
 
-| Output property | Source |
+| Document | What it gives you |
 | --- | --- |
-| Words, pronunciation | input text -> normalizer -> `data/lexicon/lexicon.txt` (cmudict first pron., g2p_en OOVs) |
-| Voice, accent, intonation | model trained on LJSpeech only (main: `m1_pos_diph`, VITS with MFA durations; M0: FastSpeech2 baseline) |
-| Word times, pauses, length | reference audio aligned with MFA `english_us_arpa` (MMS_FA CTC fallback) |
+| **[docs/REPORT.md](docs/REPORT.md)** | **The final report:** problem, approach, every decision with its reasoning and code links, all results |
+| [docs/PLAN.md](docs/PLAN.md) | The original specification (code comments cite its sections) |
+| [docs/DECISIONS.md](docs/DECISIONS.md) | The running log of every decision (D-n) and error (E-n), in order |
+| [docs/HANDOFF.md](docs/HANDOFF.md) | Status log and the GPU-instance runbook |
+| [slides/meeami-tts.pptx](slides/meeami-tts.pptx) | 14-slide presentation with speaker notes |
+| `make demo` → `out/demo_site/index.html` | Demo page: reference vs every system's output and timing plot |
+
+---
+
+## What comes from where
+
+The design rule: every output property has exactly **one** source, so nothing from the reference
+can leak into the voice or pronunciation.
+
+| Output property | Source | Code |
+| --- | --- | --- |
+| Words | Input text → normalizer | [`tts/text/normalize.py`](tts/text/normalize.py) |
+| Pronunciation | `data/lexicon/lexicon.txt`: first CMUdict pronunciation, g2p_en for OOV words | [`tts/text/lexicon.py`](tts/text/lexicon.py) |
+| Voice, accent, intonation, phone timing inside words | The model, trained on LJSpeech only | [`tts/models/vits_mfa/models.py`](tts/models/vits_mfa/models.py) |
+| Word start/end times, pauses, total length | Reference audio aligned with MFA `english_us_arpa` (MMS_FA CTC fallback) | [`tts/infer/pipeline.py`](tts/infer/pipeline.py) |
+
+## Results on held-out accents
+
+The test accents are Arabic, Korean and Vietnamese (12 speakers, 1,248 references). They were
+never used for tuning and were only readable after the git tag `freeze-v1`.
+
+| System | What it is | Word-boundary MAE | Pause F1 | WER | US prob | UTMOS | Spk sim LJ |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| L2 references | the input recordings | | | 6.3% | 0.486 | | |
+| M0 | FastSpeech2 + HiFi-GAN, reference durations injected | 31.9 ms | 0.726 | 9.3% | 0.746 | 3.96 | 0.766 |
+| M1 | VITS fine-tuned with MFA durations instead of MAS | 24.2 ms | 0.822 | 3.8% | 0.734 | 4.19 | 0.805 |
+| m1_pos | M1 + position-in-phone embedding | 24.6 ms | 0.826 | 4.4% | 0.781 | 4.17 | 0.806 |
+| **m1_pos_diph** | **main system:** m1_pos with each diphthong split into two tokens | **23.9 ms** | **0.835** | **2.9%** | 0.762 | **4.20** | 0.800 |
+| abl_a_pos | m1_pos + 40% pace-augmented clips (pace from LJ statistics) | 24.7 ms | 0.825 | 3.9% | 0.665 | 4.06 | 0.801 |
+| abl_b_pos | m1_pos + 40% pace-augmented clips (pace from dev-accent statistics) | 24.7 ms | 0.826 | 4.5% | 0.767 | 4.08 | 0.796 |
+
+- **Length:** output length equals reference length for every system and every reference (length error 0).
+- **Ceilings:** LJ ground truth scores WER 1.9% and UTMOS 4.36.
+- **Timing floor:** MFA's own word-boundary error on accented speech is 19.4 ms.
+- **Ablation B:** used pace statistics from dev-accent speakers; all reported numbers are on held-out accents.
+- **Where the numbers live:**
+  - 95% bootstrap CIs: `results/<system>/test/summary.json`.
+  - Paired Holm-adjusted tests: [`results/paired/`](results/paired).
+  - Reasoning: [REPORT §10–11](docs/REPORT.md#10-the-projects-journey-experiments-and-the-reasoning-behind-each).
+
+---
+
+## How it works
+
+```
+reference.wav ─► MFA forced alignment ─► word start/end times ─┐
+text ─► normalizer ─► lexicon phones ─► token timeline (sil · phones · sp · sil)
+                                                               │
+     duration predictor ─► native phone durations ─► fit each word to its reference span:
+        dᵢ = exp(log d̂ᵢ + z·σᵢ), one z per word ("elastic", LJ's own per-phone variability σᵢ)
+        cap at 2.5× native; the excess becomes a pause
+                                                               │
+     cumulative rounding to exactly the reference frame count ─► VITS ─► out.wav
+```
+
+- **Word boundaries come from the reference; time inside each word is spread with LJSpeech's
+  elasticity.** Copying the reference's phone durations instead was measured to hurt
+  intelligibility (WER 10.6% vs 2.5% on dev): phone timing carries the accent.
+- **The model** is VITS with
+  [six changes](docs/REPORT.md#72-m1-vits-with-mfa-durations-vits-mfa):
+  - MFA durations replace MAS;
+  - no blank tokens;
+  - 72 ARPAbet symbols;
+  - a deterministic duration predictor;
+  - an optional position-in-phone embedding;
+  - (main system only) diphthongs split into two tokens.
+
+---
 
 ## Setup
 
-Requirements: Linux/WSL2, conda (Miniconda), NVIDIA GPU + driver for CUDA 12.9, system
-`rubberband-cli` >= 3.0 (only for `augment.stretcher: rubberband`), `ffmpeg`, `sox`, `git`, `make`. Datasets are not downloaded by the code:
-LJSpeech 1.1 must be at `data/raw/LJSpeech-1.1/`, L2-ARCTIC v5 (access form) at `data/raw/l2arctic/`.
+**Requirements:**
+- Linux or WSL2, with conda (Miniconda or Miniforge).
+- An NVIDIA GPU and a driver for CUDA 12.9.
+- `ffmpeg`, `sox`, `git`, `make`.
+- `rubberband-cli` ≥ 3.0, only for `augment.stretcher: rubberband`.
+
+**Datasets** are not downloaded by the code:
+- LJSpeech 1.1 → `data/raw/LJSpeech-1.1/`;
+- L2-ARCTIC v5 (access form) → `data/raw/l2arctic/`.
 
 ```bash
-make env      # pinned conda envs: tts (everything) and mfa (Montreal Forced Aligner 3.4.3 only)
-make test     # unit tests (environment, normalizer, lexicon, parser, model, pipeline, metrics...)
+make env      # two pinned conda envs: tts (everything) and mfa (Montreal Forced Aligner 3.4.3 only)
+make test     # unit tests: 158 passed, 1 skipped (the pre-freeze lock test skips once freeze-v1 exists)
+make help     # every target
 ```
 
-`envs/lock/*.full.yml` hold full transitive exports of the tested environments. MFA is always
-called as `conda run -n mfa mfa ...` with `MFA_ROOT_DIR=data/models/mfa`.
+- **Exact environments:** `envs/lock/*.full.yml` hold full transitive exports of the tested envs.
+- **MFA** is always called as `conda run -n mfa mfa ...` with `MFA_ROOT_DIR=data/models/mfa`.
+- **Checkpoints:** exported checkpoints live under `export/<system>/ckpt_last.pt`. Their sha256
+  hashes are in [`results/checkpoints.sha256`](results/checkpoints.sha256).
+- **Configuration:** every parameter lives in [`configs/`](configs). Each config inherits
+  `base.yaml` and overrides only what differs.
 
-## Data split
+## Inference
 
-Train on LJSpeech only (original VITS filelists: 12,500 / 100 / 500; 13,073 kept after alignment
-QC). L2-ARCTIC is split by accent: **dev** Hindi, Mandarin, Spanish (tuning, Ablation B pace
-statistics); **test** Arabic, Korean, Vietnamese, locked until the git tag `freeze-v1`
-(`tts/guard.py`: code reading test-speaker audio refuses without it). Evaluation set = utterances
-with manual annotations for every speaker of the split: dev 100 x 12, test 104 x 12.
+```bash
+python scripts/infer.py --text "..." --ref ref.wav --out out/ --ckpt export/m1_pos_diph/ckpt_last.pt
+python scripts/infer.py --pairs_dir their_files/ --out out/ --ckpt export/m1_pos_diph/ckpt_last.pt  # x.wav + x.txt pairs
+python scripts/infer.py --text "..." --ref ref.wav --out out/ --ckpt m0                             # FastSpeech2 baseline
+```
 
-## Systems and results
+**Options:**
+- `--aligner mfa|ctc`
+- `--transfer elastic|proportional|phone_copy`
+- `--cap <float|none>`
+- `--noise_scale`
+- `--device cuda|cpu`
+- `--config` (default `configs/inference.yaml`; the tuned values are elastic, cap 2.5, noise
+  0.333, MFA)
 
-| System | What it is |
-| --- | --- |
-| M0 | FastSpeech2 + HiFi-GAN (pretrained LJSpeech), durations injected |
-| M1 | VITS fine-tuned with MFA durations instead of MAS (114k steps, D-70) |
-| m1_pos | M1 + 20k steps with a position-in-phone embedding (D-76) |
-| **m1_pos_diph** | **main system**: m1_pos with each diphthong split into two tokens (D-81) |
-| abl_a_pos / abl_b_pos | m1_pos + 40% pace-augmented clips, LJ-derived (A) or dev-accent-derived (B) pace (D-79) |
+**Outputs for each pair:**
+- `out.wav`: exactly round(N_ref·22050/sr_ref) samples.
+- `timings.json`: reference and output word times, aligner used, per-stage latency, RTF.
+- `timing.png`: reference and output words over both spectrograms.
 
-Held-out test accents (Arabic, Korean, Vietnamese), 1,248 references, after `freeze-v1`
-(full CIs in `results/<system>/test/summary.json`, paired tests in `results/paired/`, D-86):
+A failing pair prints a one-line reason and the run continues.
 
-| System | Word-boundary MAE (ms) | Pause F1 | WER | US prob | UTMOS | Spk sim LJ |
-| --- | --- | --- | --- | --- | --- | --- |
-| L2 references | | | 0.063 | 0.486 | | |
-| M0 | 31.9 | 0.726 | 0.093 | 0.746 | 3.96 | 0.766 |
-| M1 | 24.2 | 0.822 | 0.038 | 0.734 | 4.19 | 0.805 |
-| m1_pos | 24.6 | 0.826 | 0.044 | 0.781 | 4.17 | 0.806 |
-| **m1_pos_diph** | **23.9** | **0.835** | **0.029** | 0.762 | **4.20** | 0.800 |
-| abl_a_pos | 24.7 | 0.825 | 0.039 | 0.665 | 4.06 | 0.801 |
-| abl_b_pos | 24.7 | 0.826 | 0.045 | 0.767 | 4.08 | 0.796 |
+---
 
-Output length equals the reference length exactly for every system and reference. LJ test
-ground truth: WER 0.019, UTMOS 4.36. Ablation B used pace statistics from dev-accent speakers;
-all reported numbers are on held-out accents. Neither ablation improved timing; both lowered UTMOS.
+## The project, stage by stage
+
+Each stage below lists its method, the code that implements it, the make target that runs it, and
+how it was checked. The stages are in the order they were built. Full reasoning is in
+[docs/REPORT.md](docs/REPORT.md); the decision IDs point into
+[docs/DECISIONS.md](docs/DECISIONS.md).
+
+### Stage 1: Environments (T1)
+
+- **Method:**
+  - Two pinned conda envs: `tts` and `mfa`.
+  - conda-forge only.
+  - PyTorch/torchaudio 2.8.0 + CUDA 12.9. torchaudio 2.9 removed APIs SpeechBrain and MMS_FA
+    need (D-4).
+- **Code:** [`envs/`](envs), [`tests/test_env.py`](tests/test_env.py).
+- **Command:** `make env && make test`.
+- **Checks:**
+  - Every package imports and CUDA is visible.
+  - The MFA command form is as PLAN §3 expects, with no deprecation notice.
+
+### Stage 2: Data and the accent-disjoint split (T2)
+
+- **Method:**
+  - **LJ filelists:** the original VITS filelists (12,500 / 100 / 500), fetched by hash.
+  - **L2-ARCTIC split by accent:**
+    - dev = Hindi, Mandarin, Spanish;
+    - test = Arabic, Korean, Vietnamese.
+  - **Evaluation set:** the IDs that are manually annotated for every speaker of the split.
+    That gives dev 100 × 12 and test 104 × 12.
+  - **Test lock:** test-speaker audio can't be read until `freeze-v1` exists.
+- **Code:** [`tts/splits.py`](tts/splits.py), [`tts/guard.py`](tts/guard.py), [`configs/splits.yaml`](configs/splits.yaml).
+- **Command:** `make data`.
+- **Check:** [`reports/data_splits.md`](reports/data_splits.md).
+
+### Stage 3: Text front end (T3)
+
+- **Method:**
+  - **One normalizer** for training text, MFA labels and inference input: numbers, ordinals,
+    dates, currency, abbreviations, symbols.
+  - **Lexicon:** one pronunciation per word. CMUdict first, then the possessive rule (D-26),
+    then g2p_en.
+  - **Symbols:** 72 (pad, sil, sp + 69 ARPAbet), equal to MFA's phone set.
+- **Code:** [`tts/text/normalize.py`](tts/text/normalize.py), [`tts/text/lexicon.py`](tts/text/lexicon.py), [`tts/text/symbols.py`](tts/text/symbols.py).
+- **Command:** `make lexicon`.
+- **Check:** 14,912 words, every phone in MFA's set ([`reports/lexicon.md`](reports/lexicon.md)).
+
+### Stage 4: Forced alignment and phone statistics (T4, T5)
+
+- **Method:** MFA `english_us_arpa` with a wide beam (100/400), plus the TextGrid parsing rules:
+  - silence ≥ 3 frames → `sp`;
+  - cumulative frame rounding;
+  - ≥ 1 frame per phone.
+
+  The phone statistics are each phone's mean and σ of log duration over LJ train.
+- **Code:** [`tts/align/mfa.py`](tts/align/mfa.py), [`tts/align/textgrid.py`](tts/align/textgrid.py), [`tts/align/lj.py`](tts/align/lj.py), [`tts/align/l2.py`](tts/align/l2.py), [`tts/stats.py`](tts/stats.py).
+- **Commands:** `make align-lj`, `make stats`, `make align-l2-dev`, `make align-dev-eval`.
+- **Checks:**
+  - 13,073 / 13,100 LJ files kept ([`reports/align_lj.md`](reports/align_lj.md)).
+  - **MFA vs manual annotation on accented dev speech:** word MAE 19.4 ms, phone MAE 13.1 ms
+    ([`reports/mfa_l2_dev.md`](reports/mfa_l2_dev.md), plot 3).
+
+### Stage 5: M0, the FastSpeech2 baseline (T6)
+
+- **Method:** pretrained FastSpeech2 + HiFi-GAN. The reference durations are passed as
+  `d_targets` to its variance adaptor.
+- **Code:** [`tts/models/fastspeech2/m0.py`](tts/models/fastspeech2/m0.py).
+- **Command:** `make m0-demo`.
+
+### Stage 6: VITS-MFA model and trainer (T7, T8)
+
+- **Method:** VITS with MAS removed. The alignment is a one-hot expansion of the MFA durations.
+  - **Training:**
+    - no blanks;
+    - a re-initialized 72-symbol embedding;
+    - a deterministic log-duration predictor on the detached encoder output;
+    - loss 45·mel + KL + dur + adv + 2·fm;
+    - bf16 with fp32 losses.
+  - **Options:**
+    - `use_pos` (a position-in-phone embedding);
+    - one-GPU branching (`--init_from` one of our own checkpoints).
+- **Code:** [`tts/models/vits_mfa/models.py`](tts/models/vits_mfa/models.py), [`trainer.py`](tts/models/vits_mfa/trainer.py), [`data.py`](tts/models/vits_mfa/data.py), [`scripts/train.py`](scripts/train.py).
+- **Commands:** `make overfit`, `make smoke`.
+- **Checks:**
+  - **Overfit:** one utterance for 500 steps came out intelligible (WER 5.6%).
+  - **Smoke:** every config ran 200 steps at batch 4, and resume worked.
+
+### Stage 7: Pace augmentation for the ablations (T9)
+
+- **Method:**
+  - **Set A:** pace sampled from LJ statistics (target-agnostic).
+  - **Set B:** word pace and pauses sampled from dev-accent statistics (target-aware, word level
+    only).
+  - **Phone factors:** exp(z·σᵢ), clipped to [0.6, 2.5].
+  - **Pauses:** built from looped room tone.
+  - **Stretcher:** time-varying WSOLA (it replaced Rubber Band R3, which cost about 1.4 UTMOS;
+    D-67).
+  - **Filter:** the 5% of clips with the largest UTMOS drop are removed.
+- **Code:** [`tts/augment/`](tts/augment): `generate.py`, `pace_b.py`, `core.py`, `wsola.py`, `verify.py`, `filter.py`.
+- **Commands:** `make pace-stats-b`, `make aug-a aug-b`, `make aug-filter`.
+- **Check:** MFA re-alignment matches the planned boundaries to a median of about 7 ms
+  ([`reports/aug_a.md`](reports/aug_a.md), [`aug_b.md`](reports/aug_b.md)).
+
+### Stage 8: Inference pipeline and edge cases (T10)
+
+- **Method:** the ten-step pipeline under [How it works](#how-it-works). Elastic word fitting by
+  bisection, a stretch cap, cumulative rounding to the exact frame count, and pad/trim to the exact
+  sample count.
+  - **Fallback:** the MMS_FA CTC aligner, a numpy Viterbi (D-56).
+- **Code:** [`tts/infer/pipeline.py`](tts/infer/pipeline.py), [`systems.py`](tts/infer/systems.py), [`ctc.py`](tts/infer/ctc.py), [`edge_cases.py`](tts/infer/edge_cases.py), [`scripts/infer.py`](scripts/infer.py).
+- **Command:** `make edge` (`CKPT=... DEVICE=cuda|cpu`).
+- **Check:** 21 edge cases covering text normalization, audio formats, extreme timing and
+  alignment failures. **21/21 pass on GPU and CPU.**
+
+### Stage 9: Evaluation harness and metrics (T11)
+
+`scripts/evaluate.py` synthesizes every reference of a split and aligns the outputs with MFA. It
+then scores every output and writes:
+- `per_utt.csv`;
+- `summary.json` (95% bootstrap CIs, per accent);
+- paired Wilcoxon tests against M1;
+- the plots.
+
+| Metric | Definition | Code |
+| --- | --- | --- |
+| Length error | Output samples − round(N_ref·22050/sr_ref), must be 0 | [`pipeline.py`](tts/infer/pipeline.py#L333-L334) |
+| Word-boundary MAE, % within 20 / 50 ms | Every word start and end. Output words come from MFA on the output; reference words come from the **manual** annotation. | [`metrics.py`](tts/eval/metrics.py#L16-L30) |
+| Word-boundary MAE (CTC) | The same, with MMS_FA on the output (second-aligner cross-check) | [`evaluate.py`](scripts/evaluate.py#L188-L193) |
+| Pause F1 | Pauses (silence ≥ 100 ms) at word boundaries, output vs reference | [`metrics.py`](tts/eval/metrics.py#L38) |
+| WER, CER | faster-whisper large-v3 + Whisper text normalizer + jiwer | [`asr.py`](tts/eval/asr.py#L45) |
+| US probability | CommonAccent ECAPA accent ID, softmax(30·cosine), US class | [`scorers.py`](tts/eval/scorers.py#L55-L70) |
+| Speaker similarity | ECAPA cosine to the mean of 100 LJ test clips, and to the reference speaker | [`scorers.py`](tts/eval/scorers.py#L39), [`evaluate.py`](scripts/evaluate.py#L149-L168) |
+| UTMOS | SpeechMOS `utmos22_strong`, sha256-pinned weights | [`scorers.py`](tts/eval/scorers.py#L14), [`tts/eval/assets.py`](tts/eval/assets.py) |
+| CIs, paired test | Bootstrap (1,000 resamples), Wilcoxon signed-rank | [`metrics.py`](tts/eval/metrics.py#L61-L83) |
+
+- **Commands:**
+  - `make assets-eval` (pinned evaluation models);
+  - `make eval SYSTEM=m0 SPLIT=dev`.
+- **Plots** (in [`results/plots/`](results/plots), from [`tts/eval/plots.py`](tts/eval/plots.py)):
+  - 02 boundary scatter;
+  - 03 MFA error;
+  - 04 metrics vs stretch;
+  - 05/07 tuning and transfer variants;
+  - 06 per accent;
+  - 08 dev vs test pace;
+  - 09 efficiency;
+  - 10 training curves.
+
+### Stage 10: Profiling, GPU bundle and demo (T12–T14)
+
+- **Profiling** ([`scripts/profile.py`](scripts/profile.py), `make profile`):
+  - parameters per module;
+  - MACs, using ptflops' `aten` backend plus one layer worked by hand;
+  - p50/p90 latency per stage;
+  - RTF.
+- **Bundle** (`make bundle` / `bundle-m1`, then `make check-data` on a fresh unpack): every
+  training file, sha256-verified.
+- **Demo page** ([`scripts/make_demo.py`](scripts/make_demo.py), `make demo`): the per-sample
+  outputs double as backup outputs for the live demo.
+
+### Stage 11: Phase 1, training M1 on one L40S (D-70)
+
+- **Method:**
+  - A 300-step benchmark (0.229 s/step) set `max_steps` to 114,000 for an 8 h budget, at batch 32.
+  - Training ran in tmux, with resume after an interruption.
+  - Runbook: [docs/HANDOFF.md](docs/HANDOFF.md).
+- **Commands:**
+  - `python scripts/train.py --config configs/m1.yaml`;
+  - `bash scripts/export_run.sh m1`.
+
+### Stage 12: Tuning and the M1 dev results (D-72, D-73)
+
+- **Method:** a grid over transfer variant × cap × noise scale × aligner, on 120 dev references.
+  The rule was fixed in advance: highest UTMOS among settings within 5 ms of the best MAE
+  ([`tts/eval/tune.py`](tts/eval/tune.py)).
+- **Chosen:** elastic, cap 2.5, noise 0.333, MFA.
+- **Command:** `make tune SPLIT=dev`, which writes the chosen values into
+  `configs/inference.yaml`.
+- **Result (M1 vs M0 on dev):**
+  - MAE 31.3 → 23.7 ms;
+  - WER 10.0 → 3.5%;
+  - UTMOS 3.94 → 4.20;
+  - US probability level.
+
+### Stage 13: Phase 2, three experiments driven by listening
+
+Every phase-2 system branches from M1 for 20,000 steps with a fresh optimizer, so each pair differs
+in one setting.
+
+| Phase | Observation | Probe added | Experiment | Outcome |
+| --- | --- | --- | --- | --- |
+| 2a (D-74 to D-78) | "Words end sharply": within-phone spectral movement 14% below LJ | **Phone dynamics** ([`tts/eval/phone_dynamics.py`](tts/eval/phone_dynamics.py), `make phone-dyn`) | `m1_pos` vs `m1_cont` | US prob 0.769 vs 0.680 (p = 5e-31); m1_pos becomes the base |
+| 2b (D-79, D-82, D-83) | Do pace-augmented clips help at high stretch? | **Paired test against each system's own control, by accent and stretch tercile, Holm-adjusted** ([`tts/eval/paired.py`](tts/eval/paired.py), `make paired`) | `abl_a_pos`, `abl_b_pos` vs `m1_pos` | No gain at any stretch; UTMOS −0.08 to −0.11: a **negative result** |
+| 2c (D-80, D-81, D-84) | "cry" heard as "cra": diphthongs flattened (LPC formant probe: AY/AW glides missing) | Diphthong glide probe (formants, D-80) | `m1_pos_diph` (each diphthong → two tokens, [`tts/text/diph.py`](tts/text/diph.py)) vs `m1_pos` | Glide restored; MAE −0.7 ms, WER 3.9 → 2.7%, UTMOS +0.02 → **main system** |
+
+Full story and numbers:
+[REPORT §10](docs/REPORT.md#10-the-projects-journey-experiments-and-the-reasoning-behind-each).
+
+### Stage 14: Freeze and the test evaluation (D-85, D-86)
+
+- **Freeze:** the final system set was fixed, the checkpoint hashes were committed, and
+  `git tag freeze-v1` was placed on `5889ecf`.
+- **Only then** were the test accents evaluated, once, for all six systems. Then came the paired
+  tests, plot 8 (dev vs test pace: ×1.12 vs ×1.16 LJ), the profiles, the clean demo build and the
+  slides.
+
+---
 
 ## Commands in run order
 
 ```bash
-# --- laptop, days 1-2 ----------------------------------------------------------------------
+# --- laptop: build and verify (T1-T14) -------------------------------------------------------
 make env && make test
 make data            # T2: checks, VITS filelists, splits, eval IDs, manifest skeletons
 make lexicon         # T3: pinned MFA/NLTK assets + lexicon (all phones in MFA's phone set)
@@ -78,81 +362,99 @@ make m0-demo         # T6: FastSpeech2 baseline on 5 dev references
 make overfit         # T7: one-utterance overfit + ASR intelligibility check
 make smoke           # T8: every config 200 steps at batch 4, resume, benchmark
 make pace-stats-b    # T9: stats/l2_dev_pace.json (dev accents only)
-make aug-a aug-b     # T9: augmented sets (time-varying WSOLA, D-67) + MFA verification + UTMOS filter
+make aug-a aug-b     # T9: augmented sets (time-varying WSOLA, D-67) + MFA verification
+make aug-filter      # T9: UTMOS filter -> aug_a.jsonl / aug_b.jsonl
 make edge            # T10: 21-case edge suite (CKPT=m0|path, DEVICE=cuda|cpu)
-make assets-eval     # pinned Section 8 models (ASR, ECAPA, accent ID, UTMOS via torch.hub)
-make eval SYSTEM=m0 SPLIT=dev   # T11 (ARGS=--no_utmos if UTMOS is not available)
-make profile CKPT=runs/smoke_m1/ckpt_last.pt DEVICE=cuda   # T12 (laptop numbers)
-make bundle          # T13: export/bundle.tar (+ check-data on a fresh unpack); BUNDLE_AUG=0 = light
-git tag smoke-ok      # after T8; then `git tag gpu-ready` on the commit the GPU run uses
+make assets-eval     # T11: pinned evaluation models (ASR, ECAPA, accent ID, UTMOS)
+make eval SYSTEM=m0 SPLIT=dev
+make profile DEVICE=cuda      # T12
+make bundle-m1                # T13: small M1 bundle (+ check-data on a fresh unpack); `make bundle` = full
+git tag smoke-ok; git tag gpu-ready
 
-# --- GPU instance, day 2: one L40, M1 first, ablations optional later (docs/HANDOFF.md, D-68) ---
+# --- GPU instance, phase 1: M1 (docs/HANDOFF.md) ---------------------------------------------
 git clone <repo> meeami-tts && cd meeami-tts && git checkout gpu-ready
-bash scripts/setup_gpu.sh
-bash scripts/fetch_bundle.sh <url-or-path>/bundle.tar
-make check-data
-conda run -n tts python scripts/train.py --config configs/m1.yaml --benchmark 300
-#   -> set train.max_steps in configs/base.yaml on the laptop, commit, push; git pull here
+bash scripts/setup_gpu.sh && bash scripts/fetch_bundle.sh <url-or-path> && make lj-download && make check-data
+conda run -n tts python scripts/train.py --config configs/m1.yaml --benchmark 300   # -> train.max_steps
 tmux new -d -s train 'conda run --no-capture-output -n tts python scripts/train.py --config configs/m1.yaml 2>&1 | tee logs/m1.log'
-#   after a crash: add --resume. Ablations (optional): branching from export/m1, HANDOFF.md phase 2
-bash scripts/export_run.sh m1        # -> export/m1.tar.gz ; rsync to the laptop
+bash scripts/export_run.sh m1          # -> export/m1.tar.gz ; rsync to the laptop
 
-# --- GPU instance, phase 2: branches from M1, 20k steps each, fresh optimizer (HANDOFF.md) ---
-for e in m1_cont m1_pos; do conda run -n tts python scripts/train.py --config configs/$e.yaml \
-    --init_from runs/m1/ckpt_last.pt --max_steps 20000; done          # 2a: +pos vs plain continuation
-for e in abl_a_pos abl_b_pos m1_pos_diph; do ... same command ...; done # 2b ablations, 2c diphthong split
-for e in m1_pos m1_cont abl_a_pos abl_b_pos m1_pos_diph; do bash scripts/export_run.sh $e; done
+# --- GPU instance, phase 2: branches from M1, 20k steps each, fresh optimizer ------------------
+B=runs/m1/ckpt_last.pt
+python scripts/train.py --config configs/m1.yaml        --init_from $B --max_steps 20000 --tag m1_cont   # 2a control
+python scripts/train.py --config configs/m1_pos.yaml    --init_from $B --max_steps 20000                 # 2a
+python scripts/train.py --config configs/abl_a_pos.yaml --init_from $B --max_steps 20000                 # 2b
+python scripts/train.py --config configs/abl_b_pos.yaml --init_from $B --max_steps 20000                 # 2b
+python scripts/train.py --config configs/m1_pos_diph.yaml --init_from $B --max_steps 20000               # 2c
+for e in m1_cont m1_pos abl_a_pos abl_b_pos m1_pos_diph; do bash scripts/export_run.sh $e; done
 
-# --- laptop, days 3-5 -----------------------------------------------------------------------
+# --- laptop: tune, dev evaluation, freeze, test ------------------------------------------------
 for e in m1 m1_pos m1_pos_diph abl_a_pos abl_b_pos; do sha256sum -c export/$e.tar.gz.sha256 && tar -xzf export/$e.tar.gz; done
 make tune SPLIT=dev                  # writes cap / noise_scale into configs/inference.yaml (D-72)
 make eval-all SPLIT=dev              # SYSTEMS = m0 m1 m1_pos m1_pos_diph abl_a_pos abl_b_pos
-make phone-dyn PD_CKPTS="export/m1_pos/ckpt_last.pt ..."   # within-phone movement vs LJ (D-76)
-make paired CONTROL=m1_pos SYSTEMS_CMP="abl_a_pos abl_b_pos m1_pos_diph"   # paired tests (D-82)
+make phone-dyn PD_CKPTS="export/m1/ckpt_last.pt export/m1_pos/ckpt_last.pt ..."   # D-76
+make paired CONTROL=m1_pos SYSTEMS_CMP="abl_a_pos abl_b_pos m1_pos_diph"           # D-82
 make edge CKPT=export/m1_pos_diph/ckpt_last.pt DEVICE=cuda   # and DEVICE=cpu: 21/21
 git tag freeze-v1                    # code, configs and checkpoints frozen (results/checkpoints.sha256)
 make eval-all SPLIT=test             # held-out accents; also draws plot 8 (dev vs test pace)
 make paired CONTROL=m1_pos SYSTEMS_CMP="abl_a_pos abl_b_pos m1_pos_diph" SPLIT=test
 make profile DEVICE=cuda ; make profile DEVICE=cpu ; make profile DEVICE=cpu ARGS="--threads 1"
 make demo                            # out/demo_site/index.html (+ backup outputs per sample)
-python scripts/infer.py --text "..." --ref ref.wav --out out/ --ckpt export/m1_pos_diph/ckpt_last.pt
 ```
 
-## Inference
+On the GPU instance, prefix the training commands with `conda run -n tts`, inside tmux.
+[HANDOFF.md](docs/HANDOFF.md) has the exact launch lines.
 
-```bash
-python scripts/infer.py --text "For the 20th time that evening..." --ref ref.wav --out out/ \
-    --ckpt export/m1_pos_diph/ckpt_last.pt   # main system; --ckpt m0 for the FastSpeech2 baseline
-python scripts/infer.py --pairs_dir their_files/ --out out/ --ckpt export/m1_pos_diph/ckpt_last.pt
+---
+
+## Repository layout
+
 ```
-
-Options: `--config configs/inference.yaml`, `--aligner mfa|ctc`,
-`--transfer elastic|proportional|phone_copy`, `--cap <float|none>`, `--noise_scale`,
-`--device cuda|cpu`. Per pair: `out.wav` (exactly round(N_ref·22050/sr_ref) samples),
-`timings.json` (reference and intended output word times, aligner used, latency, RTF) and
-`timing.png`. Any failure prints a one-line reason and continues with the next pair.
+configs/    base.yaml (all shared parameters) · splits.yaml · inference.yaml (tuned) · one yaml per system
+tts/
+  text/       normalize.py · lexicon.py · symbols.py · diph.py (diphthong split, main system)
+  align/      mfa.py (MFA wrapper) · textgrid.py (parsing rules) · lj.py · l2.py (MFA vs manual)
+  models/     vits_mfa/ (VITS-MFA: models, trainer, data) · fastspeech2/ (M0, vendored)
+  augment/    generate.py (A/B plans) · pace_b.py · core.py · wsola.py · verify.py · filter.py
+  infer/      pipeline.py (Section 5 steps 1-10) · systems.py · ctc.py · edge_cases.py · batch.py
+  eval/       metrics.py · scorers.py · asr.py · paired.py · phone_dynamics.py · tune.py · plots.py
+  guard.py    test-split lock          splits.py · stats.py · audio.py · config.py
+scripts/    train.py · infer.py · evaluate.py · profile.py · make_demo.py · GPU bundle/setup/export
+tests/      unit tests (one per module) + edge_cases/ (21 committed WAV/TXT cases)
+stats/      phone_logdur.json (LJ per-phone log-duration mean, σ) · l2_dev_pace.json (Ablation B)
+reports/    data splits, lexicon, LJ alignment QC, MFA error on accented speech, augmentation
+results/    <system>/<split>/{per_utt.csv, summary.json} · paired/ · phone_dynamics/ · tune/ · plots/ · profile_*.json
+docs/       REPORT.md · PLAN.md · DECISIONS.md · HANDOFF.md
+slides/     meeami-tts.pptx + build.js
+data/ runs/ export/ out/   git-ignored (datasets, training runs, checkpoints, demo)
+```
 
 ## Known failure modes
 
-- `mfa align_one` takes ~10-15 s per reference (model load); it dominates end-to-end latency.
-- If MFA fails, returns `spn` or misses a word, word boundaries come from the MMS_FA CTC aligner,
-  which is coarser (~53 ms word-boundary MAE vs ~21 ms for MFA on dev references).
-- Extreme stretches are capped (2.5x the native word duration, tuned on dev, D-72); the excess
-  becomes a pause.
-- Part of an accent lives in timing: speech forced onto an L2 reference's word timing sounds less American
-  than it could (dev US prob: L2 references 0.30, main-system outputs 0.74).
-- ARPAbet diphthongs are single tokens, so the plain VITS-MFA model flattened them ("cry" heard
-  as "cra", D-80). The main system splits each diphthong into two tokens with a fixed 50/50
-  duration split (D-81); short unstressed diphthongs get only 1-2 frames per half.
-- The accent-ID US probability is near-binary per utterance and flips on inaudible changes (D-84);
-  read it as a population average, not per sample.
-- Pace augmentation (Ablations A/B) with a WSOLA stretcher lowered UTMOS and did not improve
-  timing on dev (D-83): the stretched clips carry artifacts the model learns.
-- `phone_copy` needs MFA phone durations; with the CTC fallback it runs as `elastic`.
-- Reference audio is decoded with libsndfile, then ffmpeg; anything neither can read fails cleanly.
+- **MFA latency:** `mfa align_one` takes 3–15 s per reference, mostly model loading. It
+  dominates end-to-end latency (model RTF 0.012, end-to-end 0.90 on the laptop GPU).
+- **CTC fallback:** if MFA fails, returns `spn` or misses a word, word boundaries come from the
+  MMS_FA CTC aligner. It is coarser: about 53 ms word-boundary MAE, against about 21 ms for MFA on
+  dev references.
+- **Stretch cap:** extreme stretches are capped at 2.5× the native word duration (tuned on dev,
+  D-72); the excess becomes a pause.
+- **Timing carries accent:** speech forced onto an L2 reference's word timing sounds less
+  American than it could. Dev US probability: L2 references 0.30, main-system outputs 0.74.
+- **Fixed diphthong split:** the main system splits each diphthong 50/50 (D-81). Short
+  unstressed diphthongs get only 1–2 frames per half.
+- **Noisy accent ID:** the US probability is near-binary per utterance and flips on inaudible
+  changes (D-84). Read it as a population average, not per sample.
+- **Augmentation hurt:** pace augmentation (Ablations A/B) lowered UTMOS and did not improve
+  timing (D-83, D-86).
+- **`phone_copy` without MFA:** it needs MFA phone durations; with the CTC fallback it runs as
+  `elastic`.
+- **Undecodable audio:** reference audio is decoded with libsndfile, then ffmpeg. Anything
+  neither can read fails cleanly.
+- **Abbreviation periods:** title abbreviations need their period, as in LJSpeech (`Dr.`, not
+  `Dr`). Without it, `Dr` is read as "drive" (D-74).
 
 ## Licences
 
-VITS (jaywalnut310, MIT) and FastSpeech2/HiFi-GAN (ming024, MIT) code is vendored under
-`tts/models/` with their licence files. L2-ARCTIC (CC BY-NC 4.0) derived clips in
-`tests/edge_cases/` come from dev speakers only.
+- **Vendored code:** VITS (jaywalnut310, MIT) and FastSpeech2/HiFi-GAN (ming024, MIT) live under
+  `tts/models/`, with their licence files.
+- **Edge-case clips:** the L2-ARCTIC (CC BY-NC 4.0) clips in `tests/edge_cases/` come from dev
+  speakers only.
