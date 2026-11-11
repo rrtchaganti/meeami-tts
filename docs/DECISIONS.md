@@ -1201,3 +1201,11 @@ docs/HANDOFF.md instead of being worked around.
   - **Finding: a text/audio mismatch is not detected.** An inserted word ("two *old* men") did
     not fail MFA: it gave "old" 90 ms, taken from "two" and "men". Detecting it would need an
     alignment-confidence check (future work). The runbook says so.
+- **D-97 Checkpoints published (resolves E-34).** The owner logged in with a write token, and
+  `make publish-models` uploaded everything in one commit, `d7771609d12e1ac7e35f5a8b0ea819d4b713d8d7`, to the private repo
+  `Raviteja546/meeami-tts`. It holds the 5 `infer.pt` files with their configs, the 3 baseline
+  weight files, `MANIFEST.sha256`, README and LICENSES. `hosting.revision` is pinned to that
+  commit.
+  - **Download check:** `export/m1/infer.pt` was moved aside, and `make models` downloaded it,
+    passed the sha256 check, and produced a byte-identical file (`cmp`). The other 7 files were
+    reported present with matching hashes.

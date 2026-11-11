@@ -321,7 +321,7 @@ demo:
 # --- D-95: hosted checkpoints (Hugging Face model repo; `make models` fetches, sha256-checked) --
 hosting:
   hf_repo: Raviteja546/meeami-tts
-  revision: main            # pinned to a commit hash after the upload (D-95)
+  revision: d7771609d12e1ac7e35f5a8b0ea819d4b713d8d7   # pinned upload commit (D-95)
   private: true             # the owner flips visibility on the Hub when sharing
   systems: [m1_pos_diph, m1, m1_pos, abl_a_pos, abl_b_pos]   # vits_mfa/<name>/infer.pt
   # repo path -> local path (third-party baseline weights, mirrored unmodified with licences)
