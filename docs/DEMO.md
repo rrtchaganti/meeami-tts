@@ -3,6 +3,23 @@
 What to run in front of the interviewers, what to say, and what to do when something goes wrong.
 Everything here runs the frozen main system; nothing changes a model or an experiment config.
 
+## 0a. On a fresh machine (~15 min, tested from a clean clone: D-98)
+
+```bash
+git clone git@github.com:rrtchaganti/meeami-tts.git && cd meeami-tts
+make env                 # conda envs `tts` and `mfa` (~3.5 min); updates them in place (--prune) if they exist
+hf auth login            # the model repo Raviteja546/meeami-tts is private
+# datasets (not downloadable by script; L2-ARCTIC needs its licence form):
+#   data/raw/LJSpeech-1.1/   and   data/raw/l2arctic/<SPEAKER>/{wav,transcript,annotation}/
+make models              # 5 checkpoints + 3 baseline weights from the HF Hub, sha256-checked (~5 min)
+make assets              # pinned MFA english_us_arpa models + NLTK data, sha256-checked (~1 min)
+make lexicon             # data/lexicon/lexicon.txt from the corpus texts (~30 s; data/ is not in git)
+make test                # 286 passed, 6 skipped (skips need training manifests / eval models)
+```
+
+Then continue with §0. The rebuilt lexicon has one entry fewer than the frozen one (`dr`; D-98),
+which does not change any demo output.
+
 ## 0. Before the interview (once, ~10 min)
 
 ```bash

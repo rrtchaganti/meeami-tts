@@ -1209,3 +1209,31 @@ docs/HANDOFF.md instead of being worked around.
   - **Download check:** `export/m1/infer.pt` was moved aside, and `make models` downloaded it,
     passed the sha256 check, and produced a byte-identical file (`cmp`). The other 7 files were
     reported present with matching hashes.
+- **D-98 Fresh-clone test of the demo (user request).** Nothing came from the working copy except
+  the datasets, which were symlinked into `data/raw` because L2-ARCTIC needs its licence form.
+  The steps:
+  - cloned from GitHub at 9bf09f2, with the tags present;
+  - built both envs from `envs/*.yml` into a scratch prefix (tts 2m43s, mfa 42s). `make env`
+    itself was not used, because it updates the working `tts`/`mfa` envs in place with
+    `--prune`;
+  - pointed `conda run -n` at the scratch envs with `CONDA_ENVS_DIRS`, so MFA also ran in the
+    fresh env.
+  - **Results:**
+
+    | Command | Result |
+    | --- | --- |
+    | `make models` | 8/8 files downloaded and sha256-checked (4m46s) |
+    | `make assets` | ok (63 s) |
+    | `make lexicon` | ok (28 s) |
+    | `make test` | 286 passed, 6 skipped, all skips data-dependent (LJ manifests, MMS_FA weights, the pre-freeze guard) |
+    | `make text-stress` | 115 PASS + 2 G2P |
+    | `make live-demo` | main 7 ms, V0 25 ms mean measured \|Δ\|; length error 0; RTF model 0.03 |
+    | `make rehearse` | 12/12 |
+
+  - **Finding: a rebuilt lexicon has 14,911 entries, the frozen one 14,912.** The missing entry
+    is `dr D R AY1 V`. D-94 made the corpus's only bare "Dr" ("Dr Paul C. Peters", LJ) read as
+    "doctor", so "dr" is no longer a corpus word. It has no effect on the demo or the
+    evaluation: an "Elm Dr" input gets the same CMUdict pronunciation through `ensure_words`.
+    The frozen models and alignments were built with the original lexicon and are not rebuilt.
+  - **Gap fixed:** `docs/DEMO.md` §0a now lists the fresh-machine steps. `data/` is not in git,
+    so the lexicon must be built with `make lexicon`, and the datasets must be placed by hand.
