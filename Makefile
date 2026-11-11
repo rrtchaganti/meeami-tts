@@ -9,7 +9,7 @@ MFA_RUN := $(CONDA) run --no-capture-output -n mfa
 help:
 	@echo "Laptop:  env test data lexicon align-lj stats align-l2-dev align-dev-eval pace-stats-b"
 	@echo "         aug-a aug-b aug-filter m0-demo overfit smoke edge eval eval-all tune phone-dyn paired profile"
-	@echo "         bundle check-data demo"
+	@echo "         bundle check-data demo  |  live demo: models text-stress rehearse live-demo (docs/DEMO.md)"
 	@echo "GPU:     see docs/HANDOFF.md (setup_gpu.sh, fetch_bundle.sh, check-data, train.py)"
 
 # --- T1: environments -------------------------------------------------------
@@ -175,6 +175,27 @@ lj-download:   # on the GPU instance: official LJSpeech 1.1 archive -> data/raw/
 
 check-data:
 	$(TTS_RUN) python -m tts.check_data --root . $(ARGS)
+
+# --- D-94: text-input stress cases (read-only; TEXT="..." for ad-hoc input) ---------------
+.PHONY: text-stress
+text-stress:
+	$(TTS_RUN) python -m tts.text.stress $(if $(TEXT),--text "$(TEXT)" --phones,) $(ARGS)
+
+# --- D-95: hosted checkpoints (Hugging Face) -------------------------------------------------
+.PHONY: models export-infer publish-models
+models:          # download export/<system>/infer.pt + baseline weights, sha256-checked
+	$(TTS_RUN) python scripts/fetch_models.py
+export-infer:    # owner: export/<system>/ckpt_last.pt -> infer.pt (generator only), verified
+	$(TTS_RUN) python scripts/export_infer.py --verify $(foreach n,m1_pos_diph m1 m1_pos abl_a_pos abl_b_pos,--name $(n))
+publish-models:  # owner: upload to hosting.hf_repo (configs/base.yaml)
+	$(TTS_RUN) python scripts/fetch_models.py --publish
+
+# --- D-96: live interview demo ---------------------------------------------------------------
+.PHONY: live-demo rehearse
+live-demo:       # UTT=HKK_arctic_a0003 [TEXT="..."] or REF=their.wav TEXT="..."
+	$(TTS_RUN) python scripts/demo.py $(if $(UTT),--utt $(UTT),) $(if $(REF),--ref "$(REF)",) $(if $(TEXT),--text "$(TEXT)",) $(ARGS)
+rehearse:        # every case in configs/live_demo.yaml -> out/live_demo/REHEARSAL.md
+	$(TTS_RUN) python scripts/demo.py --suite $(ARGS)
 
 # --- T14: demo page ----------------------------------------------------------------------
 .PHONY: demo

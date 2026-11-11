@@ -100,6 +100,66 @@ text:
     "$": [dollar, dollars, cent, cents]
     "£": [pound, pounds, penny, pence]
     "€": [euro, euros, cent, cents]
+  # Inference-input pre-pass (D-94). Added after freeze-v1; every rule rewrites only forms that
+  # never occur in the training/eval transcripts (checked by tests/test_text_stress.py), so the
+  # frozen data, alignments and results are unchanged. Applied before everything above.
+  input_rules:
+    fixed:               # regex -> words, applied first
+      '\b24/7\b': twenty four seven
+      '\b9/11\b': nine eleven
+      '\b50/50\b': fifty fifty
+      '\bPh\.\s?D\.?': P H D
+    tlds: [com, org, net, io, ai, in, co, edu, gov, uk, dev]
+    money:               # regex for the symbol/code -> [singular, plural, sub singular, sub plural]
+      '₹|\bRs\.?|\bINR': [rupee, rupees, paisa, paise]
+      '¥|\bJPY': [yen, yen, sen, sen]
+      '\bUSD|\bUS\$': [dollar, dollars, cent, cents]
+      '\bEUR': [euro, euros, cent, cents]
+      '\bGBP': [pound, pounds, penny, pence]
+    units:               # after a number; regex -> [singular, plural]
+      'km/h|kmph|kph': [kilometer per hour, kilometers per hour]
+      'mph': [mile per hour, miles per hour]
+      'kwh': [kilowatt hour, kilowatt hours]
+      'km': [kilometer, kilometers]
+      'cm': [centimeter, centimeters]
+      'mm': [millimeter, millimeters]
+      'kg': [kilogram, kilograms]
+      'mg': [milligram, milligrams]
+      'lbs?': [pound, pounds]
+      'oz': [ounce, ounces]
+      'ft': [foot, feet]
+      'mi': [mile, miles]
+      'hrs?|h': [hour, hours]
+      'mins?': [minute, minutes]
+      'secs?': [second, seconds]
+      'ms': [millisecond, milliseconds]
+      'tb': [terabyte, terabytes]
+      'gb': [gigabyte, gigabytes]
+      'mb': [megabyte, megabytes]
+      'kb': [kilobyte, kilobytes]
+      'ghz': [gigahertz, gigahertz]
+      'mhz': [megahertz, megahertz]
+      'khz': [kilohertz, kilohertz]
+      'hz': [hertz, hertz]
+      'kw': [kilowatt, kilowatts]
+    weekdays: {mon: monday, tue: tuesday, tues: tuesday, wed: wednesday, thu: thursday,
+               thur: thursday, thurs: thursday, fri: friday, sat: saturday, sun: sunday}
+    bare_titles:         # undotted title before a capitalised word (dotted forms: abbreviations)
+      dr: doctor
+      st: saint
+    bare_words: {vs: versus, approx: approximately}
+    roman: {II: 2, III: 3, IV: 4, V: 5, VI: 6, VII: 7, VIII: 8, IX: 9, X: 10, XI: 11, XII: 12,
+            XIII: 13, XIV: 14, XV: 15, XVI: 16, XX: 20}
+    # "<context> II" is a cardinal ("World War two"); "<Name> VIII" an ordinal ("Henry the eighth")
+    roman_cardinal_after: [World War, Chapter, Part, Volume, Vol., Act, Phase, Book, Section,
+                           Article, Title, Class, Type, Level, Stage, Round, Episode, Season,
+                           Apollo, Rocky, Grade]
+    # All-caps tokens not in cmudict with <= spell_max_letters letters, or without a vowel, are
+    # spelled letter by letter (GPU, TTS, MP3). Known words are cmudict only (the project lexicon
+    # grows at inference, which would make this rule change between runs) plus keep_caps.
+    spell_max_letters: 3
+    keep_caps: [PRS, FPCC, MSS, LL, BBL, MVD]   # in LJ text: keep the training-time reading
+    spell_words: [ai]    # all-caps words cmudict reads wrongly as a word ("ai" = the sloth)
 
 # --- T3: lexicon (Section 3) ---------------------------------------------------------------
 lexicon:
@@ -257,3 +317,15 @@ demo:
   systems: [m0, m1, m1_pos, m1_pos_diph, abl_a_pos, abl_b_pos]   # m0 or export/<name>/ckpt_last.pt (D-85)
   suitcase_speakers: [BWC, NJS, TNI]   # dev speakers; test-speaker clips only after freeze-v1
   own_recordings: demo/own_recordings  # optional: <name>.wav + <name>.txt, labelled "stress test"
+
+# --- D-95: hosted checkpoints (Hugging Face model repo; `make models` fetches, sha256-checked) --
+hosting:
+  hf_repo: Raviteja546/meeami-tts
+  revision: main            # pinned to a commit hash after the upload (D-95)
+  private: true             # the owner flips visibility on the Hub when sharing
+  systems: [m1_pos_diph, m1, m1_pos, abl_a_pos, abl_b_pos]   # vits_mfa/<name>/infer.pt
+  # repo path -> local path (third-party baseline weights, mirrored unmodified with licences)
+  baselines:
+    baselines/vits/pretrained_ljs.pth: data/models/vits/pretrained_ljs.pth
+    baselines/fastspeech2/900000.pth.tar: data/models/fastspeech2/900000.pth.tar
+    baselines/fastspeech2/hifigan/generator_LJSpeech.pth.tar: data/models/fastspeech2/hifigan/generator_LJSpeech.pth.tar

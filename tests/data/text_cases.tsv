@@ -1,0 +1,121 @@
+# Text-input stress cases (DECISIONS D-94). Columns: category <TAB> input <TAB> expected words.
+# Expected = the words a US speaker most likely says (the text is the reference's transcript, so
+# a wrong expansion is an MFA word mismatch, not only a pronunciation error). ERROR = the
+# normalizer must refuse with NormalizeError / no words. Lines starting with # are comments.
+numbers	0, 7, 13 and 100	zero seven thirteen and one hundred
+numbers	1,000 or 1000 or 1,234,567	one thousand or one thousand or one million two hundred thirty four thousand five hundred sixty seven
+numbers	Agent 007	agent oh oh seven
+numbers	3.14 and 0.5	three point one four and zero point five
+numbers	.5 of it	point five of it
+numbers	-5 degrees	minus five degrees
+numbers	2nd, 21st, 101st	second twenty first one hundred first
+numbers	in 2024, 1999 and 2010	in twenty twenty four nineteen ninety nine and twenty ten
+numbers	10k runners	ten thousand runners
+numbers	version 2.0.1	version two point zero point one
+numbers	rated 3.5/5	rated three point five out of five
+numbers	5-10 people	five to ten people
+numbers	from 1990-1995	from nineteen ninety to nineteen ninety five
+numbers	#1 fan	number one fan
+numbers	No. 5 shirt	number five shirt
+numbers	5 x 3	five times three
+numbers	3x faster	three times faster
+numbers	odds 3:1	odds three to one
+dates	1/2 and 3/4 and 2/3	one half and three quarters and two thirds
+dates	on 12/03	on december third
+dates	on 11/11	on november eleventh
+dates	on 7/4	on july fourth
+dates	on 5/15	on may fifteenth
+dates	open 24/7	open twenty four seven
+dates	since 9/11	since nine eleven
+dates	12/03/2024	december third twenty twenty four
+dates	January 5, 2020	january fifth twenty twenty
+dates	Jan. 5th	january fifth
+dates	Sept. 9	september ninth
+dates	2020-01-05	january fifth twenty twenty
+dates	the 5th of May	the fifth of may
+dates	Mon. Nov 11	monday november eleventh
+dates	the 1990s	the nineteen nineties
+dates	the '90s	the nineties
+dates	the 90s	the nineties
+dates	44 BC	forty four b c
+dates	2020 AD	twenty twenty a d
+times	at 3pm	at three p m
+times	at 3 p.m.	at three p m
+times	at 3:05 PM	at three oh five p m
+times	at 15:45	at fifteen forty five
+times	at 12:00	at twelve o'clock
+times	at 3:30pm	at three thirty p m
+times	2h 30m	two hours thirty minutes
+money	$5 and $5.50	five dollars and five dollars and fifty cents
+money	$0.99	ninety nine cents
+money	$2.5 million	two point five million dollars
+money	£3 or €10	three pounds or ten euros
+money	5¢	five cents
+money	50% and 2.5%	fifty percent and two point five percent
+money	₹500	five hundred rupees
+money	Rs. 500	five hundred rupees
+money	INR 500	five hundred rupees
+money	¥100	one hundred yen
+money	USD 20	twenty dollars
+money	20 USD	twenty dollars
+money	₹1,00,000	one lakh rupees
+units	10km	ten kilometers
+units	100mph	one hundred miles per hour
+units	5kg	five kilograms
+units	3 lbs	three pounds
+units	2 oz	two ounces
+units	6 ft	six feet
+units	20°C	twenty degrees celsius
+units	98.6°F	ninety eight point six degrees fahrenheit
+units	4 GB	four gigabytes
+units	10 secs	ten seconds
+units	1 km	one kilometer
+symbols	salt & pepper	salt and pepper
+symbols	2 + 2 = 4	two plus two equals four
+symbols	call 555-123-4567	call five five five one two three four five six seven
+symbols	call (555) 123-4567	call five five five one two three four five six seven
+symbols	john@example.com	john at example dot com
+symbols	www.example.com	w w w dot example dot com
+symbols	https://example.com/a	example dot com slash a
+symbols	and/or	and slash or
+symbols	x*y~z	x y z
+abbreviations	Dr. Smith	doctor smith
+abbreviations	Dr Smith	doctor smith
+abbreviations	Elm Dr	elm dr
+abbreviations	Mrs. Lee and Mr Jones	missus lee and mr jones
+abbreviations	Prof. Capt. Gen. Lt. Jr.	professor captain general lieutenant junior
+abbreviations	St. Louis	saint louis
+abbreviations	Main St.	main street
+abbreviations	St Louis	saint louis
+abbreviations	e.g. this, i.e. that, etc.	for example this that is that et cetera
+abbreviations	cats vs. dogs	cats versus dogs
+abbreviations	cats vs dogs	cats versus dogs
+abbreviations	approx 5	approximately five
+initialisms	the U.S. and the USA	the u s and the usa
+initialisms	NASA and the FBI	nasa and the fbi
+initialisms	a GPU for TTS	a g p u for t t s
+initialisms	the FAQ	the f a q
+initialisms	an MP3	an m p three
+initialisms	AI research	a i research
+initialisms	Ph.D. student	p h d student
+initialisms	I LOVE THIS	i love this
+names	World War II	world war two
+names	Henry VIII	henry the eighth
+names	Chapter IV	chapter four
+names	ChatGPT and PyTorch	chat g p t and py torch
+names	iPhone and YouTube	iphone and youtube
+names	café in Zürich, naïve	cafe in zurich naive
+punctuation	"Hello," she said. ‘Yes’ — “no” … maybe!!! Really?! (Fine.) [ok]	hello she said yes no maybe really fine ok
+punctuation	Don't, y'all, o'clock, CD's, students'	don't y'all o'clock cd's students
+punctuation	rock 'n' roll till '99	rock n roll till ninety nine
+punctuation	Philip`s book	philip's book
+punctuation	well-known e-mail snake_case	well known e mail snake case
+punctuation	  tabs	and   spaces  	tabs and spaces
+punctuation	HELLO World	hello world
+punctuation	Wait... what?!	wait what
+punctuation	I'm happy 😀 today	i'm happy today
+errors	你好 world	ERROR
+errors	नमस्ते friend	ERROR
+errors	😀	ERROR
+errors	...	ERROR
+errors	— —	ERROR

@@ -1103,3 +1103,101 @@ docs/HANDOFF.md instead of being worked around.
     V0 writes it as ", ", and a plain space is a boundary with no pause;
   - measured on the dev references (MFA word times): 78.9% of word junctions have no silence,
     21.1% have one of at least 3 frames, 12.2% of at least 100 ms (the pause-F1 threshold).
+
+## After the freeze — live demo, typed-text robustness, hosted checkpoints (2026-11-11)
+
+- **D-94 Normalizer pre-pass for typed input (user request: "test the whole pipeline by giving
+  text with all kinds of cases with special characters").**
+  - **Stress set:** `tests/data/text_cases.tsv` has 117 cases in 12 groups. Each expected value is
+    the words a US speaker most likely says, because the text is the reference's transcript and a
+    wrong expansion becomes an MFA word mismatch. Tool: `tts/text/stress.py`, `make text-stress`.
+    It is read-only and never appends to the lexicon.
+  - **Before:** 58/117 failed. Examples: `12/03` → "twelve thirds", `11/11` → "eleven elevenths",
+    `Dr Smith` → "dr" (CMUdict "drive"), `10km`/`5kg`/`4 GB` → g2p guesses, `555-123-4567` →
+    "five hundred fifty five to ...", `GPU`/`TTS` → g2p words, `AI` → the sloth, `World War II`
+    → "ii", `₹500` → "rs", `the 5th of May` → "the the fifth", `नमस्ते` → "nmste".
+  - **Fix:** `tts/text/input_rules.py` (`InputRules`), called first in `Normalizer.__call__`. Its
+    tables live in `text.input_rules` (configs/base.yaml, new keys only). The rules were adapted
+    from the tutor-workspace audit (meeami-learn `tools/normalize_patch.py`, R1–R13), which was
+    never adopted before the freeze.
+  - **Changes while porting:**
+    1. "Known word" (all-caps spelling, CamelCase split) is CMUdict + `keep_caps`, not the
+       project lexicon. The lexicon grows at inference (`ensure_words` appends g2p guesses), so
+       a lexicon-based check would spell `GPU` on the first run and read it as a word afterwards.
+    2. The undotted-title rule is case-sensitive (`Dr Smith` → doctor; `Elm Dr` stays "drive").
+    3. Ratings like `3.5/5` → "out of" only when a side has a decimal point.
+  - **After:** 115 PASS + 2 correct-but-g2p ("lakh", "py").
+  - **Freeze compatibility (measured, `test_corpus_word_sequences_unchanged`):** word sequences
+    are unchanged for all 26,867 L2-ARCTIC transcripts (dev and test, so every frozen eval result
+    is reproducible) and all 22 suitcase transcripts. In LJ, 1 of 13,100 changes. Before
+    `keep_caps`, 65 LJ texts changed (`PRS` ×51, `FPCC` ×10, `MSS`, `LL`, `BBL`, `MVD`): those
+    all-caps tokens are not in CMUdict and would have been spelled. They are now listed and keep
+    their training-time reading. The remaining LJ change is "Dr Paul C. Peters": the old rules
+    read the bare "Dr" as "drive", although the audio says "doctor". It is a bug fix and does not
+    affect training, since the model is frozen.
+  - **Why this is allowed after freeze-v1:** CLAUDE.md forbids changing model code and
+    experiment configs. This is front-end text code plus new config keys. No model, training
+    setting or existing config value changes, and the frozen results are reproducible as shown
+    above.
+  - **Correction to D-74:** bare `Mr`/`Mrs`/`Ms` are *not* OOV. CMUdict has mr = M IH1 S T ER0,
+    mrs = M IH1 S IH0 Z and ms = M IH1 Z.
+  - **Still not handled** (DEMO.md):
+    - homographs (CMUdict's first pronunciation);
+    - ambiguous readings: `1500` as "fifteen hundred", `5 January` as "the fifth of", D/M dates
+      read as US M/D;
+    - seconds in `11:59:59`;
+    - brand names that g2p gets wrong.
+- **D-95 Checkpoints hosted on the Hugging Face Hub (user: "Maybe huggingface would be nice?").**
+  - **Repo:** `Raviteja546/meeami-tts`, private (`hosting.private`; the owner decides when to make
+    it public).
+  - **Exports:** `scripts/export_infer.py` writes `export/<system>/infer.pt` with `net_g`, the
+    config, the step and the source checkpoint's sha256. That is 141 MB instead of 956 MB,
+    because the discriminators and optimizer states are dropped.
+  - **Verified for all 5 systems** (m1_pos_diph, m1, m1_pos, abl_a_pos, abl_b_pos): loading
+    `infer.pt` gives bit-identical generator weights to `ckpt_last.pt`, and an identical
+    waveform for a fixed token/duration input (`--verify`).
+  - **Baseline mirrors:** the V0 and M0 weights are mirrored unmodified with their MIT licences
+    (`docs/hf_card/LICENSES.md`), because their Google Drive downloads are unreliable.
+  - **No L2-ARCTIC audio is uploaded.** `abl_b_pos` is marked non-commercial to be safe: its
+    pace statistics come from L2-ARCTIC (CC BY-NC 4.0).
+  - **Fetching:** `make models` (`scripts/fetch_models.py`) downloads at `hosting.revision` and
+    checks every file against the repo's `MANIFEST.sha256`. A mismatch stops the run.
+  - **Publishing:** `make publish-models` (owner only).
+- **E-34 First upload refused: "403 Forbidden: You don't have the rights to create a model under
+  the namespace".** The cached token (`indicf5`) is fine-grained with read-only scopes
+  (`repo.content.read`, `repo.access.read`). Nothing was uploaded. The owner needs a token with
+  write access (`hf auth login`, or `hf auth switch` to an existing one). Then run
+  `make publish-models` and pin the printed commit hash as `hosting.revision`.
+- **D-96 Live interview demo (user request: "setup the final demo ... a sentence and its
+  accented audio from the l2arctic dataset").**
+  - **Files:** `scripts/demo.py`, `configs/live_demo.yaml` (not an experiment config; it picks
+    frozen systems and inputs), `make live-demo` / `make rehearse`, and the runbook
+    `docs/DEMO.md`.
+  - **Headline input:** `HKK_arctic_a0003`, "For the twentieth time that evening the two men shook
+    hands". All 12 test speakers read it, so the same sentence can be shown in all three held-out
+    accents. The main system's mean error on it, 24.8 ms, equals its overall test error of
+    23.9 ms, so it is typical rather than cherry-picked. The speaker is the Korean one closest to
+    the median for that prompt.
+  - **Systems:** main (`m1_pos_diph`) and V0 side by side, from `infer.pt` (D-95), falling back
+    to `ckpt_last.pt`.
+  - **Three choices that keep the demo honest:**
+    1. *Measured, not planned, word times.* The pipeline's `out_words` are where it *placed* the
+       words, which equal the reference times up to frame rounding. Showing them would prove
+       nothing. The demo aligns each output with MFA, exactly as `make eval` does (single
+       speaker, no adaptation), and shows the measured times. On the headline: main 9 ms, V0
+       25 ms mean |Δ|. V0 is consistently 20–40 ms early, the D-90 finding, visible live.
+    2. *MFA once.* The reference is aligned once with the pipeline's own `align_one` call and
+       shared through `Pipeline.run(ref_textgrid=...)`. This halves the wait. Its time is added
+       to each system's `align`/`total` and written back into `timings.json`.
+    3. *Warm-up.* The first measurement showed "RTF model 0.996". In one warm process the same
+       call gives 0.02, so the slowness was a CUDA cold start, and the laptop GPU also clocks
+       down during the ~13 s MFA wait. Each system is warmed at load and again before its
+       synthesis. RTF model is now 0.03–0.06; MFA is ~7–14 s of the ~7–15 s total (REPORT §12).
+  - **Rehearsal (12 cases, `out/live_demo/REHEARSAL.md`): 12/12 as expected.**
+    - Typed variants with the same spoken words (`20th`, `300`, `10 days`, `& ... 2 hrs`,
+      curly quotes and dashes, all caps, tabs and extra spaces, `...?`, `:`) all used MFA, with
+      length error 0 for both systems.
+    - Non-Latin text, punctuation-only text and a missing file were each refused in one line.
+  - **Finding: a text/audio mismatch is not detected.** An inserted word ("two *old* men") did
+    not fail MFA: it gave "old" 90 ms, taken from "two" and "men". Detecting it would need an
+    alignment-confidence check (future work). The runbook says so.

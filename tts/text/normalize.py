@@ -108,6 +108,13 @@ class Normalizer:
         """`cfg` is a full config (uses `cfg.text`) or the `text` node itself."""
         node = cfg.text if "text" in cfg else cfg
         self.t = _tables(OmegaConf.to_yaml(node))
+        rules = node.get("input_rules")
+        if rules is not None:
+            from tts.text.input_rules import InputRules
+
+            self.pre = InputRules(OmegaConf.to_container(rules))
+        else:
+            self.pre = None
 
     # number-like spans --------------------------------------------------------------------
     def _number(self, s: str) -> str:
@@ -245,6 +252,8 @@ class Normalizer:
                       lambda m: f" {self._number(m.group(0))} ", text)
 
     def __call__(self, text: str) -> str:
+        if self.pre is not None:
+            text = self.pre(text)            # inference-input pre-pass (D-94)
         text = self._currency(text)          # before unidecode: it would turn £ into "PS"
         for k, v in self.t.symbols:
             text = text.replace(k, f" {v} ")

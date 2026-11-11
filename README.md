@@ -21,6 +21,7 @@ python scripts/infer.py --text "Will we ever forget it." --ref ref.wav --out out
 | [docs/HANDOFF.md](docs/HANDOFF.md) | Status log and the GPU-instance runbook |
 | [slides/meeami-tts_v2.pptx](slides/meeami-tts_v2.pptx) | 23-slide presentation with speaker notes (current draft, D-91; v1: [meeami-tts.pptx](slides/meeami-tts.pptx)) |
 | `make demo` → `out/demo_site/index.html` | Demo page: reference vs every system's output and timing plot |
+| **[docs/DEMO.md](docs/DEMO.md)** | **Live demo runbook:** `make models`, `make live-demo`, `make rehearse`, what to say, what to do when something fails |
 
 ---
 
@@ -482,6 +483,13 @@ make demo                            # out/demo_site/index.html (+ backup output
 make eval SYSTEM=v0 SPLIT=dev ; make eval SYSTEM=v0 SPLIT=test
 make paired CONTROL=v0 SYSTEMS_CMP="m1 m1_pos_diph m0" SPLIT=test
 make fidelity SPLIT=dev ; make fidelity SPLIT=test   # duration fidelity + aligner calibration
+# --- live demo (D-94..D-96; docs/DEMO.md) ------------------------------------------------------
+make models                          # export/<system>/infer.pt + baseline weights from the HF Hub (sha256-checked)
+make text-stress                     # 117 typed-text cases through the normalizer (TEXT="..." for one input)
+make rehearse                        # 12 end-to-end cases -> out/live_demo/REHEARSAL.md
+make live-demo                       # main vs V0 on one test-accent sentence, measured word times
+make live-demo UTT=YBAA_arctic_a0003 TEXT="For the 20th time that evening, the two men shook hands."
+make live-demo REF=their.mp3 TEXT="what the recording says"
 ```
 
 On the GPU instance, prefix the training commands with `conda run -n tts`, inside tmux.
@@ -494,14 +502,14 @@ On the GPU instance, prefix the training commands with `conda run -n tts`, insid
 ```
 configs/    base.yaml (all shared parameters) · splits.yaml · inference.yaml (tuned) · one yaml per system
 tts/
-  text/       normalize.py · lexicon.py · symbols.py · diph.py (diphthong split, main system)
+  text/       normalize.py · input_rules.py (typed-input pre-pass, D-94) · stress.py · lexicon.py · symbols.py · diph.py
   align/      mfa.py (MFA wrapper) · textgrid.py (parsing rules) · lj.py · l2.py (MFA vs manual)
   models/     vits_mfa/ (VITS-MFA: models, trainer, data) · fastspeech2/ (M0, vendored) · vits_mas/ (V0 adapter)
   augment/    generate.py (A/B plans) · pace_b.py · core.py · wsola.py · verify.py · filter.py
   infer/      pipeline.py (Section 5 steps 1-10) · systems.py · ctc.py · edge_cases.py · batch.py
   eval/       metrics.py · scorers.py · asr.py · paired.py · phone_dynamics.py · fidelity.py · tune.py · plots.py
   guard.py    test-split lock          splits.py · stats.py · audio.py · config.py
-scripts/    train.py · infer.py · evaluate.py · profile.py · make_demo.py · GPU bundle/setup/export
+scripts/    train.py · infer.py · evaluate.py · profile.py · make_demo.py · demo.py (live demo) · export_infer.py · fetch_models.py (HF Hub) · GPU bundle/setup/export
 tests/      unit tests (one per module) + edge_cases/ (21 committed WAV/TXT cases)
 stats/      phone_logdur.json (LJ per-phone log-duration mean, σ) · l2_dev_pace.json (Ablation B)
 reports/    data splits, lexicon, LJ alignment QC, MFA error on accented speech, augmentation

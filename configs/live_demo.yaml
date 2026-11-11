@@ -1,0 +1,32 @@
+# Live interview demo (DECISIONS D-96; scripts/demo.py, `make live-demo`, `make rehearse`).
+# Not an experiment config: it only chooses which frozen systems and inputs the demo runs.
+inherit: inference.yaml
+exp: live_demo
+live_demo:
+  out_dir: out/live_demo
+  # name -> checkpoint for scripts/infer.py's loader; infer.pt comes from `make models`
+  # (ckpt_last.pt is used when only the full training checkpoint is present)
+  systems:
+    main: export/m1_pos_diph/infer.pt
+    v0: v0
+  # The headline sentence: read by all 12 test speakers; the main system's error on it (24.8 ms)
+  # equals its overall test error (23.9 ms), so it is typical, not a best case.
+  default_utt: HKK_arctic_a0003
+  # Rehearsal suite. Each case: utt (L2-ARCTIC test utterance) or ref (a file), the text typed
+  # as an interviewer might, and what must happen: ok (synthesized, MFA used, exact length)
+  # or refused (one-line reason, no crash). Texts differ in form from the ARCTIC prompt but not
+  # in the spoken words, so MFA still matches the audio.
+  suite:
+    - {utt: HKK_arctic_a0003, expect: ok, text: "For the 20th time that evening, the two men shook hands."}
+    - {utt: YBAA_arctic_a0003, expect: ok, text: "“For the 20th time that evening” — the two men shook hands!!!"}
+    - {utt: HQTV_arctic_a0003, expect: ok, text: "FOR THE TWENTIETH TIME THAT EVENING THE TWO MEN SHOOK HANDS"}
+    - {utt: SKA_arctic_a0031, expect: ok, text: "They were 300 yards apart."}
+    - {utt: YKWK_arctic_a0039, expect: ok, text: "The ship should be in within a week... or 10 days?"}
+    - {utt: ZHAA_arctic_a0121, expect: ok, text: "They ate dinner at the 5th & rested for 2 hrs."}
+    - {utt: HJK_arctic_a0122, expect: ok, text: "2 years ago, I gave up civilization for this:"}
+    - {utt: THV_arctic_a0031, expect: ok, text: "  They\twere three-hundred   yards apart  "}
+    # text/audio mismatch: an extra word the speaker never said; must still give exact length
+    - {utt: HKK_arctic_a0003, expect: ok_any_aligner, text: "For the twentieth time that evening the two old men shook hands"}
+    - {utt: HKK_arctic_a0003, expect: refused, text: "For the 20th time 你好"}
+    - {utt: HKK_arctic_a0003, expect: refused, text: "... — !!!"}
+    - {ref: does/not/exist.wav, expect: refused, text: "Hello world."}
