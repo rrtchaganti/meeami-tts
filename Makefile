@@ -9,7 +9,7 @@ MFA_RUN := $(CONDA) run --no-capture-output -n mfa
 help:
 	@echo "Laptop:  env test data lexicon align-lj stats align-l2-dev align-dev-eval pace-stats-b"
 	@echo "         aug-a aug-b aug-filter m0-demo overfit smoke edge eval eval-all tune phone-dyn paired profile"
-	@echo "         bundle check-data demo  |  live demo: models text-stress rehearse live-demo (docs/DEMO.md)"
+	@echo "         bundle check-data demo  |  inference/demo: models infer live-demo rehearse text-stress (docs/DEMO.md)"
 	@echo "GPU:     see docs/HANDOFF.md (setup_gpu.sh, fetch_bundle.sh, check-data, train.py)"
 
 # --- T1: environments -------------------------------------------------------
@@ -125,6 +125,9 @@ SYSTEM ?= m0
 SPLIT ?= dev
 CKPT_EVAL ?=
 MAIN ?= m1_pos_diph
+# a system's checkpoint: the full training file where it exists (the owner's laptop), otherwise the
+# inference-only export that `make models` downloads (a fresh clone; D-95)
+ckpt_of = $(firstword $(wildcard export/$(1)/ckpt_last.pt) export/$(1)/infer.pt)
 SYSTEMS ?= m0 m1 m1_pos m1_pos_diph abl_a_pos abl_b_pos   # final set (D-85); V0 (D-90): make eval SYSTEM=v0
 .PHONY: eval eval-all tune
 eval:
@@ -133,12 +136,12 @@ eval:
 
 eval-all:
 	@for s in $(SYSTEMS); do \
-	  if [ "$$s" = m0 ] || [ "$$s" = v0 ] || [ -f export/$$s/ckpt_last.pt ]; then \
+	  if [ "$$s" = m0 ] || [ "$$s" = v0 ] || [ -f export/$$s/ckpt_last.pt ] || [ -f export/$$s/infer.pt ]; then \
 	    $(TTS_RUN) python scripts/evaluate.py --system $$s --split $(SPLIT) $(ARGS) || exit 1; \
-	  else echo "eval-all: skipping $$s (no export/$$s/ckpt_last.pt)"; fi; \
+	  else echo "eval-all: skipping $$s (no checkpoint in export/$$s; make models)"; fi; \
 	done
 
-PD_CKPTS ?= export/$(MAIN)/ckpt_last.pt
+PD_CKPTS ?= $(call ckpt_of,$(MAIN))
 .PHONY: phone-dyn
 phone-dyn:   # within-phone spectral movement vs LJ (D-76); PD_CKPTS="export/m1_pos/ckpt_last.pt ..."
 	$(TTS_RUN) python -m tts.eval.phone_dynamics $(foreach c,$(PD_CKPTS),--ckpt $(c)) --device $(DEVICE)
@@ -156,7 +159,7 @@ tune:     # dev only: grid over cap x noise_scale (+ transfer variants); writes 
 	$(TTS_RUN) python -m tts.eval.tune --split $(SPLIT) $(ARGS)
 
 # --- T12: profiling ----------------------------------------------------------------------
-CKPT_PROF ?= export/$(MAIN)/ckpt_last.pt
+CKPT_PROF ?= $(call ckpt_of,$(MAIN))
 .PHONY: profile
 profile:
 	$(TTS_RUN) python scripts/profile.py --ckpt $(if $(filter-out m0,$(CKPT)),$(CKPT),$(CKPT_PROF)) --device $(DEVICE) $(ARGS)
@@ -189,6 +192,15 @@ export-infer:    # owner: export/<system>/ckpt_last.pt -> infer.pt (generator on
 	$(TTS_RUN) python scripts/export_infer.py --verify $(foreach n,m1_pos_diph m1 m1_pos abl_a_pos abl_b_pos,--name $(n))
 publish-models:  # owner: upload to hosting.hf_repo (configs/base.yaml)
 	$(TTS_RUN) python scripts/fetch_models.py --publish
+
+# --- inference on any reference: make infer REF=their.wav TEXT="what it says" [SYS=m1_pos_diph|v0|m0]
+SYS ?= $(MAIN)
+OUT ?= out/infer
+.PHONY: infer
+infer:
+	@test -n "$(REF)" -a -n "$(TEXT)" || { echo 'usage: make infer REF=their.wav TEXT="what the recording says" [SYS=v0|m0|<system>] [OUT=dir]'; exit 2; }
+	$(TTS_RUN) python scripts/infer.py --text "$(TEXT)" --ref "$(REF)" --out $(OUT) \
+	  --ckpt $(if $(filter v0 m0,$(SYS)),$(SYS),$(call ckpt_of,$(SYS))) $(ARGS)
 
 # --- D-96: live interview demo ---------------------------------------------------------------
 .PHONY: live-demo rehearse

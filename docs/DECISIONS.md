@@ -1237,3 +1237,34 @@ docs/HANDOFF.md instead of being worked around.
     The frozen models and alignments were built with the original lexicon and are not rebuilt.
   - **Gap fixed:** `docs/DEMO.md` §0a now lists the fresh-machine steps. `data/` is not in git,
     so the lexicon must be built with `make lexicon`, and the datasets must be placed by hand.
+- **D-99 Repository finalized for a clean clone (user request: "finalize the project in github
+  with clear setup and demo inference command").**
+  - **README opens with a quick start** (clone → `make env` → `hf auth login` → datasets →
+    `make models assets lexicon test`). It then gives the commands to run: a first check on a
+    clip that ships with the repo (`tests/edge_cases/norm_date.wav`), `make infer`,
+    `make live-demo`, `make rehearse` and `make text-stress`. A table says what lives where
+    (GitHub / Hugging Face / the author's machine). The Setup and Inference sections now use
+    `infer.pt`, state the test counts on both machines, and say that the text must be what the
+    recording says.
+  - **New `make infer REF=... TEXT=... [SYS=...] [OUT=...]`.** It prints a usage line when
+    arguments are missing. Checked on the shipped clip: length error 0, MFA, 21 s.
+  - **Clone-friendly checkpoint defaults.** A clone has `infer.pt` only, so these defaults now
+    use `export/<system>/ckpt_last.pt` when it exists, otherwise `infer.pt`:
+    - the Makefile's `ckpt_of` (used by `infer`, `profile` and `phone-dyn`);
+    - `eval-all`;
+    - `scripts/evaluate.py`;
+    - `scripts/make_demo.py`, which also gains V0.
+    On the author's machine nothing changes, because `ckpt_last.pt` exists.
+  - **What stays only on the author's laptop** (git-ignored; nothing was deleted):
+    - datasets (`data/raw`, 13 GB);
+    - training data (`data/aug`, manifests, alignments);
+    - the full training checkpoints `export/<system>/ckpt_last.pt` (956 MB each). Their only
+      copy is here, because the Hub has the generator-only exports;
+    - synthesized eval audio (`results/*/*/wav`).
+  - **Redundant on the laptop (could be deleted; the owner decides):**
+    - `export/bundle.tar` (13 GB, the GPU bundle; `make bundle`);
+    - `runs/smoke_*`, `runs/overfit` (11 GB, smoke runs);
+    - `export/*.tar.gz` (5.3 GB, transfer archives of the extracted `export/<system>/`);
+    - `data/mfa_tmp` (2.5 GB, MFA temp);
+    - `export/m1_partial` (0.9 GB, superseded);
+    - `data/models/fastspeech2/LJSpeech_900000.zip` (0.35 GB, the extracted copy is used).

@@ -8,10 +8,50 @@ sentence:
   are kept, and the output is **exactly** as long as the reference.
 
 ```bash
-python scripts/infer.py --text "Will we ever forget it." --ref ref.wav --out out/ \
-    --ckpt export/m1_pos_diph/ckpt_last.pt
-# -> out/out.wav (exact reference length), out/timings.json, out/timing.png
+make infer REF=ref.wav TEXT="Will we ever forget it."
+# -> out/infer/out.wav (exact reference length), timings.json, timing.png
 ```
+
+## Quick start (fresh clone, ~15 min)
+
+```bash
+git clone git@github.com:rrtchaganti/meeami-tts.git && cd meeami-tts
+make env            # conda envs `tts` and `mfa` from envs/*.yml (~4 min)
+hf auth login       # only while the model repo Raviteja546/meeami-tts is private
+# put the datasets in place (not downloadable by script, see "Setup"):
+#   data/raw/LJSpeech-1.1/      data/raw/l2arctic/<SPEAKER>/{wav,transcript,annotation}/
+make models         # checkpoints from the Hugging Face Hub, sha256-checked (~5 min)
+make assets         # pinned MFA english_us_arpa models + NLTK data (~1 min)
+make lexicon        # data/lexicon/lexicon.txt from the corpus texts (~30 s)
+make test           # unit tests: all pass; a few skip without training data / eval models
+```
+
+Then run it:
+
+```bash
+# first check: an accented clip that ships with the repo (L2-ARCTIC dev speaker, tests/edge_cases/)
+make infer REF=tests/edge_cases/norm_date.wav TEXT="At sea Wednesday March 18th, 1908."
+#   -> "[ok] norm_date: ... (error 0), aligner mfa ..." and out/infer/{out.wav,timings.json,timing.png}
+
+# any reference recording (any format ffmpeg reads) + exactly what it says
+make infer REF=their.wav TEXT="what the recording says"
+make infer REF=their.wav TEXT="..." SYS=v0         # the original VITS (MAS) baseline; SYS=m0: FastSpeech2
+
+# the interview demo: main system vs V0 on a held-out-accent L2-ARCTIC sentence,
+# with word times measured on the output (docs/DEMO.md)
+make live-demo
+make live-demo UTT=YBAA_arctic_a0003 TEXT="For the 20th time that evening, the two men shook hands."
+make rehearse       # 12 end-to-end cases (typed text, refusals) -> out/live_demo/REHEARSAL.md
+make text-stress    # 117 typed-text cases through the normalizer, no audio
+```
+
+No GPU? Add `ARGS="--device cpu"` (same output, slower synthesis; MFA runs on the CPU either way).
+
+| What | Where |
+| --- | --- |
+| Code, configs, tests, docs, slides, result tables and plots | this repository |
+| Inference checkpoints (5 systems, 141 MB each) and the two baselines' weights | Hugging Face `Raviteja546/meeami-tts` (`make models`, pinned by `hosting.revision` in [`configs/base.yaml`](configs/base.yaml)) |
+| Datasets, full training checkpoints (with discriminators, 956 MB each), synthesized test audio | the author's machine only (git-ignored); hashes in [`results/checkpoints.sha256`](results/checkpoints.sha256) |
 
 | Document | What it gives you |
 | --- | --- |
@@ -123,38 +163,53 @@ text ─► normalizer ─► lexicon phones ─► token timeline (sil · phone
 ## Setup
 
 **Requirements:**
-- Linux or WSL2, with conda (Miniconda or Miniforge).
-- An NVIDIA GPU and a driver for CUDA 12.9.
-- `ffmpeg`, `sox`, `git`, `make`.
-- `rubberband-cli` ≥ 3.0, only for `augment.stretcher: rubberband`.
+- Linux or WSL2, with conda (Miniconda or Miniforge), `git` and `make`.
+- An NVIDIA GPU with a driver for CUDA 12.9 is recommended. Every inference command also runs with
+  `--device cpu`.
+- `ffmpeg` comes with the `tts` env. `sox` and `rubberband-cli` ≥ 3.0 are needed only to rebuild
+  the augmented training data.
 
-**Datasets** are not downloaded by the code:
-- LJSpeech 1.1 → `data/raw/LJSpeech-1.1/`;
+**Datasets** are not downloaded by the code. Inference needs only the lexicon built from their
+texts and, for the L2-ARCTIC examples, the reference recordings:
+- LJSpeech 1.1 → `data/raw/LJSpeech-1.1/` (`make lj-download` fetches the official archive);
 - L2-ARCTIC v5 (access form) → `data/raw/l2arctic/`.
 
 ```bash
-make env      # two pinned conda envs: tts (everything) and mfa (Montreal Forced Aligner 3.4.3 only)
-make test     # unit tests: 166 passed, 1 skipped (the pre-freeze lock test skips once freeze-v1 exists)
+make env      # two pinned conda envs: tts (everything) and mfa (Montreal Forced Aligner 3.4.3 only);
+              # re-running it updates existing envs in place (--prune)
+make models   # inference checkpoints + baseline weights (Hugging Face, sha256-checked)
+make assets   # pinned MFA models + NLTK corpora (sha256-checked)
+make lexicon  # data/lexicon/lexicon.txt (data/ is not in git)
+make test     # unit tests (291 pass on the author's machine; on a clean clone 286 pass and 6 skip,
+              # because they need training manifests or evaluation models)
 make help     # every target
 ```
 
 - **Exact environments:** `envs/lock/*.full.yml` hold full transitive exports of the tested envs.
 - **MFA** is always called as `conda run -n mfa mfa ...` with `MFA_ROOT_DIR=data/models/mfa`.
-- **Checkpoints:** exported checkpoints live under `export/<system>/ckpt_last.pt`. Their sha256
-  hashes are in [`results/checkpoints.sha256`](results/checkpoints.sha256).
+- **Checkpoints:** `make models` writes `export/<system>/infer.pt`, holding the generator weights
+  and config only. That is everything inference reads, and it is bit-identical in output to the
+  full training checkpoint `export/<system>/ckpt_last.pt` (D-95), which exists only on the
+  author's machine. Every command takes either file, and the Makefile uses `ckpt_last.pt` when
+  present, otherwise `infer.pt`. Training-checkpoint hashes:
+  [`results/checkpoints.sha256`](results/checkpoints.sha256).
 - **Configuration:** every parameter lives in [`configs/`](configs). Each config inherits
   `base.yaml` and overrides only what differs.
 
 ## Inference
 
 ```bash
-python scripts/infer.py --text "..." --ref ref.wav --out out/ --ckpt export/m1_pos_diph/ckpt_last.pt
-python scripts/infer.py --pairs_dir their_files/ --out out/ --ckpt export/m1_pos_diph/ckpt_last.pt  # x.wav + x.txt pairs
-python scripts/infer.py --text "..." --ref ref.wav --out out/ --ckpt m0                             # FastSpeech2 baseline
-python scripts/infer.py --text "..." --ref ref.wav --out out/ --ckpt v0                             # original VITS (MAS) baseline
+make infer REF=ref.wav TEXT="..."                       # main system -> out/infer/
+make infer REF=ref.wav TEXT="..." SYS=v0 OUT=out/v0     # SYS: m1_pos_diph (default), v0, m0, m1, m1_pos, abl_a_pos, abl_b_pos
+# the same through the script, plus a folder of x.wav + x.txt pairs:
+python scripts/infer.py --text "..." --ref ref.wav --out out/ --ckpt export/m1_pos_diph/infer.pt
+python scripts/infer.py --pairs_dir their_files/ --out out/ --ckpt export/m1_pos_diph/infer.pt
+python scripts/infer.py --text "..." --ref ref.wav --out out/ --ckpt v0     # or m0
 ```
 
-**Options:**
+(`python scripts/...` needs `conda activate tts` first; the `make` targets activate it themselves.)
+
+**Options** (`python scripts/infer.py`, or `make infer ... ARGS="..."`):
 - `--aligner mfa|ctc`
 - `--transfer elastic|proportional|phone_copy`
 - `--cap <float|none>`
@@ -163,9 +218,14 @@ python scripts/infer.py --text "..." --ref ref.wav --out out/ --ckpt v0         
 - `--config` (default `configs/inference.yaml`; the tuned values are elastic, cap 2.5, noise
   0.333, MFA)
 
+**The text must be what the recording says.** The normalizer changes only the form (`20th`,
+`$5`, `Dr.`, `12/03`, `10km`, `GPU` are read as a US speaker would; D-94). Words that were not
+spoken are not detected: MFA forces them into the audio (docs/DEMO.md §3).
+
 **Outputs for each pair:**
 - `out.wav`: exactly round(N_ref·22050/sr_ref) samples.
-- `timings.json`: reference and output word times, aligner used, per-stage latency, RTF.
+- `timings.json`: normalized text, reference and output word times, aligner used, per-stage
+  latency, RTF.
 - `timing.png`: reference and output words over both spectrograms.
 
 A failing pair prints a one-line reason and the run continues.
@@ -484,6 +544,7 @@ make eval SYSTEM=v0 SPLIT=dev ; make eval SYSTEM=v0 SPLIT=test
 make paired CONTROL=v0 SYSTEMS_CMP="m1 m1_pos_diph m0" SPLIT=test
 make fidelity SPLIT=dev ; make fidelity SPLIT=test   # duration fidelity + aligner calibration
 # --- live demo (D-94..D-96; docs/DEMO.md) ------------------------------------------------------
+make infer REF=their.wav TEXT="..."  # one reference -> out/infer/ (SYS=v0|m0|<system>)
 make models                          # export/<system>/infer.pt + baseline weights from the HF Hub (sha256-checked)
 make text-stress                     # 117 typed-text cases through the normalizer (TEXT="..." for one input)
 make rehearse                        # 12 end-to-end cases -> out/live_demo/REHEARSAL.md
@@ -549,3 +610,7 @@ data/ runs/ export/ out/   git-ignored (datasets, training runs, checkpoints, de
   `tts/models/`, with their licence files.
 - **Edge-case clips:** the L2-ARCTIC (CC BY-NC 4.0) clips in `tests/edge_cases/` come from dev
   speakers only.
+- **Checkpoints** (Hugging Face `Raviteja546/meeami-tts`): fine-tuned from the MIT-licensed
+  pretrained VITS on LJSpeech (public domain). `abl_b_pos` follows pace statistics from
+  L2-ARCTIC, so treat it as non-commercial. The baseline weights are unmodified mirrors with
+  their MIT licences ([`docs/hf_card/LICENSES.md`](docs/hf_card/LICENSES.md)).

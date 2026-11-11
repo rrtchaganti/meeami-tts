@@ -27,15 +27,19 @@ from tts.guard import accent_of, freeze_tag_exists  # noqa: E402
 
 
 def systems(cfg) -> list[tuple[str, str]]:
-    """cfg.demo.systems in order: m0, or export/<name>/ckpt_last.pt when it exists."""
+    """cfg.demo.systems in order: m0 / v0, or export/<name>/ckpt_last.pt (else infer.pt) when it exists."""
     out = []
     for name in cfg.demo.systems:
         if name == "m0":
             out.append(("m0", "m0"))
+        elif name == "v0":
+            out.append(("v0", "v0"))
         elif (repo_path("export") / name / "ckpt_last.pt").exists():
             out.append((name, str(repo_path("export") / name / "ckpt_last.pt")))
+        elif (repo_path("export") / name / "infer.pt").exists():   # fresh clone: make models (D-95)
+            out.append((name, str(repo_path("export") / name / "infer.pt")))
         else:
-            print(f"[demo] skipping {name}: no export/{name}/ckpt_last.pt")
+            print(f"[demo] skipping {name}: no export/{name}/ckpt_last.pt or infer.pt (make models)")
     return out
 
 

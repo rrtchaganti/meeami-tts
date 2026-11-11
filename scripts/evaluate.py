@@ -63,7 +63,7 @@ def manual_words(row: dict, cfg) -> list[dict]:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--system", required=True)
-    ap.add_argument("--ckpt", default=None, help="default: export/<system>/ckpt_last.pt (m0: none)")
+    ap.add_argument("--ckpt", default=None, help="default: export/<system>/ckpt_last.pt, else infer.pt (m0/v0: none)")
     ap.add_argument("--split", default="dev", choices=["dev", "test"])
     ap.add_argument("--config", default="configs/inference.yaml")
     ap.add_argument("--device", default="cuda")
@@ -83,7 +83,9 @@ def main(argv=None) -> int:
     from tts.text.normalize import Normalizer, words
 
     name = a.tag or a.system
-    ckpt = a.ckpt or (a.system if a.system in ("m0", "v0") else f"export/{a.system}/ckpt_last.pt")
+    full = Path(f"export/{a.system}/ckpt_last.pt")   # training file; a fresh clone has infer.pt (D-95)
+    ckpt = a.ckpt or (a.system if a.system in ("m0", "v0") else
+                      str(full if repo_path(full).exists() else full.with_name("infer.pt")))
     res = repo_path("results") / name / a.split
     wav_root = res / "wav"
     res.mkdir(parents=True, exist_ok=True)
