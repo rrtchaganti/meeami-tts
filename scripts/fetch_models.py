@@ -5,8 +5,8 @@
     python scripts/fetch_models.py --publish       # owner only: upload export/*/infer.pt + baselines
 
 Fetch: every file listed in the repo's MANIFEST.sha256 at `hosting.revision` is downloaded to its
-local path (vits_mfa/<name>/infer.pt -> export/<name>/infer.pt; baselines -> data/models/...) and
-must match its sha256, otherwise the run stops (CLAUDE.md: never substitute silently). Files that
+local path (vits_mfa/<name>/infer.pt -> export/<name>/infer.pt; baselines -> data/models/...;
+lexicon/lexicon.txt -> data/lexicon/lexicon.txt, only if missing) and must match its sha256, otherwise the run stops (CLAUDE.md: never substitute silently). Files that
 already exist with the right hash are skipped. A private repo needs `huggingface-cli login` or
 HF_TOKEN.
 
@@ -33,6 +33,7 @@ def file_map(cfg) -> dict[str, Path]:
     m |= {f"vits_mfa/{n}/config.yaml": repo_path("export") / n / "config.yaml"
           for n in cfg.hosting.systems}
     m |= {k: repo_path(v) for k, v in cfg.hosting.baselines.items()}
+    m |= {k: repo_path(v) for k, v in cfg.hosting.get("if_missing", {}).items()}
     return m
 
 
@@ -52,6 +53,7 @@ def fetch(cfg) -> int:
     man = parse_manifest(Path(hf_hub_download(h.hf_repo, "MANIFEST.sha256",
                                               revision=h.revision)).read_text())
     local = file_map(cfg)
+    keep = set(cfg.hosting.get("if_missing", {}))
     for rp, digest in man.items():
         dst = local.get(rp)
         if dst is None:
@@ -59,6 +61,10 @@ def fetch(cfg) -> int:
             continue
         if dst.exists() and sha256(dst) == digest:
             print(f"[models] {rp}: present")
+            continue
+        if dst.exists() and rp in keep:
+            print(f"[models] {rp}: local copy differs from the hosted one (e.g. words added at "
+                  "inference); kept")
             continue
         src = Path(hf_hub_download(h.hf_repo, rp, revision=h.revision))
         got = sha256(src)

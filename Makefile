@@ -1,8 +1,13 @@
 # Makefile for meeami-tts (docs/PLAN.md Section 10). Targets map to the laptop tasks T1-T14.
 SHELL := /bin/bash
 CONDA ?= conda
-TTS_RUN := $(CONDA) run --no-capture-output -n tts
-MFA_RUN := $(CONDA) run --no-capture-output -n mfa
+# env names: override if `tts`/`mfa` are taken on your machine (make env TTS_ENV=x MFA_ENV=y, or export them);
+# MEEAMI_MFA_ENV carries the MFA env name to the Python code (configs/base.yaml mfa.conda_env)
+TTS_ENV ?= tts
+MFA_ENV ?= mfa
+export MEEAMI_MFA_ENV := $(MFA_ENV)
+TTS_RUN := $(CONDA) run --no-capture-output -n $(TTS_ENV)
+MFA_RUN := $(CONDA) run --no-capture-output -n $(MFA_ENV)
 
 .PHONY: help env env-tts env-mfa env-export test
 
@@ -17,24 +22,24 @@ help:
 env: env-tts env-mfa
 
 env-tts:
-	@if $(CONDA) env list | awk '{print $$1}' | grep -qx tts; then \
-		$(CONDA) env update -n tts -f envs/tts.yml --prune; \
+	@if $(CONDA) env list | awk '{print $$1}' | grep -qx $(TTS_ENV); then \
+		$(CONDA) env update -n $(TTS_ENV) -f envs/tts.yml --prune; \
 	else \
-		$(CONDA) env create -n tts -f envs/tts.yml; \
+		$(CONDA) env create -n $(TTS_ENV) -f envs/tts.yml; \
 	fi
 
 env-mfa:
-	@if $(CONDA) env list | awk '{print $$1}' | grep -qx mfa; then \
-		$(CONDA) env update -n mfa -f envs/mfa.yml --prune; \
+	@if $(CONDA) env list | awk '{print $$1}' | grep -qx $(MFA_ENV); then \
+		$(CONDA) env update -n $(MFA_ENV) -f envs/mfa.yml --prune; \
 	else \
-		$(CONDA) env create -n mfa -f envs/mfa.yml; \
+		$(CONDA) env create -n $(MFA_ENV) -f envs/mfa.yml; \
 	fi
 
 # Full exports of the installed envs, for reference when pinning envs/*.yml.
 env-export:
 	@mkdir -p envs/lock
-	$(CONDA) env export -n tts --no-builds > envs/lock/tts.full.yml
-	$(CONDA) env export -n mfa --no-builds > envs/lock/mfa.full.yml
+	$(CONDA) env export -n $(TTS_ENV) --no-builds > envs/lock/tts.full.yml
+	$(CONDA) env export -n $(MFA_ENV) --no-builds > envs/lock/mfa.full.yml
 
 test:
 	$(TTS_RUN) python -m pytest -q tests/

@@ -36,15 +36,18 @@ def test_suite_texts_keep_the_spoken_words():
     from tts.text.normalize import Normalizer, words
 
     norm = Normalizer(CFG)
-    root = REPO_ROOT / CFG.paths.raw_l2
     for c in CFG.live_demo.suite:
         if c.expect != "ok" or "utt" not in c:
             continue
-        spk, _, name = c.utt.partition("_")
-        txt = root / spk / "transcript" / f"{name}.txt"
-        if not txt.exists():
-            pytest.skip("L2-ARCTIC transcripts not present")
-        assert words(norm(c.text)) == words(norm(txt.read_text())), c.text
+        _, transcript = demo.utt_ref(CFG, c.utt)
+        assert words(norm(c.text)) == words(norm(transcript)), c.text
+
+
+def test_demo_clips_ship_with_the_repo():
+    """Every suite utterance is in demo/clips, so the demo needs no dataset (D-100)."""
+    clips = REPO_ROOT / CFG.live_demo.clips_dir
+    for u in {c.utt for c in CFG.live_demo.suite if "utt" in c} | {CFG.live_demo.default_utt}:
+        assert (clips / f"{u}.wav").exists() and (clips / f"{u}.txt").exists(), u
 
 
 def test_ckpt_for_falls_back_to_training_checkpoint(tmp_path, monkeypatch):

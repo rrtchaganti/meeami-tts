@@ -16,6 +16,8 @@ bundle*.tar.gz
 *.opus
 # edge-case suite is committed (Section 9)
 !/tests/edge_cases/**
+# live-demo references (L2-ARCTIC test clips, CC BY-NC 4.0; demo/clips/SOURCE.md, D-100)
+!/demo/clips/**
 
 # tensorboard
 events.out.tfevents.*

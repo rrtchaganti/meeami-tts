@@ -4,6 +4,8 @@ inherit: inference.yaml
 exp: live_demo
 live_demo:
   out_dir: out/live_demo
+  # the suite's L2-ARCTIC clips ship here, so the demo runs without the dataset (D-100)
+  clips_dir: demo/clips
   # name -> checkpoint for scripts/infer.py's loader; infer.pt comes from `make models`
   # (ckpt_last.pt is used when only the full training checkpoint is present)
   systems:

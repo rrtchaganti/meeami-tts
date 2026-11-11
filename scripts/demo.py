@@ -34,12 +34,17 @@ from tts.config import REPO_ROOT, load_config, repo_path  # noqa: E402
 
 
 def utt_ref(cfg, utt: str) -> tuple[Path, str]:
-    """L2-ARCTIC utterance id (SPK_arctic_xNNNN) -> (wav path, transcript)."""
+    """L2-ARCTIC utterance id (SPK_arctic_xNNNN) -> (wav path, transcript): the dataset copy if
+    present, else the clip shipped in live_demo.clips_dir (the demo's 8 utterances, D-100)."""
     spk, _, name = utt.partition("_")
     root = repo_path(cfg.paths.raw_l2) / spk
     wav, txt = root / "wav" / f"{name}.wav", root / "transcript" / f"{name}.txt"
     if not wav.exists():
-        raise FileNotFoundError(f"no L2-ARCTIC utterance {utt} ({wav})")
+        clips = repo_path(cfg.live_demo.clips_dir)
+        wav, txt = clips / f"{utt}.wav", clips / f"{utt}.txt"
+    if not wav.exists():
+        raise FileNotFoundError(f"no L2-ARCTIC utterance {utt}: not in {cfg.paths.raw_l2} and "
+                                f"not shipped in {cfg.live_demo.clips_dir}")
     return wav, txt.read_text(encoding="utf-8").strip()
 
 
