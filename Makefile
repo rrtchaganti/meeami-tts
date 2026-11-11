@@ -14,7 +14,7 @@ MFA_RUN := $(CONDA) run --no-capture-output -n $(MFA_ENV)
 help:
 	@echo "Laptop:  env test data lexicon align-lj stats align-l2-dev align-dev-eval pace-stats-b"
 	@echo "         aug-a aug-b aug-filter m0-demo overfit smoke edge eval eval-all tune phone-dyn paired profile"
-	@echo "         bundle check-data demo  |  inference/demo: models infer live-demo rehearse text-stress (docs/DEMO.md)"
+	@echo "         bundle check-data demo  |  inference/demo: models infer live-demo rehearse text-stress web-demo (docs/DEMO.md)"
 	@echo "GPU:     see docs/HANDOFF.md (setup_gpu.sh, fetch_bundle.sh, check-data, train.py)"
 
 # --- T1: environments -------------------------------------------------------
@@ -213,6 +213,15 @@ live-demo:       # UTT=HKK_arctic_a0003 [TEXT="..."] or REF=their.wav TEXT="..."
 	$(TTS_RUN) python scripts/demo.py $(if $(UTT),--utt $(UTT),) $(if $(REF),--ref "$(REF)",) $(if $(TEXT),--text "$(TEXT)",) $(ARGS)
 rehearse:        # every case in configs/live_demo.yaml -> out/live_demo/REHEARSAL.md
 	$(TTS_RUN) python scripts/demo.py --suite $(ARGS)
+
+# --- D-101: browser demo (record/upload + text -> every system); share via an HTTPS tunnel ------
+.PHONY: web-demo web-tunnel
+web-demo:        # http://localhost:7860/?key=<printed>; MEEAMI_DEMO_KEY=... fixes the key
+	$(TTS_RUN) python scripts/web_demo.py $(ARGS)
+WEB_PORT ?= 7860
+web-tunnel:      # second terminal: public https URL for the running web-demo (cloudflared quick tunnel)
+	@command -v cloudflared >/dev/null || { echo "cloudflared not found; install: docs/DEMO.md §6"; exit 2; }
+	cloudflared tunnel --url http://localhost:$(WEB_PORT)
 
 # --- T14: demo page ----------------------------------------------------------------------
 .PHONY: demo

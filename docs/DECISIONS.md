@@ -1305,3 +1305,38 @@ docs/HANDOFF.md instead of being worked around.
     MFA was confirmed to run in `mfa_out` (`sys.prefix` checked). The clone, `tts_out` and
     `mfa_out` were removed afterwards.
   - README quick start and DEMO.md §0a now describe this path (no dataset, no `make lexicon`).
+- **D-101 Browser demo hosted on the laptop (user request: the visitor uploads or records audio
+  and types text in a browser, and gets every model's output; "without changing whatever we built
+  so far").**
+  - **Files (all new):** `scripts/web_demo.py`, `scripts/web_demo.html`,
+    `configs/web_demo.yaml`, `make web-demo` / `make web-tunnel`, `tests/test_web_demo.py`,
+    and DEMO.md §6. No existing module changed: `scripts/demo.py`'s `Demo` (D-96) is imported
+    as is.
+  - **No web framework.** The pinned `tts` env has none (gradio, flask, fastapi, starlette and
+    aiohttp are all absent), and adding one would change the frozen env. The server is Python's
+    standard library (`ThreadingHTTPServer`). The page is plain HTML/JS with MediaRecorder.
+  - **Systems:** all seven in one process (main, m1, m1_pos, abl_a_pos, abl_b_pos, V0, M0),
+    taking ~1.5 GB of GPU memory and loading in ~11 s. One MFA alignment of the reference is
+    shared by all systems, then each synthesizes (0.07–0.27 s each).
+  - **Requests:** queued and run one at a time (one GPU). The page polls, so long runs (up to
+    ~45 s with measurement) never meet proxy timeouts. Results are written to
+    `out/web_demo/<id>/result.json`, so `?job=<id>` links survive a restart. The last 50 jobs
+    are kept.
+  - **Security:**
+    - an access key on every route (random per start, or `MEEAMI_DEMO_KEY`);
+    - binds to 127.0.0.1 only;
+    - file serving confined to the job folders (path-traversal test);
+    - limits on audio length and size and on text length.
+  - **Hosting:** WSL2 is behind NAT, and browsers allow microphone capture only on https or
+    localhost. So the documented route is a Cloudflare quick tunnel (`cloudflared`, a user-level
+    binary with no account), not LAN port forwarding, which would need Windows admin and give
+    no https.
+  - **Checked:**
+    - 5 unit tests with a fake runner (auth, examples, upload lifecycle, path traversal, limits);
+    - two real jobs: a shipped example with measurement (42 s; measured error main 8 ms, V0 24
+      ms, the others 9–12 ms) and a browser-style webm/opus upload with digits in the text
+      (12 s);
+    - every output with length error 0 and MFA as the aligner;
+    - the page rendered in headless Chrome: the empty form, and a result link with all 7 cards
+      in order.
+    - Not tested here: microphone capture, which needs a real browser and a person.

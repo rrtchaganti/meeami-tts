@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>meeami-tts: time-aligned US-English TTS</title>
+<style>
+  :root { --ink:#1d2433; --muted:#5b6475; --line:#d9dee7; --bg:#f6f7f9; --card:#fff;
+          --accent:#1f5fbf; --main:#0f7b5f; --bad:#b3261e; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+         color:var(--ink); background:var(--bg); }
+  header { padding:20px 28px 8px; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  header p { margin:0; color:var(--muted); max-width:980px; }
+  main { padding:12px 28px 40px; max-width:1200px; }
+  section { background:var(--card); border:1px solid var(--line); border-radius:10px;
+            padding:16px 18px; margin:14px 0; }
+  h2 { font-size:16px; margin:0 0 10px; }
+  .row { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:8px 0; }
+  button { font:inherit; padding:7px 14px; border-radius:7px; border:1px solid var(--line);
+           background:#fff; cursor:pointer; }
+  button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  button:disabled { opacity:.5; cursor:default; }
+  button.rec { border-color:var(--bad); color:var(--bad); }
+  textarea { width:100%; font:inherit; padding:8px 10px; border:1px solid var(--line);
+             border-radius:7px; min-height:60px; }
+  select { font:inherit; padding:6px; border-radius:7px; border:1px solid var(--line); max-width:100%; }
+  .muted { color:var(--muted); font-size:13px; }
+  .err { color:var(--bad); font-weight:600; }
+  .status { min-height:22px; }
+  audio { height:36px; max-width:100%; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(520px, 1fr)); gap:14px; }
+  .card { border:1px solid var(--line); border-radius:10px; padding:12px 14px; background:#fff; }
+  .card.main { border:2px solid var(--main); }
+  .card h3 { font-size:15px; margin:0 0 2px; }
+  .card .label { color:var(--muted); font-size:13px; margin-bottom:8px; }
+  .card img { width:100%; border-radius:6px; border:1px solid var(--line); margin-top:8px; cursor:zoom-in; }
+  .kv { font-size:13px; color:var(--muted); }
+  .kv b { color:var(--ink); font-weight:600; }
+  table { border-collapse:collapse; font-size:13px; width:100%; }
+  th, td { padding:4px 8px; border-bottom:1px solid var(--line); text-align:right; white-space:nowrap; }
+  th:first-child, td:first-child { text-align:left; }
+  .tablewrap { overflow-x:auto; }
+  code { background:#eef1f6; padding:1px 5px; border-radius:4px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Time-aligned US-English TTS</h1>
+  <p>Record or upload a sentence read with any accent and type exactly what it says. Every model
+     says the same words in the LJSpeech voice with a US accent, <b>on the recording's word
+     timing</b>, and every output is exactly as long as the recording.</p>
+</header>
+<main>
+  <section>
+    <h2>1. Reference recording</h2>
+    <div class="row">
+      <button id="recBtn" class="rec">● Record</button>
+      <span id="recTime" class="muted"></span>
+      <span class="muted">or</span>
+      <input id="file" type="file" accept="audio/*">
+      <span class="muted">or an example:</span>
+      <select id="example"><option value="">(choose an L2-ARCTIC test-speaker clip)</option></select>
+    </div>
+    <div id="recNote" class="muted"></div>
+    <div class="row"><audio id="refPreview" controls style="display:none"></audio></div>
+  </section>
+
+  <section>
+    <h2>2. What the recording says</h2>
+    <textarea id="text" placeholder="Type the exact words of the recording. Digits, symbols and abbreviations are fine (20th, $5, Dr., 12/03)."></textarea>
+    <div class="row">
+      <label><input id="measure" type="checkbox" checked> measure word times on every output with MFA
+        (adds ~20-40 s; shows how close each model lands)</label>
+    </div>
+    <div class="row">
+      <button id="go" class="primary">Synthesize with all models</button>
+      <span id="status" class="status muted"></span>
+    </div>
+  </section>
+
+  <section id="results" style="display:none">
+    <h2>3. Results</h2>
+    <div id="summary"></div>
+    <div id="cards" class="grid"></div>
+    <details style="margin-top:12px"><summary>Per-word measured times</summary>
+      <div id="words" class="tablewrap"></div></details>
+  </section>
+
+  <p class="muted">How it works: the text is normalized and looked up in one fixed US lexicon; MFA
+    aligns the text to the recording to get each word's start and end; each model uses its own
+    native durations inside every word, stretched to the word's span, so the accent of the
+    recording never leaks in; the waveform is cut to exactly the recording's length.
+    "Measured" times come from MFA run on each output, as in the evaluation.</p>
+</main>
+<script>
+const KEY = new URLSearchParams(location.search).get("key") || "";
+const api = (p) => p + (p.includes("?") ? "&" : "?") + "key=" + encodeURIComponent(KEY);
+const $ = (id) => document.getElementById(id);
+let blob = null, blobType = "", exampleId = "", examples = [];
+
+// --- reference: record / upload / example -------------------------------------------------
+let rec = null, chunks = [], t0 = 0, timer = null;
+if (!navigator.mediaDevices || !window.MediaRecorder) {
+  $("recBtn").disabled = true;
+  $("recNote").textContent = "Recording needs https:// or localhost in this browser; upload a file instead.";
+}
+function setRef(b, type, name) {
+  blob = b; blobType = type; exampleId = "";
+  $("example").value = "";
+  $("refPreview").src = URL.createObjectURL(b); $("refPreview").style.display = "";
+  $("recNote").textContent = name;
+}
+$("recBtn").onclick = async () => {
+  if (rec && rec.state === "recording") { rec.stop(); return; }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    chunks = []; rec = new MediaRecorder(stream);
+    rec.ondataavailable = (e) => chunks.push(e.data);
+    rec.onstop = () => {
+      stream.getTracks().forEach((t) => t.stop()); clearInterval(timer);
+      $("recBtn").textContent = "● Record again";
+      const type = (rec.mimeType || "audio/webm").split(";")[0];
+      setRef(new Blob(chunks, { type }), type, "recorded " + ((Date.now() - t0) / 1000).toFixed(1) + " s");
+      $("recTime").textContent = "";
+    };
+    rec.start(); t0 = Date.now();
+    $("recBtn").textContent = "■ Stop";
+    timer = setInterval(() => $("recTime").textContent = ((Date.now() - t0) / 1000).toFixed(1) + " s", 100);
+  } catch (e) { $("recNote").innerHTML = '<span class="err">Microphone: ' + e.message + "</span>"; }
+};
+$("file").onchange = () => {
+  const f = $("file").files[0];
+  if (f) setRef(f, f.type || "application/octet-stream", f.name + " (" + (f.size / 1e6).toFixed(1) + " MB)");
+};
+$("example").onchange = () => {
+  const ex = examples.find((e) => e.id === $("example").value);
+  if (!ex) return;
+  blob = null; exampleId = ex.id; $("file").value = "";
+  $("refPreview").src = api("/examples/" + ex.id + ".wav"); $("refPreview").style.display = "";
+  $("text").value = ex.text;
+  $("recNote").textContent = ex.speaker + " (" + ex.accent + "), held-out test accent";
+};
+fetch(api("/api/examples")).then((r) => r.ok ? r.json() : Promise.reject(r.status)).then((list) => {
+  examples = list;
+  for (const e of list) {
+    const o = document.createElement("option");
+    o.value = e.id; o.textContent = e.speaker + " (" + e.accent + "): " + e.text;
+    $("example").appendChild(o);
+  }
+}).catch((s) => { if (s === 403) $("status").innerHTML = '<span class="err">This link needs its ?key=… part.</span>'; });
+
+// --- submit and poll ------------------------------------------------------------------------
+$("go").onclick = async () => {
+  const text = $("text").value.trim();
+  if (!blob && !exampleId) { $("status").innerHTML = '<span class="err">Record, upload or choose a reference first.</span>'; return; }
+  if (!text) { $("status").innerHTML = '<span class="err">Type what the recording says.</span>'; return; }
+  $("go").disabled = true; $("results").style.display = "none";
+  $("status").textContent = "uploading …";
+  const q = "/api/synthesize?text=" + encodeURIComponent(text) + "&measure=" + ($("measure").checked ? 1 : 0)
+          + (exampleId ? "&example=" + encodeURIComponent(exampleId) : "");
+  try {
+    const r = await fetch(api(q), { method: "POST", body: exampleId ? "" : blob,
+                                    headers: { "Content-Type": exampleId ? "text/plain" : blobType } });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || r.status);
+    history.replaceState(null, "", "?key=" + encodeURIComponent(KEY) + "&job=" + j.job);
+    poll(j.job, Date.now());
+  } catch (e) { $("status").innerHTML = '<span class="err">' + e.message + "</span>"; $("go").disabled = false; }
+};
+async function poll(job, start) {
+  const r = await fetch(api("/api/job/" + job));
+  const j = await r.json();
+  if (!r.ok) { $("status").innerHTML = '<span class="err">' + esc(j.error || r.status) + "</span>"; $("go").disabled = false; return; }
+  const secs = ((Date.now() - start) / 1000).toFixed(0);
+  if (j.status === "queued") $("status").textContent = "queued (" + (j.ahead || 0) + " ahead) … " + secs + " s";
+  else if (j.status === "running") $("status").textContent = "aligning the recording and synthesizing with every model … " + secs + " s";
+  if (j.status === "done") {
+    show(job, j.result);
+    $("status").textContent = (job === JOB && !$("text").value) ? "saved result (" + f(j.result.total_s, 0) + " s to make)" : "done in " + secs + " s";
+    if (!$("text").value) $("text").value = j.result.text;
+    $("go").disabled = false; return;
+  }
+  if (j.status === "error") { $("status").innerHTML = '<span class="err">' + j.error + "</span>"; $("go").disabled = false; return; }
+  setTimeout(() => poll(job, start), 1000);
+}
+
+// a result link (?job=<id>) opens that job
+const JOB = new URLSearchParams(location.search).get("job");
+if (JOB) { $("go").disabled = true; poll(JOB, Date.now()); }
+
+// --- results ---------------------------------------------------------------------------------
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const f = (x, d = 0) => (x === null || x === undefined) ? "–" : Number(x).toFixed(d);
+function show(job, res) {
+  const file = (p) => api("/files/" + job + "/" + p);
+  const anyMeasured = res.systems.some((s) => s.measured_mae_ms !== null);
+  $("summary").innerHTML =
+    '<div class="row"><b>Reference</b> <audio controls src="' + file(res.reference) + '"></audio>' +
+    '<span class="kv">' + f(res.ref_duration_s, 2) + " s</span></div>" +
+    '<div class="kv">normalized words: <code>' + esc(res.normalized) + "</code>" +
+    (res.oov_added.length ? " · new words (g2p): <b>" + esc(res.oov_added.join(", ")) + "</b>" : "") +
+    " · alignment " + f(res.align_s, 1) + " s" + (anyMeasured ? " · output measurement " + f(res.measure_s, 1) + " s" : "") + "</div>";
+  $("cards").innerHTML = res.systems.map((s) =>
+    '<div class="card' + (s.name === "main" ? " main" : "") + '">' +
+    "<h3>" + esc(s.name) + (s.name === "main" ? " ★" : "") + "</h3>" +
+    '<div class="label">' + esc(s.label) + "</div>" +
+    '<audio controls preload="none" src="' + file(s.audio) + '"></audio>' +
+    '<div class="kv">aligner <b>' + esc(s.aligner) + "</b>" +
+    (s.mfa_fallback_reason ? " (MFA failed: " + esc(s.mfa_fallback_reason) + ")" : "") +
+    " · length error <b>" + s.length_error_samples + "</b> samples" +
+    " · synthesis <b>" + f(s.synthesis_s, 2) + " s</b> (RTF " + f(s.rtf_model, 3) + ")" +
+    (s.measured_mae_ms !== null ? " · measured word-time error <b>" + f(s.measured_mae_ms) + " ms</b>" : "") +
+    (s.capped_words.length ? " · stretch capped: " + esc(s.capped_words.join(", ")) : "") + "</div>" +
+    '<a href="' + file(s.plot) + '" target="_blank"><img loading="lazy" src="' + file(s.plot) + '" alt="timing plot"></a></div>'
+  ).join("");
+  if (anyMeasured) {
+    let h = "<table><tr><th>word</th><th>reference</th>" + res.systems.map((s) => "<th>" + esc(s.name) + " Δstart / Δend (ms)</th>").join("") + "</tr>";
+    res.ref_words.forEach((w, i) => {
+      h += "<tr><td>" + esc(w.word) + "</td><td>" + f(w.start, 2) + "–" + f(w.end, 2) + " s</td>" +
+           res.systems.map((s) => { const m = s.measured && s.measured[i];
+             return "<td>" + (m ? f(m.d_start_ms) + " / " + f(m.d_end_ms) : "not found") + "</td>"; }).join("") + "</tr>";
+    });
+    $("words").innerHTML = h + "</table>";
+  } else $("words").innerHTML = '<span class="muted">Tick "measure word times" to see them.</span>';
+  $("results").style.display = "";
+}
+</script>
+</body>
+</html>

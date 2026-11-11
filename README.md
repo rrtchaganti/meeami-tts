@@ -44,6 +44,9 @@ make live-demo
 make live-demo UTT=YBAA_arctic_a0003 TEXT="For the 20th time that evening, the two men shook hands."
 make rehearse       # 12 end-to-end cases (typed text, refusals) -> out/live_demo/REHEARSAL.md
 make text-stress    # 117 typed-text cases through the normalizer, no audio
+
+# browser demo on this machine: record/upload + text -> all 7 systems side by side (docs/DEMO.md §6)
+make web-demo       # prints http://localhost:7860/?key=...;  make web-tunnel  shares it over https
 ```
 
 No GPU? Add `ARGS="--device cpu"` (same output, slower synthesis; MFA runs on the CPU either way).
@@ -574,7 +577,7 @@ tts/
   infer/      pipeline.py (Section 5 steps 1-10) · systems.py · ctc.py · edge_cases.py · batch.py
   eval/       metrics.py · scorers.py · asr.py · paired.py · phone_dynamics.py · fidelity.py · tune.py · plots.py
   guard.py    test-split lock          splits.py · stats.py · audio.py · config.py
-scripts/    train.py · infer.py · evaluate.py · profile.py · make_demo.py · demo.py (live demo) · export_infer.py · fetch_models.py (HF Hub) · GPU bundle/setup/export
+scripts/    train.py · infer.py · evaluate.py · profile.py · make_demo.py · demo.py (live demo) · web_demo.py (browser demo) · export_infer.py · fetch_models.py (HF Hub) · GPU bundle/setup/export
 tests/      unit tests (one per module) + edge_cases/ (21 committed WAV/TXT cases)
 stats/      phone_logdur.json (LJ per-phone log-duration mean, σ) · l2_dev_pace.json (Ablation B)
 reports/    data splits, lexicon, LJ alignment QC, MFA error on accented speech, augmentation

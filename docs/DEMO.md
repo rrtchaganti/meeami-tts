@@ -114,3 +114,43 @@ initialisms, names and Roman numerals, punctuation, and inputs that must be refu
 consonants. The D-94 pre-pass fixes them. Two cases are correct but go to g2p: "lakh" and "py"
 from PyTorch. The pre-pass changes none of the 26,867 L2-ARCTIC transcripts and one of the 13,100
 LJ transcripts (a bare "Dr" that the old rules read as "drive"), so the frozen results stand.
+
+## 6. Browser demo hosted on this laptop (D-101)
+
+The visitor records or uploads a sentence in their browser, types what it says, and gets the
+outputs of **all seven systems** side by side: main, M1, M1+pos, both ablations, V0 and M0. Each
+system shows its audio, timing plot, aligner, length error and, optionally, the word-time error
+measured with MFA.
+
+```bash
+make web-demo            # terminal 1: loads all 7 systems (~15 s), prints http://localhost:7860/?key=XXXX
+make web-tunnel          # terminal 2: prints https://<random>.trycloudflare.com
+# send the visitor:  https://<random>.trycloudflare.com/?key=XXXX
+```
+
+- **Why a tunnel:** WSL2 sits behind NAT (172.17.x), so other machines cannot reach it directly.
+  Browsers also allow the **microphone only on https:// or localhost**. A Cloudflare quick tunnel
+  gives an https URL with no account and no router or Windows-firewall changes.
+- **Install cloudflared once, without sudo:**
+  ```bash
+  mkdir -p ~/.local/bin && curl -L -o ~/.local/bin/cloudflared \
+    https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 \
+    && chmod +x ~/.local/bin/cloudflared   # ~/.local/bin must be on PATH
+  ```
+- **Access key:** every request needs `?key=`. It is random at each start, or fixed with
+  `MEEAMI_DEMO_KEY=... make web-demo`. Without the key the page and the API answer 403. The URL
+  changes on every `make web-tunnel`. Stop both terminals (Ctrl+C) after the session.
+- **What one request costs:**
+  - MFA on the reference: ~5–10 s;
+  - all 7 syntheses: < 1 s together on the laptop GPU;
+  - with "measure word times": +20–40 s for MFA on the 7 outputs.
+
+  Requests queue and run one at a time. The page shows how many jobs are ahead.
+- **Limits** (`configs/web_demo.yaml`): 30 s of audio, 20 MB per upload, 400 characters of text.
+  Any format ffmpeg reads works; browser recordings arrive as webm/opus.
+- **Result links:** after a run the address bar holds `&job=<id>`, so the page can be reloaded or
+  shared. Results stay in `out/web_demo/<id>/` (the last 50 are kept).
+- **Keep the laptop awake** and on power during the session. The GPU holds all 7 models in
+  ~1.5 GB.
+- **Same text rule as everywhere:** the text must be what the recording says. An extra word is
+  not detected (§3).

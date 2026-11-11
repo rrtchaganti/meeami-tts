@@ -1,0 +1,36 @@
+# Browser demo (DECISIONS D-101; scripts/web_demo.py, `make web-demo`).
+# Not an experiment config: it picks frozen systems and server limits. The pipeline, the systems
+# and scripts/demo.py are reused unchanged.
+inherit: live_demo.yaml
+exp: web_demo
+live_demo:
+  # every system, in display order (name -> checkpoint for the shared loader; infer.pt from
+  # `make models`, ckpt_last.pt used when present)
+  systems:
+    main: export/m1_pos_diph/infer.pt
+    m1: export/m1/infer.pt
+    m1_pos: export/m1_pos/infer.pt
+    abl_a_pos: export/abl_a_pos/infer.pt
+    abl_b_pos: export/abl_b_pos/infer.pt
+    v0: v0
+    m0: m0
+web_demo:
+  host: 127.0.0.1          # local only; share it through an HTTPS tunnel (docs/DEMO.md §6)
+  port: 7860
+  out_dir: out/web_demo
+  keep_jobs: 50            # older job folders are deleted
+  max_upload_mb: 20
+  max_ref_seconds: 30
+  max_text_chars: 400
+  # display order (the config merge keeps live_demo.yaml's key order, so it is stated here)
+  order: [main, m1, m1_pos, abl_a_pos, abl_b_pos, v0, m0]
+  # access key: MEEAMI_DEMO_KEY if set, otherwise a random key printed at start (part of the URL)
+  key: ${oc.env:MEEAMI_DEMO_KEY,""}
+  labels:
+    main: "Main system (m1_pos_diph): VITS + MFA durations, position-in-phone, diphthong split"
+    m1: "M1: VITS fine-tuned with MFA durations instead of MAS"
+    m1_pos: "M1 + position-in-phone embedding"
+    abl_a_pos: "Ablation A: + pace-augmented LJ (LJ pace statistics)"
+    abl_b_pos: "Ablation B: + pace-augmented LJ (dev-accent pace statistics)"
+    v0: "V0: original pretrained VITS (MAS), same timing injected"
+    m0: "M0: FastSpeech2 + HiFi-GAN, same timing injected"
