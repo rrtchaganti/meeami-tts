@@ -1268,3 +1268,40 @@ docs/HANDOFF.md instead of being worked around.
     - `data/mfa_tmp` (2.5 GB, MFA temp);
     - `export/m1_partial` (0.9 GB, superseded);
     - `data/models/fastspeech2/LJSpeech_900000.zip` (0.35 GB, the extracted copy is used).
+- **D-100 Demo inference without the datasets, tested as an outsider (user: "setup like an
+  outsider only for demo inference").** D-98 had symlinked the datasets. A real outsider would
+  have hit three blockers:
+  1. **Conda env names.** `make env` matches envs by name. Even with a separate `CONDA_ENVS_DIRS`,
+     conda still lists the existing `tts`/`mfa`, so `make env` would have updated someone's
+     existing envs with `--prune`. **Fix:** `TTS_ENV`/`MFA_ENV` in the Makefile (defaults
+     `tts`/`mfa`, so this machine behaves as before). The MFA name reaches the Python code
+     through `mfa.conda_env: ${oc.env:MEEAMI_MFA_ENV,mfa}`, which the Makefile exports.
+  2. **The lexicon is built from the datasets.** `data/` is not in git, so a clone could not
+     run inference. **Fix:** the frozen lexicon is hosted. Its sha256 `0969f40c…` matches the
+     training bundle's record. It is in HF commit `0daebb7`, now `hosting.revision`.
+     `make models` fetches it **only if missing**, because inference appends g2p words to it.
+     A changed local copy is kept, with a message.
+  3. **The demo references are L2-ARCTIC audio.** **Fix:** the 8 utterances that `make
+     live-demo`/`make rehearse` use are shipped unmodified in `demo/clips/` (2.5 MB, CC BY-NC
+     4.0, `SOURCE.md`), following the existing `tests/edge_cases/` practice.
+     - They are test speakers, added after `freeze-v1`.
+     - `scripts/demo.py` reads the dataset copy if present, otherwise the shipped clip
+       (`live_demo.clips_dir`).
+     - New test: every suite utterance is shipped.
+  - **Outsider run** (clean clone of 8a5ca41 from GitHub, **no `data/`**, the real `make env`
+    with `TTS_ENV=tts_out MFA_ENV=mfa_out`):
+
+    | Command | Result |
+    | --- | --- |
+    | `make env` | 129 s |
+    | `make models` | 9 files including the lexicon |
+    | `make assets` | ok |
+    | `make infer` (shipped clip) | length error 0, MFA |
+    | `make live-demo` | length error 0, RTF model 0.03 |
+    | `make rehearse` | 12/12 |
+    | `make text-stress` | 115 + 2 |
+    | `make test` | 284 passed, 9 skipped; every skip needs training data |
+
+    MFA was confirmed to run in `mfa_out` (`sys.prefix` checked). The clone, `tts_out` and
+    `mfa_out` were removed afterwards.
+  - README quick start and DEMO.md §0a now describe this path (no dataset, no `make lexicon`).

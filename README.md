@@ -12,19 +12,20 @@ make infer REF=ref.wav TEXT="Will we ever forget it."
 # -> out/infer/out.wav (exact reference length), timings.json, timing.png
 ```
 
-## Quick start (fresh clone, ~15 min)
+## Quick start: inference and demo (fresh clone, ~15 min, no dataset needed)
 
 ```bash
 git clone git@github.com:rrtchaganti/meeami-tts.git && cd meeami-tts
-make env            # conda envs `tts` and `mfa` from envs/*.yml (~4 min)
+make env            # conda envs `tts` + `mfa` from envs/*.yml (~3-5 min)
+                    # names taken already? use others:  export TTS_ENV=tts2 MFA_ENV=mfa2  (then make env)
 hf auth login       # only while the model repo Raviteja546/meeami-tts is private
-# put the datasets in place (not downloadable by script, see "Setup"):
-#   data/raw/LJSpeech-1.1/      data/raw/l2arctic/<SPEAKER>/{wav,transcript,annotation}/
-make models         # checkpoints from the Hugging Face Hub, sha256-checked (~5 min)
-make assets         # pinned MFA english_us_arpa models + NLTK data (~1 min)
-make lexicon        # data/lexicon/lexicon.txt from the corpus texts (~30 s)
-make test           # unit tests: all pass; a few skip without training data / eval models
+make models         # checkpoints, baseline weights and the frozen lexicon from the HF Hub, sha256-checked (~1.3 GB)
+make assets         # pinned MFA english_us_arpa models + NLTK data (~1-2 min)
+make test           # unit tests: ~284 pass; ~9 skip because they need the training data
 ```
+
+The datasets are needed only to retrain or re-evaluate (see "Setup"). The demo's reference clips
+ship in [`demo/clips/`](demo/clips/SOURCE.md) and [`tests/edge_cases/`](tests/edge_cases/SOURCE.md).
 
 Then run it:
 
@@ -49,8 +50,8 @@ No GPU? Add `ARGS="--device cpu"` (same output, slower synthesis; MFA runs on th
 
 | What | Where |
 | --- | --- |
-| Code, configs, tests, docs, slides, result tables and plots | this repository |
-| Inference checkpoints (5 systems, 141 MB each) and the two baselines' weights | Hugging Face `Raviteja546/meeami-tts` (`make models`, pinned by `hosting.revision` in [`configs/base.yaml`](configs/base.yaml)) |
+| Code, configs, tests, docs, slides, result tables and plots, demo reference clips | this repository |
+| Inference checkpoints (5 systems, 141 MB each), the two baselines' weights, the frozen lexicon | Hugging Face `Raviteja546/meeami-tts` (`make models`, pinned by `hosting.revision` in [`configs/base.yaml`](configs/base.yaml)) |
 | Datasets, full training checkpoints (with discriminators, 956 MB each), synthesized test audio | the author's machine only (git-ignored); hashes in [`results/checkpoints.sha256`](results/checkpoints.sha256) |
 
 | Document | What it gives you |
@@ -169,19 +170,22 @@ text ─► normalizer ─► lexicon phones ─► token timeline (sil · phone
 - `ffmpeg` comes with the `tts` env. `sox` and `rubberband-cli` ≥ 3.0 are needed only to rebuild
   the augmented training data.
 
-**Datasets** are not downloaded by the code. Inference needs only the lexicon built from their
-texts and, for the L2-ARCTIC examples, the reference recordings:
+**Datasets** are not downloaded by the code, and inference does not need them: `make models` also
+brings the frozen lexicon, and the demo clips are in the repo. To rebuild or retrain (`make data`,
+`make lexicon`, ...):
 - LJSpeech 1.1 → `data/raw/LJSpeech-1.1/` (`make lj-download` fetches the official archive);
 - L2-ARCTIC v5 (access form) → `data/raw/l2arctic/`.
 
 ```bash
 make env      # two pinned conda envs: tts (everything) and mfa (Montreal Forced Aligner 3.4.3 only);
-              # re-running it updates existing envs in place (--prune)
-make models   # inference checkpoints + baseline weights (Hugging Face, sha256-checked)
+              # re-running it updates existing envs in place (--prune). Other names:
+              # TTS_ENV=... MFA_ENV=... on every make call, or exported once
+make models   # inference checkpoints + baseline weights + the frozen lexicon (Hugging Face, sha256-checked;
+              # the lexicon only if missing, since inference appends new words to it)
 make assets   # pinned MFA models + NLTK corpora (sha256-checked)
-make lexicon  # data/lexicon/lexicon.txt (data/ is not in git)
-make test     # unit tests (291 pass on the author's machine; on a clean clone 286 pass and 6 skip,
-              # because they need training manifests or evaluation models)
+make lexicon  # rebuild data/lexicon/lexicon.txt from the corpus texts (needs the datasets; D-98)
+make test     # unit tests: 292 pass with the full data (author's machine); 284 pass and 9 skip
+              # on a clean clone without datasets (D-100)
 make help     # every target
 ```
 
@@ -610,6 +614,9 @@ data/ runs/ export/ out/   git-ignored (datasets, training runs, checkpoints, de
   `tts/models/`, with their licence files.
 - **Edge-case clips:** the L2-ARCTIC (CC BY-NC 4.0) clips in `tests/edge_cases/` come from dev
   speakers only.
+- **Demo clips:** `demo/clips/` holds 8 unmodified L2-ARCTIC test-speaker utterances (CC BY-NC
+  4.0, attribution in [`demo/clips/SOURCE.md`](demo/clips/SOURCE.md)). They were added after
+  `freeze-v1`.
 - **Checkpoints** (Hugging Face `Raviteja546/meeami-tts`): fine-tuned from the MIT-licensed
   pretrained VITS on LJSpeech (public domain). `abl_b_pos` follows pace statistics from
   L2-ARCTIC, so treat it as non-commercial. The baseline weights are unmodified mirrors with
