@@ -1340,3 +1340,20 @@ docs/HANDOFF.md instead of being worked around.
     - the page rendered in headless Chrome: the empty form, and a result link with all 7 cards
       in order.
     - Not tested here: microphone capture, which needs a real browser and a person.
+- **D-102 Public test session of the browser demo (user: "install cloudflared and run a test
+  session").**
+  - **Install:** cloudflared 2026.10.7, user-level binary in `~/.local/bin` (already on PATH), no
+    sudo, no account.
+  - **Tunnel start:** `make web-tunnel` got a `*.trycloudflare.com` URL. The first registration
+    attempts failed with "Unauthorized: Tunnel not found" (HTTP 530 meanwhile), then
+    `Registered tunnel connection` after ~10 s (edge `bom03`, QUIC). The ICMP/ping_group_range
+    warnings are harmless. Both are in DEMO.md §6.
+  - **Over the public URL:**
+    - `/?key=` → 200, without the key → 403;
+    - a browser-style webm/opus upload with "measure": done in 47 s; all 7 systems with length
+      error 0 and MFA; measured error main 8, m1 7, abl_b 7, abl_a 11, m1_pos 15, M0 15, V0
+      38 ms;
+    - output audio streamed through the tunnel;
+    - headless Chrome rendered the result link with the Record button enabled (https is a
+      secure context).
+    - Microphone capture is left to the owner on a real device.

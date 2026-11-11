@@ -137,6 +137,10 @@ make web-tunnel          # terminal 2: prints https://<random>.trycloudflare.com
     https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 \
     && chmod +x ~/.local/bin/cloudflared   # ~/.local/bin must be on PATH
   ```
+- **First seconds of a tunnel:** cloudflared may log `ERR Register tunnel error ... Tunnel not
+  found` a few times, and the URL answers 530, until it prints `Registered tunnel connection`
+  (~10 s in the test). The `WRN ... ping_group_range` / ICMP lines are harmless: ping is not
+  needed.
 - **Access key:** every request needs `?key=`. It is random at each start, or fixed with
   `MEEAMI_DEMO_KEY=... make web-demo`. Without the key the page and the API answer 403. The URL
   changes on every `make web-tunnel`. Stop both terminals (Ctrl+C) after the session.
