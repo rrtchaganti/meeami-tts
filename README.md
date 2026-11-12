@@ -23,7 +23,6 @@ make infer REF=ref.wav TEXT="Will we ever forget it."
 | Q3: params, MACs, latency, RTF, plots | [REPORT §12](docs/REPORT.md#12-efficiency), [`results/profile_*.json`](results), [`results/plots/`](results/plots) (09_efficiency and 10 more analysis plots), [§11](docs/REPORT.md#11-final-results-on-held-out-accents) test results |
 | Q4: code walkthrough, inference on the interviewers' files | [Repository layout](#repository-layout); `make infer REF=… TEXT=…`, `make live-demo`, `make web-demo` |
 | **Project report (PDF)** | [`docs/meeami-tts_report.pdf`](docs/meeami-tts_report.pdf): 16 pages; methods, ablations, results, plots and metrics, every table and figure generated from the committed results (`make env-report && make report-pdf`). Longer version with a code link for every claim: [`docs/REPORT.md`](docs/REPORT.md) |
-| Slides | [`slides/meeami-tts_v3.pptx`](slides/meeami-tts_v3.pptx): 34 slides with speaker notes; slide 2 maps the four key questions to slides; demonstration slides embed the exact evaluated audio |
 | Evidence for every claim and decision | [REPORT §16](docs/REPORT.md#16-claim--evidence-index) (claim → result file → code → samples), [`docs/DECISIONS.md`](docs/DECISIONS.md) (every decision and error) |
 
 ## Quick start: inference and demo (fresh clone, ~15 min, no dataset needed)
@@ -34,7 +33,7 @@ make env            # conda envs `tts` + `mfa` from envs/*.yml (~3-5 min)
                     # names taken already? use others:  export TTS_ENV=tts2 MFA_ENV=mfa2  (then make env)
 make models         # checkpoints, baseline weights and the frozen lexicon from the public HF Hub repo, sha256-checked (~1.3 GB, no login)
 make assets         # pinned MFA english_us_arpa models + NLTK data (~1-2 min)
-make test           # unit tests: ~300 pass; 9 skip because they need the training data
+make test           # unit tests: ~305 pass; 9 skip because they need the training data
 ```
 
 The datasets are needed only to retrain or re-evaluate (see "Setup"). The demo's reference clips
@@ -66,7 +65,7 @@ No GPU? Add `ARGS="--device cpu"` (same output, slower synthesis; MFA runs on th
 
 | What | Where |
 | --- | --- |
-| Code, configs, tests, docs, slides, result tables and plots, demo reference clips | this repository |
+| Code, configs, tests, docs, result tables and plots, demo reference clips | this repository |
 | Inference checkpoints (5 systems, 141 MB each), the two baselines' weights, the frozen lexicon | Hugging Face `Raviteja546/meeami-tts` (`make models`, pinned by `hosting.revision` in [`configs/base.yaml`](configs/base.yaml)) |
 | Exact evaluated outputs with references and word timings (21 test samples, listening sets, browser tests) | this repository, [`samples/`](samples/README.md) |
 | Every evaluated test output (1,248 utterances × 7 systems, with measured TextGrids and metric files) | Hugging Face, `outputs/test/` (`make outputs`, ~1.4 GB, pinned by `hosting.outputs.revision`) |
@@ -78,7 +77,6 @@ No GPU? Add `ARGS="--device cpu"` (same output, slower synthesis; MFA runs on th
 | [docs/PLAN.md](docs/PLAN.md) | The original specification (code comments cite its sections) |
 | [docs/DECISIONS.md](docs/DECISIONS.md) | The running log of every decision (D-n) and error (E-n), in order |
 | [docs/HANDOFF.md](docs/HANDOFF.md) | Status log and the GPU-instance runbook |
-| [slides/meeami-tts_v3.pptx](slides/meeami-tts_v3.pptx) | 34-slide presentation with speaker notes (current, D-105; earlier versions kept: [v2](slides/meeami-tts_v2.pptx), [v1](slides/meeami-tts.pptx)) |
 | `make demo` → `out/demo_site/index.html` | Demo page: reference vs every system's output and timing plot |
 | **[docs/DEMO.md](docs/DEMO.md)** | **Live demo runbook:** `make models`, `make live-demo`, `make rehearse`, what to say, what to do when something fails |
 
@@ -202,7 +200,7 @@ make models   # inference checkpoints + baseline weights + the frozen lexicon (H
               # the lexicon only if missing, since inference appends new words to it)
 make assets   # pinned MFA models + NLTK corpora (sha256-checked)
 make lexicon  # rebuild data/lexicon/lexicon.txt from the corpus texts (needs the datasets; D-98)
-make test     # unit tests: 308 pass with the full data (author's machine); 300 pass and 9 skip
+make test     # unit tests: 313 pass with the full data (author's machine); 305 pass and 9 skip
               # on a clean clone without datasets (D-100, rechecked in D-104)
 make help     # every target
 ```
@@ -479,8 +477,7 @@ Full story and numbers:
 - **Freeze:** the final system set was fixed, the checkpoint hashes were committed, and
   `git tag freeze-v1` was placed on `5889ecf`.
 - **Only then** were the test accents evaluated, once, for all six systems. Then came the paired
-  tests, plot 8 (dev vs test pace: ×1.12 vs ×1.16 LJ), the profiles, the clean demo build and the
-  slides.
+  tests, plot 8 (dev vs test pace: ×1.12 vs ×1.16 LJ), the profiles and the clean demo build.
 
 ### Stage 15: The immediate baseline V0, added after the freeze (D-90)
 
@@ -599,7 +596,6 @@ reports/    data splits, lexicon, LJ alignment QC, MFA error on accented speech,
 results/    <system>/<split>/{per_utt.csv, summary.json} · paired/ · phone_dynamics/ · fidelity/ · tune/ · plots/ · profile_*.json · _rejected/
 docs/       meeami-tts_report.pdf (make report-pdf) · REPORT.md · PLAN.md · DECISIONS.md · HANDOFF.md
 samples/    exact evaluated outputs + references + word timings (make samples, E-36): demo/ · listening/ · browser_tests/
-slides/     meeami-tts_v3.pptx + build_v3.js (current) · v2 (build_v2.js) · v1 (build.js), kept unchanged
 data/ runs/ export/ out/   git-ignored (datasets, training runs, checkpoints, demo)
 ```
 

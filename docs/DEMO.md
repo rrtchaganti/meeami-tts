@@ -10,7 +10,7 @@ git clone https://github.com/rrtchaganti/meeami-tts.git && cd meeami-tts
 make env                 # envs `tts` + `mfa`; if those names exist: export TTS_ENV=tts2 MFA_ENV=mfa2 first
 make models              # 5 checkpoints + 3 baseline weights + the frozen lexicon, sha256-checked
 make assets              # pinned MFA english_us_arpa models + NLTK data
-make test                # ~300 passed, 9 skipped (the skips need the training data)
+make test                # ~305 passed, 9 skipped (the skips need the training data)
 ```
 
 The demo's 8 reference clips ship in `demo/clips/` (L2-ARCTIC test speakers, CC BY-NC 4.0), so

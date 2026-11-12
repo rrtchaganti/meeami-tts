@@ -20,7 +20,7 @@ m1_pos, US prob -0.03.
 **Update 2026-11-09 (night): frozen and finished.** User chose m1_pos_diph as the main system
 (D-85). `freeze-v1` on 5889ecf (checkpoint hashes in `results/checkpoints.sha256`). Test eval of
 all six systems done (D-86, README "Systems and results"); profile, plot 8, demo (rebuilt clean,
-D-88) and slides (`slides/meeami-tts.pptx`, D-87) done. GPU instance no longer needed.
+D-88) and slides (D-87) done. GPU instance no longer needed.
 **Still open (yours):** checkpoint hosting for the README links (exports are on the laptop only),
 a fresh-clone `make env` check on another machine, rehearsal with the live demo.
 

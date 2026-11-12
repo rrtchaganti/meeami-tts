@@ -1581,3 +1581,12 @@ docs/HANDOFF.md instead of being worked around.
   - **Visual QA:** every page rendered to PNG (pypdfium2 in a scratch folder) and checked.
     Fixed: near-empty pages from forced page breaks (headings now keep with the next block),
     overlapping labels in the pipeline, CDF, stretch, per-accent and tuning figures.
+- **D-108 Slides taken out of the repository (owner: the repo is what interviewers see, keep it
+  clean).**
+  - `slides/` (three decks and their build scripts) is no longer tracked; `/slides/` is
+    gitignored, and the files stay on the laptop unchanged. The slides are submitted separately.
+  - Removed the slide references from README (deliverables table, hosting table, layout, stage
+    14), REPORT (§11 source note, §14.1 "Slides"), HANDOFF and the PDF's deliverables table.
+    DECISIONS keeps its history.
+  - Test counts brought up to date after D-107: 313 passed on the author's machine, 305 passed and
+    9 skipped on a clean clone (the 5 new report tests pass in a fresh clone).

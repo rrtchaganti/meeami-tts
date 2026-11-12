@@ -819,7 +819,7 @@ The table is in §2. Paired tests on test (D-86, [`results/paired/`](../results/
 | Korean | 0.595 | 39.3 ms / 1.5% | 22.2 ms / 3.3% | 21.8 ms / 2.2% | 0.793 |
 | Vietnamese | 0.406 | 41.6 ms / 2.2% | 25.4 ms / 4.0% | 25.4 ms / 3.2% | 0.771 |
 
-**Distribution and stretch** (from `results/<system>/test/per_utt.csv`; deck v3 slide 23):
+**Distribution and stretch** (from `results/<system>/test/per_utt.csv`):
 
 | | V0 | M0 | M1 | m1_pos_diph |
 | --- | --- | --- | --- | --- |
@@ -905,7 +905,7 @@ Main checkpoint, from [`scripts/profile.py`](../scripts/profile.py) → [`result
   - alignment failures (an unspoken word, a false start, a forced CTC path).
   - Pass means exact length or a clean fallback. **21/21 on GPU and CPU** with the main checkpoint.
 - **Failure handling.** Any failure in `scripts/infer.py --pairs_dir` prints a one-line reason and continues with the next pair.
-- **Unit tests.** `make test` gives 308 passed, 1 skipped on the author's machine. That is 158 at the freeze; V0 and the fidelity probe added 8, and the post-freeze tooling of §14.1 added the rest. On a clean clone without the datasets it gives 300 passed, 9 skipped. The skip on the full machine is the pre-freeze lock test, which skips by design once the tag exists. Every module has a test and a make target.
+- **Unit tests.** `make test` gives 313 passed, 1 skipped on the author's machine. That is 158 at the freeze; V0 and the fidelity probe added 8, and the post-freeze tooling of §14.1 and the PDF report builder added the rest. On a clean clone without the datasets it gives 305 passed, 9 skipped. The skip on the full machine is the pre-freeze lock test, which skips by design once the tag exists. Every module has a test and a make target.
 - **Backup outputs for the live demo.** The demo page ([`scripts/make_demo.py`](../scripts/make_demo.py)) stores every sample's outputs and timing plots. It was rebuilt from an empty folder after the freeze (D-88). Its audio is re-synthesized, so it differs from the evaluated files by sampling noise. The evidence is therefore `samples/` (§14.1), not the demo page.
 
 ### 14.1 After the freeze: hosting, demos and evidence (D-95..D-105)
@@ -937,11 +937,6 @@ None of this changes a model or an experiment config.
 **Outsider check** (D-100, D-104):
 - **Setup:** a fresh clone, no login, an empty download cache.
 - **Result:** `make models`, `assets`, `infer`, `rehearse`, `text-stress`, `test` and `outputs` all pass. The README's quick start is that sequence.
-
-**Slides** (`slides/meeami-tts_v3.pptx`, D-105):
-- 34 slides with speaker notes;
-- slide 2 maps the four key questions to slides;
-- the demonstration slides embed the exact sample audio.
 
 ---
 

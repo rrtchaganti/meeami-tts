@@ -829,7 +829,7 @@ def build_pdf(cfg, out):
        "unspoken word, a false start and a forced CTC path. Pass = exact length or a clean fallback.",
        "<b>Typed text:</b> 121-case stress set (119 pass; the 2 failures are G2P guesses for unknown names) and a 12-case "
        "end-to-end rehearsal including refusals.",
-       "<b>Unit tests:</b> 308 pass on the author's machine; 300 pass, 9 skipped on a clean clone without datasets.",
+       "<b>Unit tests:</b> 313 pass on the author's machine; 305 pass, 9 skipped on a clean clone without datasets.",
        "<b>Browser demo:</b> visitors record or upload a sentence and get all seven systems side by side; 50 recorded "
        "sessions are kept in samples/browser_tests/."])
     P("Live testing of the browser demo exposed failures that read-speech corpora never contain:", small)
@@ -867,7 +867,7 @@ def build_pdf(cfg, out):
        ["Models", "make models", "frozen inference checkpoints and baselines from the HF Hub, pinned revision, sha256-checked"],
        ["Synthesize", "make infer / make live-demo", "out.wav (exact length), timings.json, timing.png"],
        ["Test outputs", "make outputs", "all 1,248 evaluated outputs per system into results/&lt;system&gt;/test/"],
-       ["Tests", "make test; make text-stress; make rehearse", "300 pass on a clean clone; 119/121; 12/12"],
+       ["Tests", "make test; make text-stress; make rehearse", "305 pass on a clean clone; 119/121; 12/12"],
        ["Browser demo", "make web-demo (+ make web-tunnel)", "record / upload, all seven systems side by side"],
        ["This report", "make report-pdf", "docs/meeami-tts_report.pdf from the committed results"]], [0.18, 0.35, 0.47])
     tab_caption("Checked from a fresh clone with no login and an empty download cache (D-104).")
@@ -876,8 +876,7 @@ def build_pdf(cfg, out):
        ["Detailed report with a code link for every claim", "docs/REPORT.md; decision and error log docs/DECISIONS.md"],
        ["Exact audio evidence: reference, annotation, all 7 outputs, word timings, ≥ 2 accents", "samples/demo/ (21 samples, 3 accents; MAE recomputed and checked, 147/147)"],
        ["Listening sets behind phase-2 decisions; browser recordings", "samples/listening/, samples/browser_tests/"],
-       ["Checkpoints and every test output", cfg.links.hf],
-       ["Slides", "slides/meeami-tts_v3.pptx"]], [0.45, 0.55])
+       ["Checkpoints and every test output", cfg.links.hf]], [0.45, 0.55])
     tab_caption("Where each deliverable lives.")
 
     # ================= Appendix
