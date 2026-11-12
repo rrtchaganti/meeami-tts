@@ -1181,7 +1181,9 @@ def build_pdf(cfg, out):
     P("9. Limitations and future work", h1)
     B(["<b>The accent classifier is a weak judge;</b> a listening test (for example MUSHRA, where listeners rate versions side "
        "by side) with accent ratings is the right next measurement.",
-       "<b>Part of the accent lies in timing:</b> forcing LJ's voice onto a non-US speaker's word timing limits how American it can sound.",
+       "<b>Part of the accent lies in timing:</b> forcing LJ's voice onto a non-US speaker's word timing limits how American it can sound. "
+       "This is acceptable for the likely aim of the task, creating time-aligned speech pairs from any accent to US English, "
+       "where keeping the speaker's timing is the point.",
        "<b>A fixed alignment flattens phones</b> (14-16% less sound change inside phones); V0 keeps a better word error rate and UTMOS.",
        "<b>No word-boundary marker</b> in the model's input (\"a name\" and \"an aim\" are the same phones); the diphthong is always split 50/50.",
        "<b>The ablations started late</b> (20,000 steps from M1), so they test late-stage augmentation only.",

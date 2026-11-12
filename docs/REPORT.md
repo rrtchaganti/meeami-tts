@@ -944,7 +944,7 @@ None of this changes a model or an experiment config.
 
 **Limitations:**
 - **Accent ID is a weak judge.** It is near-binary per utterance, so small US-probability differences need listening tests to interpret. A MUSHRA-style listening test would be the right next measurement.
-- **Part of the accent lives in timing.** Forcing the LJ voice onto an L2 reference's word timing caps how American it can sound. Dev US probability: references 0.30, outputs 0.74.
+- **Part of the accent lives in timing.** Forcing the LJ voice onto an L2 reference's word timing caps how American it can sound. Dev US probability: references 0.30, outputs 0.74. This is acceptable for the likely aim of the task, creating time-aligned speech pairs from any accent to US English, where keeping the speaker's timing is the point.
 - **The 50/50 diphthong split is fixed.** MFA gives no internal boundary, and short unstressed diphthongs get only 1–2 frames per half.
 - **No word-boundary token.** The encoder input is a bare phone stream ("a name" = "an aim"), so word-final phones are distinguishable only through context and `sp` (D-75c).
 - **End-to-end latency is MFA-bound.** It takes 3.3 s per reference on the laptop, while the model itself runs 80× faster than real time.
