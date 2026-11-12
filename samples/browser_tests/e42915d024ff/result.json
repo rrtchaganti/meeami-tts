@@ -1,0 +1,140 @@
+{
+ "text": "abc are three letters of english",
+ "normalized": "abc are three letters of english",
+ "oov_added": [],
+ "ref_duration_s": 3.3,
+ "ref_words": [
+  {
+   "word": "abc",
+   "start": 0.84,
+   "end": 1.52
+  },
+  {
+   "word": "are",
+   "start": 1.52,
+   "end": 1.84
+  },
+  {
+   "word": "three",
+   "start": 1.84,
+   "end": 2.01
+  },
+  {
+   "word": "letters",
+   "start": 2.01,
+   "end": 2.38
+  },
+  {
+   "word": "of",
+   "start": 2.38,
+   "end": 2.52
+  },
+  {
+   "word": "english",
+   "start": 2.56,
+   "end": 3.03
+  }
+ ],
+ "align_s": 8.62093301599998,
+ "total_s": 41.09703596700092,
+ "systems": [
+  {
+   "name": "main",
+   "audio": "main/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.06526967363628722,
+   "synthesis_s": 0.2153899229997478,
+   "measured_mae_ms": 78.33333333333341,
+   "measured": [
+    {
+     "start": 0.0,
+     "end": 1.52,
+     "d_start_ms": -840.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 1.52,
+     "end": 1.84,
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 1.84,
+     "end": 2.02,
+     "d_start_ms": 0.0,
+     "d_end_ms": 10.000000000000231
+    },
+    {
+     "start": 2.02,
+     "end": 2.38,
+     "d_start_ms": 10.000000000000231,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 2.38,
+     "end": 2.48,
+     "d_start_ms": 0.0,
+     "d_end_ms": -40.000000000000036
+    },
+    {
+     "start": 2.55,
+     "end": 3.06,
+     "d_start_ms": -10.000000000000231,
+     "d_end_ms": 30.00000000000025
+    }
+   ]
+  },
+  {
+   "name": "v0",
+   "audio": "v0/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.03476514818182543,
+   "synthesis_s": 0.11472498900002392,
+   "measured_mae_ms": 45.833333333333314,
+   "measured": [
+    {
+     "start": 0.83,
+     "end": 1.49,
+     "d_start_ms": -10.000000000000009,
+     "d_end_ms": -30.00000000000003
+    },
+    {
+     "start": 1.52,
+     "end": 1.76,
+     "d_start_ms": 0.0,
+     "d_end_ms": -80.00000000000007
+    },
+    {
+     "start": 1.76,
+     "end": 1.98,
+     "d_start_ms": -80.00000000000007,
+     "d_end_ms": -29.999999999999805
+    },
+    {
+     "start": 1.98,
+     "end": 2.32,
+     "d_start_ms": -29.999999999999805,
+     "d_end_ms": -60.00000000000006
+    },
+    {
+     "start": 2.32,
+     "end": 2.53,
+     "d_start_ms": -60.00000000000006,
+     "d_end_ms": 9.999999999999787
+    },
+    {
+     "start": 2.56,
+     "end": 3.19,
+     "d_start_ms": 0.0,
+     "d_end_ms": 160.00000000000014
+    }
+   ]
+  }
+ ]
+}

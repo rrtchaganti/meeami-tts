@@ -1,0 +1,598 @@
+{
+ "id": "HJK_arctic_a0028",
+ "accent": "korean",
+ "why_selected": "worst main-system MAE (113.3 ms)",
+ "text": "Robbery bribery fraud",
+ "normalized": "robbery bribery fraud",
+ "reference": "data/raw/l2arctic/HJK/wav/arctic_a0028.wav",
+ "ref_duration_s": 2.1006802721088436,
+ "annotation_words": [
+  {
+   "word": "robbery",
+   "start": 0.05,
+   "end": 0.6
+  },
+  {
+   "word": "bribery",
+   "start": 0.6,
+   "end": 1.37
+  },
+  {
+   "word": "fraud",
+   "start": 1.37,
+   "end": 2.0
+  }
+ ],
+ "ref_words": [
+  {
+   "word": "robbery",
+   "start": 0.07,
+   "end": 0.68
+  },
+  {
+   "word": "bribery",
+   "start": 0.78,
+   "end": 1.36
+  },
+  {
+   "word": "fraud",
+   "start": 1.36,
+   "end": 1.74
+  }
+ ],
+ "systems": {
+  "m1_pos_diph": {
+   "label": "main (m1_pos_diph)",
+   "planned_words": [
+    {
+     "word": "robbery",
+     "start": 0.06965986394557823,
+     "end": 0.6849886621315193
+    },
+    {
+     "word": "bribery",
+     "start": 0.7778684807256235,
+     "end": 1.3583673469387756
+    },
+    {
+     "word": "fraud",
+     "start": 1.3583673469387756,
+     "end": 1.7414965986394557
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "robbery",
+     "start": 0.03,
+     "end": 0.73
+    },
+    {
+     "word": "bribery",
+     "start": 0.79,
+     "end": 1.35
+    },
+    {
+     "word": "fraud",
+     "start": 1.35,
+     "end": 1.7
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "robbery",
+     "out": {
+      "word": "robbery",
+      "start": 0.03,
+      "end": 0.73
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 130.0
+    },
+    {
+     "word": "bribery",
+     "out": {
+      "word": "bribery",
+      "start": 0.79,
+      "end": 1.35
+     },
+     "d_start_ms": 190.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "fraud",
+     "out": {
+      "word": "fraud",
+      "start": 1.35,
+      "end": 1.7
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -300.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 113.3333,
+    "wer": 0.0,
+    "utmos": 3.2792,
+    "us_prob": 0.9965
+   },
+   "source": "results/m1_pos_diph/test/wav/HJK_arctic_a0028/out.wav"
+  },
+  "m1": {
+   "label": "M1",
+   "planned_words": [
+    {
+     "word": "robbery",
+     "start": 0.06965986394557823,
+     "end": 0.6849886621315193
+    },
+    {
+     "word": "bribery",
+     "start": 0.7778684807256235,
+     "end": 1.3583673469387756
+    },
+    {
+     "word": "fraud",
+     "start": 1.3583673469387756,
+     "end": 1.7414965986394557
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "robbery",
+     "start": 0.03,
+     "end": 0.73
+    },
+    {
+     "word": "bribery",
+     "start": 0.78,
+     "end": 1.36
+    },
+    {
+     "word": "fraud",
+     "start": 1.36,
+     "end": 1.7
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "robbery",
+     "out": {
+      "word": "robbery",
+      "start": 0.03,
+      "end": 0.73
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 130.0
+    },
+    {
+     "word": "bribery",
+     "out": {
+      "word": "bribery",
+      "start": 0.78,
+      "end": 1.36
+     },
+     "d_start_ms": 180.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "fraud",
+     "out": {
+      "word": "fraud",
+      "start": 1.36,
+      "end": 1.7
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -300.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 108.3333,
+    "wer": 0.0,
+    "utmos": 3.4292,
+    "us_prob": 0.9998
+   },
+   "source": "results/m1/test/wav/HJK_arctic_a0028/out.wav"
+  },
+  "m1_pos": {
+   "label": "M1 + position embedding",
+   "planned_words": [
+    {
+     "word": "robbery",
+     "start": 0.06965986394557823,
+     "end": 0.6849886621315193
+    },
+    {
+     "word": "bribery",
+     "start": 0.7778684807256235,
+     "end": 1.3583673469387756
+    },
+    {
+     "word": "fraud",
+     "start": 1.3583673469387756,
+     "end": 1.7414965986394557
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "robbery",
+     "start": 0.0,
+     "end": 0.73
+    },
+    {
+     "word": "bribery",
+     "start": 0.79,
+     "end": 1.35
+    },
+    {
+     "word": "fraud",
+     "start": 1.35,
+     "end": 1.7
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "robbery",
+     "out": {
+      "word": "robbery",
+      "start": 0.0,
+      "end": 0.73
+     },
+     "d_start_ms": -50.0,
+     "d_end_ms": 130.0
+    },
+    {
+     "word": "bribery",
+     "out": {
+      "word": "bribery",
+      "start": 0.79,
+      "end": 1.35
+     },
+     "d_start_ms": 190.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "fraud",
+     "out": {
+      "word": "fraud",
+      "start": 1.35,
+      "end": 1.7
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -300.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 118.3333,
+    "wer": 0.3333,
+    "utmos": 3.3719,
+    "us_prob": 0.2598
+   },
+   "source": "results/m1_pos/test/wav/HJK_arctic_a0028/out.wav"
+  },
+  "abl_a_pos": {
+   "label": "Ablation A",
+   "planned_words": [
+    {
+     "word": "robbery",
+     "start": 0.06965986394557823,
+     "end": 0.6849886621315193
+    },
+    {
+     "word": "bribery",
+     "start": 0.7778684807256235,
+     "end": 1.3583673469387756
+    },
+    {
+     "word": "fraud",
+     "start": 1.3583673469387756,
+     "end": 1.7414965986394557
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "robbery",
+     "start": 0.03,
+     "end": 0.71
+    },
+    {
+     "word": "bribery",
+     "start": 0.79,
+     "end": 1.35
+    },
+    {
+     "word": "fraud",
+     "start": 1.35,
+     "end": 1.69
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "robbery",
+     "out": {
+      "word": "robbery",
+      "start": 0.03,
+      "end": 0.71
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 110.0
+    },
+    {
+     "word": "bribery",
+     "out": {
+      "word": "bribery",
+      "start": 0.79,
+      "end": 1.35
+     },
+     "d_start_ms": 190.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "fraud",
+     "out": {
+      "word": "fraud",
+      "start": 1.35,
+      "end": 1.69
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -310.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 111.6667,
+    "wer": 0.0,
+    "utmos": 3.918,
+    "us_prob": 0.1009
+   },
+   "source": "results/abl_a_pos/test/wav/HJK_arctic_a0028/out.wav"
+  },
+  "abl_b_pos": {
+   "label": "Ablation B",
+   "planned_words": [
+    {
+     "word": "robbery",
+     "start": 0.06965986394557823,
+     "end": 0.6849886621315193
+    },
+    {
+     "word": "bribery",
+     "start": 0.7778684807256235,
+     "end": 1.3583673469387756
+    },
+    {
+     "word": "fraud",
+     "start": 1.3583673469387756,
+     "end": 1.7414965986394557
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "robbery",
+     "start": 0.03,
+     "end": 0.72
+    },
+    {
+     "word": "bribery",
+     "start": 0.8,
+     "end": 1.35
+    },
+    {
+     "word": "fraud",
+     "start": 1.35,
+     "end": 1.69
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "robbery",
+     "out": {
+      "word": "robbery",
+      "start": 0.03,
+      "end": 0.72
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 120.0
+    },
+    {
+     "word": "bribery",
+     "out": {
+      "word": "bribery",
+      "start": 0.8,
+      "end": 1.35
+     },
+     "d_start_ms": 200.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "fraud",
+     "out": {
+      "word": "fraud",
+      "start": 1.35,
+      "end": 1.69
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -310.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 115.0,
+    "wer": 0.3333,
+    "utmos": 3.2682,
+    "us_prob": 0.6825
+   },
+   "source": "results/abl_b_pos/test/wav/HJK_arctic_a0028/out.wav"
+  },
+  "v0": {
+   "label": "V0 (pretrained VITS + MAS)",
+   "planned_words": [
+    {
+     "word": "robbery",
+     "start": 0.06965986394557823,
+     "end": 0.6849886621315193
+    },
+    {
+     "word": "bribery",
+     "start": 0.7778684807256235,
+     "end": 1.3583673469387756
+    },
+    {
+     "word": "fraud",
+     "start": 1.3583673469387756,
+     "end": 1.7414965986394557
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "robbery",
+     "start": 0.04,
+     "end": 0.69
+    },
+    {
+     "word": "bribery",
+     "start": 0.69,
+     "end": 1.26
+    },
+    {
+     "word": "fraud",
+     "start": 1.26,
+     "end": 1.75
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "robbery",
+     "out": {
+      "word": "robbery",
+      "start": 0.04,
+      "end": 0.69
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 90.0
+    },
+    {
+     "word": "bribery",
+     "out": {
+      "word": "bribery",
+      "start": 0.69,
+      "end": 1.26
+     },
+     "d_start_ms": 90.0,
+     "d_end_ms": -110.0
+    },
+    {
+     "word": "fraud",
+     "out": {
+      "word": "fraud",
+      "start": 1.26,
+      "end": 1.75
+     },
+     "d_start_ms": -110.0,
+     "d_end_ms": -250.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 110.0,
+    "wer": 0.0,
+    "utmos": 3.5363,
+    "us_prob": 0.9521
+   },
+   "source": "results/v0/test/wav/HJK_arctic_a0028/out.wav"
+  },
+  "m0": {
+   "label": "M0 (FastSpeech2)",
+   "planned_words": [
+    {
+     "word": "robbery",
+     "start": 0.06965986394557823,
+     "end": 0.6849886621315193
+    },
+    {
+     "word": "bribery",
+     "start": 0.7778684807256235,
+     "end": 1.3583673469387756
+    },
+    {
+     "word": "fraud",
+     "start": 1.3583673469387756,
+     "end": 1.7414965986394557
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "robbery",
+     "start": 0.03,
+     "end": 0.69
+    },
+    {
+     "word": "bribery",
+     "start": 0.84,
+     "end": 1.35
+    },
+    {
+     "word": "fraud",
+     "start": 1.35,
+     "end": 1.78
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "robbery",
+     "out": {
+      "word": "robbery",
+      "start": 0.03,
+      "end": 0.69
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 90.0
+    },
+    {
+     "word": "bribery",
+     "out": {
+      "word": "bribery",
+      "start": 0.84,
+      "end": 1.35
+     },
+     "d_start_ms": 240.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "fraud",
+     "out": {
+      "word": "fraud",
+      "start": 1.35,
+      "end": 1.78
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -220.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 101.6667,
+    "wer": 1.0,
+    "utmos": 3.4809,
+    "us_prob": 0.3083
+   },
+   "source": "results/m0/test/wav/HJK_arctic_a0028/out.wav"
+  }
+ }
+}

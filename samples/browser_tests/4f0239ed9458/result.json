@@ -1,0 +1,157 @@
+{
+ "text": "letters of english language have a q",
+ "normalized": "letters of english language have a q",
+ "oov_added": [],
+ "ref_duration_s": 3.54,
+ "ref_words": [
+  {
+   "word": "letters",
+   "start": 0.32,
+   "end": 0.76
+  },
+  {
+   "word": "of",
+   "start": 0.76,
+   "end": 0.96
+  },
+  {
+   "word": "english",
+   "start": 0.96,
+   "end": 1.32
+  },
+  {
+   "word": "language",
+   "start": 1.32,
+   "end": 1.82
+  },
+  {
+   "word": "have",
+   "start": 1.82,
+   "end": 2.11
+  },
+  {
+   "word": "a",
+   "start": 2.27,
+   "end": 2.39
+  },
+  {
+   "word": "q",
+   "start": 2.39,
+   "end": 2.74
+  }
+ ],
+ "align_s": 5.197880042999714,
+ "total_s": 34.749681481999914,
+ "systems": [
+  {
+   "name": "main",
+   "audio": "main/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.026229437005671787,
+   "synthesis_s": 0.09285220700007812,
+   "measured_mae_ms": 24.285714285714256,
+   "measured": [
+    {
+     "start": 0.0,
+     "end": 0.76,
+     "d_start_ms": -320.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 0.76,
+     "end": 0.96,
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 0.96,
+     "end": 1.32,
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 1.32,
+     "end": 1.82,
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 1.82,
+     "end": 2.1,
+     "d_start_ms": 0.0,
+     "d_end_ms": -9.999999999999787
+    },
+    {
+     "start": 2.28,
+     "end": 2.39,
+     "d_start_ms": 9.999999999999787,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 2.39,
+     "end": 2.74,
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    }
+   ]
+  },
+  {
+   "name": "v0",
+   "audio": "v0/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.04007686581919424,
+   "synthesis_s": 0.14187210499994762,
+   "measured_mae_ms": 20.714285714285733,
+   "measured": [
+    {
+     "start": 0.31,
+     "end": 0.74,
+     "d_start_ms": -10.000000000000009,
+     "d_end_ms": -20.000000000000018
+    },
+    {
+     "start": 0.74,
+     "end": 0.95,
+     "d_start_ms": -20.000000000000018,
+     "d_end_ms": -10.000000000000009
+    },
+    {
+     "start": 0.95,
+     "end": 1.32,
+     "d_start_ms": -10.000000000000009,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 1.32,
+     "end": 1.78,
+     "d_start_ms": 0.0,
+     "d_end_ms": -40.000000000000036
+    },
+    {
+     "start": 1.78,
+     "end": 2.13,
+     "d_start_ms": -40.000000000000036,
+     "d_end_ms": 20.000000000000018
+    },
+    {
+     "start": 2.26,
+     "end": 2.35,
+     "d_start_ms": -10.000000000000231,
+     "d_end_ms": -40.000000000000036
+    },
+    {
+     "start": 2.35,
+     "end": 2.77,
+     "d_start_ms": -40.000000000000036,
+     "d_end_ms": 29.999999999999805
+    }
+   ]
+  }
+ ]
+}

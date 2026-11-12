@@ -1,0 +1,157 @@
+{
+ "text": "letters of english language have p q",
+ "normalized": "letters of english language have p q",
+ "oov_added": [],
+ "ref_duration_s": 3.48,
+ "ref_words": [
+  {
+   "word": "letters",
+   "start": 0.23,
+   "end": 0.75
+  },
+  {
+   "word": "of",
+   "start": 0.75,
+   "end": 0.94
+  },
+  {
+   "word": "english",
+   "start": 0.94,
+   "end": 1.29
+  },
+  {
+   "word": "language",
+   "start": 1.29,
+   "end": 1.68
+  },
+  {
+   "word": "have",
+   "start": 1.82,
+   "end": 2.06
+  },
+  {
+   "word": "p",
+   "start": 2.2,
+   "end": 2.37
+  },
+  {
+   "word": "q",
+   "start": 2.37,
+   "end": 2.8
+  }
+ ],
+ "align_s": 4.854379489999928,
+ "total_s": 33.813375895000036,
+ "systems": [
+  {
+   "name": "main",
+   "audio": "main/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.024988004885022518,
+   "synthesis_s": 0.08695825699987836,
+   "measured_mae_ms": 25.000000000000007,
+   "measured": [
+    {
+     "start": 0.0,
+     "end": 0.76,
+     "d_start_ms": -230.0,
+     "d_end_ms": 10.000000000000009
+    },
+    {
+     "start": 0.76,
+     "end": 0.94,
+     "d_start_ms": 10.000000000000009,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 0.94,
+     "end": 1.29,
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 1.29,
+     "end": 1.72,
+     "d_start_ms": 0.0,
+     "d_end_ms": 40.000000000000036
+    },
+    {
+     "start": 1.82,
+     "end": 2.09,
+     "d_start_ms": 0.0,
+     "d_end_ms": 29.999999999999805
+    },
+    {
+     "start": 2.18,
+     "end": 2.37,
+     "d_start_ms": -20.000000000000018,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 2.37,
+     "end": 2.81,
+     "d_start_ms": 0.0,
+     "d_end_ms": 10.000000000000231
+    }
+   ]
+  },
+  {
+   "name": "v0",
+   "audio": "v0/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.03288524885052779,
+   "synthesis_s": 0.11444066599983671,
+   "measured_mae_ms": 24.285714285714278,
+   "measured": [
+    {
+     "start": 0.21,
+     "end": 0.73,
+     "d_start_ms": -20.000000000000018,
+     "d_end_ms": -20.000000000000018
+    },
+    {
+     "start": 0.73,
+     "end": 0.92,
+     "d_start_ms": -20.000000000000018,
+     "d_end_ms": -19.999999999999908
+    },
+    {
+     "start": 0.92,
+     "end": 1.28,
+     "d_start_ms": -19.999999999999908,
+     "d_end_ms": -10.000000000000009
+    },
+    {
+     "start": 1.28,
+     "end": 1.77,
+     "d_start_ms": -10.000000000000009,
+     "d_end_ms": 90.00000000000009
+    },
+    {
+     "start": 1.8,
+     "end": 2.09,
+     "d_start_ms": -20.000000000000018,
+     "d_end_ms": 29.999999999999805
+    },
+    {
+     "start": 2.18,
+     "end": 2.35,
+     "d_start_ms": -20.000000000000018,
+     "d_end_ms": -20.000000000000018
+    },
+    {
+     "start": 2.35,
+     "end": 2.82,
+     "d_start_ms": -20.000000000000018,
+     "d_end_ms": 20.000000000000018
+    }
+   ]
+  }
+ ]
+}

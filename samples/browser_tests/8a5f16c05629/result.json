@@ -1,0 +1,106 @@
+{
+ "text": "bc means backward caste",
+ "normalized": "bc means backward caste",
+ "oov_added": [],
+ "ref_duration_s": 2.52,
+ "ref_words": [
+  {
+   "word": "bc",
+   "start": 0.27,
+   "end": 0.71
+  },
+  {
+   "word": "means",
+   "start": 0.71,
+   "end": 1.11
+  },
+  {
+   "word": "backward",
+   "start": 1.26,
+   "end": 1.75
+  },
+  {
+   "word": "caste",
+   "start": 1.75,
+   "end": 2.1
+  }
+ ],
+ "align_s": 9.959861143997841,
+ "total_s": 39.69856595799865,
+ "systems": [
+  {
+   "name": "main",
+   "audio": "main/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.04795327857296104,
+   "synthesis_s": 0.12084226200386183,
+   "measured_mae_ms": 11.249999999999954,
+   "measured": [
+    {
+     "start": 0.28,
+     "end": 0.71,
+     "d_start_ms": 10.000000000000009,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 0.71,
+     "end": 1.13,
+     "d_start_ms": 0.0,
+     "d_end_ms": 19.999999999999794
+    },
+    {
+     "start": 1.27,
+     "end": 1.74,
+     "d_start_ms": 10.000000000000009,
+     "d_end_ms": -10.000000000000009
+    },
+    {
+     "start": 1.74,
+     "end": 2.13,
+     "d_start_ms": -10.000000000000009,
+     "d_end_ms": 29.999999999999805
+    }
+   ]
+  },
+  {
+   "name": "v0",
+   "audio": "v0/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.04101978492043498,
+   "synthesis_s": 0.10336985799949616,
+   "measured_mae_ms": 38.74999999999995,
+   "measured": [
+    {
+     "start": 0.24,
+     "end": 0.67,
+     "d_start_ms": -30.00000000000003,
+     "d_end_ms": -39.99999999999992
+    },
+    {
+     "start": 0.67,
+     "end": 1.18,
+     "d_start_ms": -39.99999999999992,
+     "d_end_ms": 69.99999999999984
+    },
+    {
+     "start": 1.18,
+     "end": 1.74,
+     "d_start_ms": -80.00000000000007,
+     "d_end_ms": -10.000000000000009
+    },
+    {
+     "start": 1.74,
+     "end": 2.13,
+     "d_start_ms": -10.000000000000009,
+     "d_end_ms": 29.999999999999805
+    }
+   ]
+  }
+ ]
+}

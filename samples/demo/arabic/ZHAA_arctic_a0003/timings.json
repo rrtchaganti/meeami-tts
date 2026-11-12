@@ -1,0 +1,1798 @@
+{
+ "id": "ZHAA_arctic_a0003",
+ "accent": "arabic",
+ "why_selected": "headline prompt",
+ "text": "For the twentieth time that evening the two men shook hands",
+ "normalized": "for the twentieth time that evening the two men shook hands",
+ "reference": "data/raw/l2arctic/ZHAA/wav/arctic_a0003.wav",
+ "ref_duration_s": 3.57,
+ "annotation_words": [
+  {
+   "word": "for",
+   "start": 0.03,
+   "end": 0.27
+  },
+  {
+   "word": "the",
+   "start": 0.27,
+   "end": 0.39
+  },
+  {
+   "word": "twentieth",
+   "start": 0.39,
+   "end": 0.82
+  },
+  {
+   "word": "time",
+   "start": 0.87,
+   "end": 1.19
+  },
+  {
+   "word": "that",
+   "start": 1.19,
+   "end": 1.48
+  },
+  {
+   "word": "evening",
+   "start": 1.48,
+   "end": 1.97
+  },
+  {
+   "word": "the",
+   "start": 1.97,
+   "end": 2.12
+  },
+  {
+   "word": "two",
+   "start": 2.12,
+   "end": 2.32
+  },
+  {
+   "word": "men",
+   "start": 2.32,
+   "end": 2.57
+  },
+  {
+   "word": "shook",
+   "start": 2.57,
+   "end": 2.96
+  },
+  {
+   "word": "hands",
+   "start": 2.96,
+   "end": 3.55
+  }
+ ],
+ "ref_words": [
+  {
+   "word": "for",
+   "start": 0.0,
+   "end": 0.26
+  },
+  {
+   "word": "the",
+   "start": 0.26,
+   "end": 0.39
+  },
+  {
+   "word": "twentieth",
+   "start": 0.39,
+   "end": 0.9
+  },
+  {
+   "word": "time",
+   "start": 0.9,
+   "end": 1.2
+  },
+  {
+   "word": "that",
+   "start": 1.2,
+   "end": 1.45
+  },
+  {
+   "word": "evening",
+   "start": 1.48,
+   "end": 1.97
+  },
+  {
+   "word": "the",
+   "start": 1.97,
+   "end": 2.09
+  },
+  {
+   "word": "two",
+   "start": 2.09,
+   "end": 2.33
+  },
+  {
+   "word": "men",
+   "start": 2.33,
+   "end": 2.55
+  },
+  {
+   "word": "shook",
+   "start": 2.55,
+   "end": 2.97
+  },
+  {
+   "word": "hands",
+   "start": 3.05,
+   "end": 3.48
+  }
+ ],
+ "systems": {
+  "m1_pos_diph": {
+   "label": "main (m1_pos_diph)",
+   "planned_words": [
+    {
+     "word": "for",
+     "start": 0.0,
+     "end": 0.25541950113378686
+    },
+    {
+     "word": "the",
+     "start": 0.25541950113378686,
+     "end": 0.3947392290249433
+    },
+    {
+     "word": "twentieth",
+     "start": 0.3947392290249433,
+     "end": 0.905578231292517
+    },
+    {
+     "word": "time",
+     "start": 0.905578231292517,
+     "end": 1.195827664399093
+    },
+    {
+     "word": "that",
+     "start": 1.195827664399093,
+     "end": 1.474467120181406
+    },
+    {
+     "word": "evening",
+     "start": 1.474467120181406,
+     "end": 1.9736961451247166
+    },
+    {
+     "word": "the",
+     "start": 1.9736961451247166,
+     "end": 2.089795918367347
+    },
+    {
+     "word": "two",
+     "start": 2.089795918367347,
+     "end": 2.3336054421768706
+    },
+    {
+     "word": "men",
+     "start": 2.3336054421768706,
+     "end": 2.5541950113378684
+    },
+    {
+     "word": "shook",
+     "start": 2.5541950113378684,
+     "end": 2.972154195011338
+    },
+    {
+     "word": "hands",
+     "start": 3.053424036281179,
+     "end": 3.4829931972789114
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "for",
+     "start": 0.0,
+     "end": 0.25
+    },
+    {
+     "word": "the",
+     "start": 0.25,
+     "end": 0.39
+    },
+    {
+     "word": "twentieth",
+     "start": 0.39,
+     "end": 0.89
+    },
+    {
+     "word": "time",
+     "start": 0.89,
+     "end": 1.22
+    },
+    {
+     "word": "that",
+     "start": 1.22,
+     "end": 1.47
+    },
+    {
+     "word": "evening",
+     "start": 1.47,
+     "end": 1.99
+    },
+    {
+     "word": "the",
+     "start": 1.99,
+     "end": 2.09
+    },
+    {
+     "word": "two",
+     "start": 2.09,
+     "end": 2.33
+    },
+    {
+     "word": "men",
+     "start": 2.33,
+     "end": 2.56
+    },
+    {
+     "word": "shook",
+     "start": 2.56,
+     "end": 2.98
+    },
+    {
+     "word": "hands",
+     "start": 3.05,
+     "end": 3.49
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "for",
+     "out": {
+      "word": "for",
+      "start": 0.0,
+      "end": 0.25
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.25,
+      "end": 0.39
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "twentieth",
+     "out": {
+      "word": "twentieth",
+      "start": 0.39,
+      "end": 0.89
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 70.0
+    },
+    {
+     "word": "time",
+     "out": {
+      "word": "time",
+      "start": 0.89,
+      "end": 1.22
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 30.0
+    },
+    {
+     "word": "that",
+     "out": {
+      "word": "that",
+      "start": 1.22,
+      "end": 1.47
+     },
+     "d_start_ms": 30.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "evening",
+     "out": {
+      "word": "evening",
+      "start": 1.47,
+      "end": 1.99
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 1.99,
+      "end": 2.09
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "two",
+     "out": {
+      "word": "two",
+      "start": 2.09,
+      "end": 2.33
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "men",
+     "out": {
+      "word": "men",
+      "start": 2.33,
+      "end": 2.56
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "shook",
+     "out": {
+      "word": "shook",
+      "start": 2.56,
+      "end": 2.98
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "hands",
+     "out": {
+      "word": "hands",
+      "start": 3.05,
+      "end": 3.49
+     },
+     "d_start_ms": 90.0,
+     "d_end_ms": -60.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 25.0,
+    "wer": 0.0,
+    "utmos": 4.2718,
+    "us_prob": 0.484
+   },
+   "source": "results/m1_pos_diph/test/wav/ZHAA_arctic_a0003/out.wav"
+  },
+  "m1": {
+   "label": "M1",
+   "planned_words": [
+    {
+     "word": "for",
+     "start": 0.0,
+     "end": 0.25541950113378686
+    },
+    {
+     "word": "the",
+     "start": 0.25541950113378686,
+     "end": 0.3947392290249433
+    },
+    {
+     "word": "twentieth",
+     "start": 0.3947392290249433,
+     "end": 0.905578231292517
+    },
+    {
+     "word": "time",
+     "start": 0.905578231292517,
+     "end": 1.195827664399093
+    },
+    {
+     "word": "that",
+     "start": 1.195827664399093,
+     "end": 1.474467120181406
+    },
+    {
+     "word": "evening",
+     "start": 1.474467120181406,
+     "end": 1.9736961451247166
+    },
+    {
+     "word": "the",
+     "start": 1.9736961451247166,
+     "end": 2.089795918367347
+    },
+    {
+     "word": "two",
+     "start": 2.089795918367347,
+     "end": 2.3336054421768706
+    },
+    {
+     "word": "men",
+     "start": 2.3336054421768706,
+     "end": 2.5541950113378684
+    },
+    {
+     "word": "shook",
+     "start": 2.5541950113378684,
+     "end": 2.972154195011338
+    },
+    {
+     "word": "hands",
+     "start": 3.053424036281179,
+     "end": 3.4829931972789114
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "for",
+     "start": 0.0,
+     "end": 0.25
+    },
+    {
+     "word": "the",
+     "start": 0.25,
+     "end": 0.39
+    },
+    {
+     "word": "twentieth",
+     "start": 0.39,
+     "end": 0.89
+    },
+    {
+     "word": "time",
+     "start": 0.89,
+     "end": 1.21
+    },
+    {
+     "word": "that",
+     "start": 1.21,
+     "end": 1.47
+    },
+    {
+     "word": "evening",
+     "start": 1.47,
+     "end": 1.99
+    },
+    {
+     "word": "the",
+     "start": 1.99,
+     "end": 2.09
+    },
+    {
+     "word": "two",
+     "start": 2.09,
+     "end": 2.34
+    },
+    {
+     "word": "men",
+     "start": 2.34,
+     "end": 2.55
+    },
+    {
+     "word": "shook",
+     "start": 2.55,
+     "end": 2.98
+    },
+    {
+     "word": "hands",
+     "start": 3.04,
+     "end": 3.48
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "for",
+     "out": {
+      "word": "for",
+      "start": 0.0,
+      "end": 0.25
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.25,
+      "end": 0.39
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "twentieth",
+     "out": {
+      "word": "twentieth",
+      "start": 0.39,
+      "end": 0.89
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 70.0
+    },
+    {
+     "word": "time",
+     "out": {
+      "word": "time",
+      "start": 0.89,
+      "end": 1.21
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "that",
+     "out": {
+      "word": "that",
+      "start": 1.21,
+      "end": 1.47
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "evening",
+     "out": {
+      "word": "evening",
+      "start": 1.47,
+      "end": 1.99
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 1.99,
+      "end": 2.09
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "two",
+     "out": {
+      "word": "two",
+      "start": 2.09,
+      "end": 2.34
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "men",
+     "out": {
+      "word": "men",
+      "start": 2.34,
+      "end": 2.55
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "shook",
+     "out": {
+      "word": "shook",
+      "start": 2.55,
+      "end": 2.98
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "hands",
+     "out": {
+      "word": "hands",
+      "start": 3.04,
+      "end": 3.48
+     },
+     "d_start_ms": 80.0,
+     "d_end_ms": -70.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 25.9091,
+    "wer": 0.0,
+    "utmos": 4.3023,
+    "us_prob": 0.7618
+   },
+   "source": "results/m1/test/wav/ZHAA_arctic_a0003/out.wav"
+  },
+  "m1_pos": {
+   "label": "M1 + position embedding",
+   "planned_words": [
+    {
+     "word": "for",
+     "start": 0.0,
+     "end": 0.25541950113378686
+    },
+    {
+     "word": "the",
+     "start": 0.25541950113378686,
+     "end": 0.3947392290249433
+    },
+    {
+     "word": "twentieth",
+     "start": 0.3947392290249433,
+     "end": 0.905578231292517
+    },
+    {
+     "word": "time",
+     "start": 0.905578231292517,
+     "end": 1.195827664399093
+    },
+    {
+     "word": "that",
+     "start": 1.195827664399093,
+     "end": 1.474467120181406
+    },
+    {
+     "word": "evening",
+     "start": 1.474467120181406,
+     "end": 1.9736961451247166
+    },
+    {
+     "word": "the",
+     "start": 1.9736961451247166,
+     "end": 2.089795918367347
+    },
+    {
+     "word": "two",
+     "start": 2.089795918367347,
+     "end": 2.3336054421768706
+    },
+    {
+     "word": "men",
+     "start": 2.3336054421768706,
+     "end": 2.5541950113378684
+    },
+    {
+     "word": "shook",
+     "start": 2.5541950113378684,
+     "end": 2.972154195011338
+    },
+    {
+     "word": "hands",
+     "start": 3.053424036281179,
+     "end": 3.4829931972789114
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "for",
+     "start": 0.0,
+     "end": 0.26
+    },
+    {
+     "word": "the",
+     "start": 0.26,
+     "end": 0.4
+    },
+    {
+     "word": "twentieth",
+     "start": 0.4,
+     "end": 0.88
+    },
+    {
+     "word": "time",
+     "start": 0.88,
+     "end": 1.21
+    },
+    {
+     "word": "that",
+     "start": 1.21,
+     "end": 1.43
+    },
+    {
+     "word": "evening",
+     "start": 1.46,
+     "end": 1.99
+    },
+    {
+     "word": "the",
+     "start": 1.99,
+     "end": 2.09
+    },
+    {
+     "word": "two",
+     "start": 2.09,
+     "end": 2.33
+    },
+    {
+     "word": "men",
+     "start": 2.33,
+     "end": 2.55
+    },
+    {
+     "word": "shook",
+     "start": 2.55,
+     "end": 2.99
+    },
+    {
+     "word": "hands",
+     "start": 3.04,
+     "end": 3.48
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "for",
+     "out": {
+      "word": "for",
+      "start": 0.0,
+      "end": 0.26
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.26,
+      "end": 0.4
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "twentieth",
+     "out": {
+      "word": "twentieth",
+      "start": 0.4,
+      "end": 0.88
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 60.0
+    },
+    {
+     "word": "time",
+     "out": {
+      "word": "time",
+      "start": 0.88,
+      "end": 1.21
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "that",
+     "out": {
+      "word": "that",
+      "start": 1.21,
+      "end": 1.43
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": -50.0
+    },
+    {
+     "word": "evening",
+     "out": {
+      "word": "evening",
+      "start": 1.46,
+      "end": 1.99
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 1.99,
+      "end": 2.09
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "two",
+     "out": {
+      "word": "two",
+      "start": 2.09,
+      "end": 2.33
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "men",
+     "out": {
+      "word": "men",
+      "start": 2.33,
+      "end": 2.55
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "shook",
+     "out": {
+      "word": "shook",
+      "start": 2.55,
+      "end": 2.99
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 30.0
+    },
+    {
+     "word": "hands",
+     "out": {
+      "word": "hands",
+      "start": 3.04,
+      "end": 3.48
+     },
+     "d_start_ms": 80.0,
+     "d_end_ms": -70.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 26.8182,
+    "wer": 0.0,
+    "utmos": 4.4605,
+    "us_prob": 0.8865
+   },
+   "source": "results/m1_pos/test/wav/ZHAA_arctic_a0003/out.wav"
+  },
+  "abl_a_pos": {
+   "label": "Ablation A",
+   "planned_words": [
+    {
+     "word": "for",
+     "start": 0.0,
+     "end": 0.25541950113378686
+    },
+    {
+     "word": "the",
+     "start": 0.25541950113378686,
+     "end": 0.3947392290249433
+    },
+    {
+     "word": "twentieth",
+     "start": 0.3947392290249433,
+     "end": 0.905578231292517
+    },
+    {
+     "word": "time",
+     "start": 0.905578231292517,
+     "end": 1.195827664399093
+    },
+    {
+     "word": "that",
+     "start": 1.195827664399093,
+     "end": 1.474467120181406
+    },
+    {
+     "word": "evening",
+     "start": 1.474467120181406,
+     "end": 1.9736961451247166
+    },
+    {
+     "word": "the",
+     "start": 1.9736961451247166,
+     "end": 2.089795918367347
+    },
+    {
+     "word": "two",
+     "start": 2.089795918367347,
+     "end": 2.3336054421768706
+    },
+    {
+     "word": "men",
+     "start": 2.3336054421768706,
+     "end": 2.5541950113378684
+    },
+    {
+     "word": "shook",
+     "start": 2.5541950113378684,
+     "end": 2.972154195011338
+    },
+    {
+     "word": "hands",
+     "start": 3.053424036281179,
+     "end": 3.4829931972789114
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "for",
+     "start": 0.0,
+     "end": 0.25
+    },
+    {
+     "word": "the",
+     "start": 0.25,
+     "end": 0.39
+    },
+    {
+     "word": "twentieth",
+     "start": 0.39,
+     "end": 0.89
+    },
+    {
+     "word": "time",
+     "start": 0.89,
+     "end": 1.21
+    },
+    {
+     "word": "that",
+     "start": 1.21,
+     "end": 1.47
+    },
+    {
+     "word": "evening",
+     "start": 1.47,
+     "end": 1.99
+    },
+    {
+     "word": "the",
+     "start": 1.99,
+     "end": 2.09
+    },
+    {
+     "word": "two",
+     "start": 2.09,
+     "end": 2.33
+    },
+    {
+     "word": "men",
+     "start": 2.33,
+     "end": 2.55
+    },
+    {
+     "word": "shook",
+     "start": 2.55,
+     "end": 2.98
+    },
+    {
+     "word": "hands",
+     "start": 3.04,
+     "end": 3.47
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "for",
+     "out": {
+      "word": "for",
+      "start": 0.0,
+      "end": 0.25
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.25,
+      "end": 0.39
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "twentieth",
+     "out": {
+      "word": "twentieth",
+      "start": 0.39,
+      "end": 0.89
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 70.0
+    },
+    {
+     "word": "time",
+     "out": {
+      "word": "time",
+      "start": 0.89,
+      "end": 1.21
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "that",
+     "out": {
+      "word": "that",
+      "start": 1.21,
+      "end": 1.47
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "evening",
+     "out": {
+      "word": "evening",
+      "start": 1.47,
+      "end": 1.99
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 1.99,
+      "end": 2.09
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "two",
+     "out": {
+      "word": "two",
+      "start": 2.09,
+      "end": 2.33
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "men",
+     "out": {
+      "word": "men",
+      "start": 2.33,
+      "end": 2.55
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "shook",
+     "out": {
+      "word": "shook",
+      "start": 2.55,
+      "end": 2.98
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "hands",
+     "out": {
+      "word": "hands",
+      "start": 3.04,
+      "end": 3.47
+     },
+     "d_start_ms": 80.0,
+     "d_end_ms": -80.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 25.4545,
+    "wer": 0.0,
+    "utmos": 3.8579,
+    "us_prob": 0.7415
+   },
+   "source": "results/abl_a_pos/test/wav/ZHAA_arctic_a0003/out.wav"
+  },
+  "abl_b_pos": {
+   "label": "Ablation B",
+   "planned_words": [
+    {
+     "word": "for",
+     "start": 0.0,
+     "end": 0.25541950113378686
+    },
+    {
+     "word": "the",
+     "start": 0.25541950113378686,
+     "end": 0.3947392290249433
+    },
+    {
+     "word": "twentieth",
+     "start": 0.3947392290249433,
+     "end": 0.905578231292517
+    },
+    {
+     "word": "time",
+     "start": 0.905578231292517,
+     "end": 1.195827664399093
+    },
+    {
+     "word": "that",
+     "start": 1.195827664399093,
+     "end": 1.474467120181406
+    },
+    {
+     "word": "evening",
+     "start": 1.474467120181406,
+     "end": 1.9736961451247166
+    },
+    {
+     "word": "the",
+     "start": 1.9736961451247166,
+     "end": 2.089795918367347
+    },
+    {
+     "word": "two",
+     "start": 2.089795918367347,
+     "end": 2.3336054421768706
+    },
+    {
+     "word": "men",
+     "start": 2.3336054421768706,
+     "end": 2.5541950113378684
+    },
+    {
+     "word": "shook",
+     "start": 2.5541950113378684,
+     "end": 2.972154195011338
+    },
+    {
+     "word": "hands",
+     "start": 3.053424036281179,
+     "end": 3.4829931972789114
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "for",
+     "start": 0.0,
+     "end": 0.25
+    },
+    {
+     "word": "the",
+     "start": 0.25,
+     "end": 0.39
+    },
+    {
+     "word": "twentieth",
+     "start": 0.39,
+     "end": 0.89
+    },
+    {
+     "word": "time",
+     "start": 0.89,
+     "end": 1.21
+    },
+    {
+     "word": "that",
+     "start": 1.21,
+     "end": 1.47
+    },
+    {
+     "word": "evening",
+     "start": 1.47,
+     "end": 1.99
+    },
+    {
+     "word": "the",
+     "start": 1.99,
+     "end": 2.08
+    },
+    {
+     "word": "two",
+     "start": 2.08,
+     "end": 2.33
+    },
+    {
+     "word": "men",
+     "start": 2.33,
+     "end": 2.55
+    },
+    {
+     "word": "shook",
+     "start": 2.55,
+     "end": 2.92
+    },
+    {
+     "word": "hands",
+     "start": 3.08,
+     "end": 3.47
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "for",
+     "out": {
+      "word": "for",
+      "start": 0.0,
+      "end": 0.25
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.25,
+      "end": 0.39
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "twentieth",
+     "out": {
+      "word": "twentieth",
+      "start": 0.39,
+      "end": 0.89
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 70.0
+    },
+    {
+     "word": "time",
+     "out": {
+      "word": "time",
+      "start": 0.89,
+      "end": 1.21
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "that",
+     "out": {
+      "word": "that",
+      "start": 1.21,
+      "end": 1.47
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "evening",
+     "out": {
+      "word": "evening",
+      "start": 1.47,
+      "end": 1.99
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 1.99,
+      "end": 2.08
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": -40.0
+    },
+    {
+     "word": "two",
+     "out": {
+      "word": "two",
+      "start": 2.08,
+      "end": 2.33
+     },
+     "d_start_ms": -40.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "men",
+     "out": {
+      "word": "men",
+      "start": 2.33,
+      "end": 2.55
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "shook",
+     "out": {
+      "word": "shook",
+      "start": 2.55,
+      "end": 2.92
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -40.0
+    },
+    {
+     "word": "hands",
+     "out": {
+      "word": "hands",
+      "start": 3.08,
+      "end": 3.47
+     },
+     "d_start_ms": 120.0,
+     "d_end_ms": -80.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 29.0909,
+    "wer": 0.0,
+    "utmos": 4.4307,
+    "us_prob": 0.9669
+   },
+   "source": "results/abl_b_pos/test/wav/ZHAA_arctic_a0003/out.wav"
+  },
+  "v0": {
+   "label": "V0 (pretrained VITS + MAS)",
+   "planned_words": [
+    {
+     "word": "for",
+     "start": 0.0,
+     "end": 0.25541950113378686
+    },
+    {
+     "word": "the",
+     "start": 0.25541950113378686,
+     "end": 0.3831292517006803
+    },
+    {
+     "word": "twentieth",
+     "start": 0.3947392290249433,
+     "end": 0.905578231292517
+    },
+    {
+     "word": "time",
+     "start": 0.905578231292517,
+     "end": 1.195827664399093
+    },
+    {
+     "word": "that",
+     "start": 1.195827664399093,
+     "end": 1.474467120181406
+    },
+    {
+     "word": "evening",
+     "start": 1.474467120181406,
+     "end": 1.9736961451247166
+    },
+    {
+     "word": "the",
+     "start": 1.9736961451247166,
+     "end": 2.089795918367347
+    },
+    {
+     "word": "two",
+     "start": 2.089795918367347,
+     "end": 2.3336054421768706
+    },
+    {
+     "word": "men",
+     "start": 2.3336054421768706,
+     "end": 2.5541950113378684
+    },
+    {
+     "word": "shook",
+     "start": 2.5541950113378684,
+     "end": 2.972154195011338
+    },
+    {
+     "word": "hands",
+     "start": 3.053424036281179,
+     "end": 3.4829931972789114
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "for",
+     "start": 0.0,
+     "end": 0.24
+    },
+    {
+     "word": "the",
+     "start": 0.24,
+     "end": 0.38
+    },
+    {
+     "word": "twentieth",
+     "start": 0.38,
+     "end": 0.9
+    },
+    {
+     "word": "time",
+     "start": 0.9,
+     "end": 1.17
+    },
+    {
+     "word": "that",
+     "start": 1.17,
+     "end": 1.45
+    },
+    {
+     "word": "evening",
+     "start": 1.45,
+     "end": 1.97
+    },
+    {
+     "word": "the",
+     "start": 1.97,
+     "end": 2.06
+    },
+    {
+     "word": "two",
+     "start": 2.06,
+     "end": 2.3
+    },
+    {
+     "word": "men",
+     "start": 2.3,
+     "end": 2.52
+    },
+    {
+     "word": "shook",
+     "start": 2.52,
+     "end": 3.0
+    },
+    {
+     "word": "hands",
+     "start": 3.03,
+     "end": 3.51
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "for",
+     "out": {
+      "word": "for",
+      "start": 0.0,
+      "end": 0.24
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.24,
+      "end": 0.38
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "twentieth",
+     "out": {
+      "word": "twentieth",
+      "start": 0.38,
+      "end": 0.9
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 80.0
+    },
+    {
+     "word": "time",
+     "out": {
+      "word": "time",
+      "start": 0.9,
+      "end": 1.17
+     },
+     "d_start_ms": 30.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "that",
+     "out": {
+      "word": "that",
+      "start": 1.17,
+      "end": 1.45
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "evening",
+     "out": {
+      "word": "evening",
+      "start": 1.45,
+      "end": 1.97
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 1.97,
+      "end": 2.06
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -60.0
+    },
+    {
+     "word": "two",
+     "out": {
+      "word": "two",
+      "start": 2.06,
+      "end": 2.3
+     },
+     "d_start_ms": -60.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "men",
+     "out": {
+      "word": "men",
+      "start": 2.3,
+      "end": 2.52
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -50.0
+    },
+    {
+     "word": "shook",
+     "out": {
+      "word": "shook",
+      "start": 2.52,
+      "end": 3.0
+     },
+     "d_start_ms": -50.0,
+     "d_end_ms": 40.0
+    },
+    {
+     "word": "hands",
+     "out": {
+      "word": "hands",
+      "start": 3.03,
+      "end": 3.51
+     },
+     "d_start_ms": 70.0,
+     "d_end_ms": -40.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 33.1818,
+    "wer": 0.1818,
+    "utmos": 4.4687,
+    "us_prob": 0.8536
+   },
+   "source": "results/v0/test/wav/ZHAA_arctic_a0003/out.wav"
+  },
+  "m0": {
+   "label": "M0 (FastSpeech2)",
+   "planned_words": [
+    {
+     "word": "for",
+     "start": 0.0,
+     "end": 0.25541950113378686
+    },
+    {
+     "word": "the",
+     "start": 0.25541950113378686,
+     "end": 0.3947392290249433
+    },
+    {
+     "word": "twentieth",
+     "start": 0.3947392290249433,
+     "end": 0.905578231292517
+    },
+    {
+     "word": "time",
+     "start": 0.905578231292517,
+     "end": 1.195827664399093
+    },
+    {
+     "word": "that",
+     "start": 1.195827664399093,
+     "end": 1.474467120181406
+    },
+    {
+     "word": "evening",
+     "start": 1.474467120181406,
+     "end": 1.9736961451247166
+    },
+    {
+     "word": "the",
+     "start": 1.9736961451247166,
+     "end": 2.089795918367347
+    },
+    {
+     "word": "two",
+     "start": 2.089795918367347,
+     "end": 2.3336054421768706
+    },
+    {
+     "word": "men",
+     "start": 2.3336054421768706,
+     "end": 2.5541950113378684
+    },
+    {
+     "word": "shook",
+     "start": 2.5541950113378684,
+     "end": 2.972154195011338
+    },
+    {
+     "word": "hands",
+     "start": 3.053424036281179,
+     "end": 3.4829931972789114
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "for",
+     "start": 0.0,
+     "end": 0.26
+    },
+    {
+     "word": "the",
+     "start": 0.26,
+     "end": 0.37
+    },
+    {
+     "word": "twentieth",
+     "start": 0.37,
+     "end": 0.91
+    },
+    {
+     "word": "time",
+     "start": 0.91,
+     "end": 1.21
+    },
+    {
+     "word": "that",
+     "start": 1.21,
+     "end": 1.5
+    },
+    {
+     "word": "evening",
+     "start": 1.5,
+     "end": 1.98
+    },
+    {
+     "word": "the",
+     "start": 1.98,
+     "end": 2.06
+    },
+    {
+     "word": "two",
+     "start": 2.06,
+     "end": 2.31
+    },
+    {
+     "word": "men",
+     "start": 2.31,
+     "end": 2.55
+    },
+    {
+     "word": "shook",
+     "start": 2.55,
+     "end": 2.97
+    },
+    {
+     "word": "hands",
+     "start": 3.07,
+     "end": 3.53
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "for",
+     "out": {
+      "word": "for",
+      "start": 0.0,
+      "end": 0.26
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.26,
+      "end": 0.37
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "twentieth",
+     "out": {
+      "word": "twentieth",
+      "start": 0.37,
+      "end": 0.91
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 90.0
+    },
+    {
+     "word": "time",
+     "out": {
+      "word": "time",
+      "start": 0.91,
+      "end": 1.21
+     },
+     "d_start_ms": 40.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "that",
+     "out": {
+      "word": "that",
+      "start": 1.21,
+      "end": 1.5
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "evening",
+     "out": {
+      "word": "evening",
+      "start": 1.5,
+      "end": 1.98
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 1.98,
+      "end": 2.06
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -60.0
+    },
+    {
+     "word": "two",
+     "out": {
+      "word": "two",
+      "start": 2.06,
+      "end": 2.31
+     },
+     "d_start_ms": -60.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "men",
+     "out": {
+      "word": "men",
+      "start": 2.31,
+      "end": 2.55
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "shook",
+     "out": {
+      "word": "shook",
+      "start": 2.55,
+      "end": 2.97
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "hands",
+     "out": {
+      "word": "hands",
+      "start": 3.07,
+      "end": 3.53
+     },
+     "d_start_ms": 110.0,
+     "d_end_ms": -20.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 29.0909,
+    "wer": 0.0,
+    "utmos": 4.1116,
+    "us_prob": 0.9833
+   },
+   "source": "results/m0/test/wav/ZHAA_arctic_a0003/out.wav"
+  }
+ }
+}

@@ -1,0 +1,56 @@
+{
+ "text": "Hi there, I'm chaganti",
+ "normalized": "hi there, i'm chaganti",
+ "oov_added": [],
+ "ref_duration_s": 2.88,
+ "ref_words": [
+  {
+   "word": "hi",
+   "start": 0.45,
+   "end": 0.71
+  },
+  {
+   "word": "there",
+   "start": 0.71,
+   "end": 1.04
+  },
+  {
+   "word": "i'm",
+   "start": 1.22,
+   "end": 1.47
+  },
+  {
+   "word": "chaganti",
+   "start": 1.47,
+   "end": 2.13
+  }
+ ],
+ "align_s": 5.348403265000343,
+ "total_s": 11.016067421000116,
+ "systems": [
+  {
+   "name": "main",
+   "audio": "main/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.03605601493019448,
+   "synthesis_s": 0.1038413229989601,
+   "measured_mae_ms": null,
+   "measured": null
+  },
+  {
+   "name": "v0",
+   "audio": "v0/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.045186240277593645,
+   "synthesis_s": 0.1301363719994697,
+   "measured_mae_ms": null,
+   "measured": null
+  }
+ ]
+}

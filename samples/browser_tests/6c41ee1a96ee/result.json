@@ -1,0 +1,106 @@
+{
+ "text": "may I know you?",
+ "normalized": "may i know you?",
+ "oov_added": [],
+ "ref_duration_s": 2.16,
+ "ref_words": [
+  {
+   "word": "may",
+   "start": 0.57,
+   "end": 0.88
+  },
+  {
+   "word": "i",
+   "start": 0.88,
+   "end": 0.91
+  },
+  {
+   "word": "know",
+   "start": 0.91,
+   "end": 1.06
+  },
+  {
+   "word": "you",
+   "start": 1.06,
+   "end": 1.39
+  }
+ ],
+ "align_s": 5.426224758999524,
+ "total_s": 34.12670036599957,
+ "systems": [
+  {
+   "name": "main",
+   "audio": "main/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.03851440231478086,
+   "synthesis_s": 0.08319110899992666,
+   "measured_mae_ms": 83.75,
+   "measured": [
+    {
+     "start": 0.0,
+     "end": 0.87,
+     "d_start_ms": -570.0,
+     "d_end_ms": -10.000000000000009
+    },
+    {
+     "start": 0.87,
+     "end": 0.9,
+     "d_start_ms": -10.000000000000009,
+     "d_end_ms": -10.000000000000009
+    },
+    {
+     "start": 0.9,
+     "end": 1.04,
+     "d_start_ms": -10.000000000000009,
+     "d_end_ms": -20.000000000000018
+    },
+    {
+     "start": 1.04,
+     "end": 1.41,
+     "d_start_ms": -20.000000000000018,
+     "d_end_ms": 20.000000000000018
+    }
+   ]
+  },
+  {
+   "name": "v0",
+   "audio": "v0/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.0425352458330929,
+   "synthesis_s": 0.09187613099948067,
+   "measured_mae_ms": 23.750000000000007,
+   "measured": [
+    {
+     "start": 0.55,
+     "end": 0.87,
+     "d_start_ms": -19.999999999999908,
+     "d_end_ms": -10.000000000000009
+    },
+    {
+     "start": 0.87,
+     "end": 0.9,
+     "d_start_ms": -10.000000000000009,
+     "d_end_ms": -10.000000000000009
+    },
+    {
+     "start": 0.9,
+     "end": 1.01,
+     "d_start_ms": -10.000000000000009,
+     "d_end_ms": -50.00000000000004
+    },
+    {
+     "start": 1.01,
+     "end": 1.42,
+     "d_start_ms": -50.00000000000004,
+     "d_end_ms": 30.00000000000003
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,157 @@
+{
+ "text": "p q are letters of english language",
+ "normalized": "p q are letters of english language",
+ "oov_added": [],
+ "ref_duration_s": 3.24,
+ "ref_words": [
+  {
+   "word": "p",
+   "start": 0.47,
+   "end": 0.81
+  },
+  {
+   "word": "q",
+   "start": 0.81,
+   "end": 1.17
+  },
+  {
+   "word": "are",
+   "start": 1.17,
+   "end": 1.44
+  },
+  {
+   "word": "letters",
+   "start": 1.44,
+   "end": 1.88
+  },
+  {
+   "word": "of",
+   "start": 1.88,
+   "end": 2.08
+  },
+  {
+   "word": "english",
+   "start": 2.08,
+   "end": 2.42
+  },
+  {
+   "word": "language",
+   "start": 2.42,
+   "end": 2.9
+  }
+ ],
+ "align_s": 5.045768516999715,
+ "total_s": 34.48286837499995,
+ "systems": [
+  {
+   "name": "main",
+   "audio": "main/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.030255213888958004,
+   "synthesis_s": 0.09802689300022394,
+   "measured_mae_ms": 8.57142857142859,
+   "measured": [
+    {
+     "start": 0.46,
+     "end": 0.81,
+     "d_start_ms": -9.999999999999954,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 0.81,
+     "end": 1.15,
+     "d_start_ms": 0.0,
+     "d_end_ms": -20.000000000000018
+    },
+    {
+     "start": 1.15,
+     "end": 1.45,
+     "d_start_ms": -20.000000000000018,
+     "d_end_ms": 10.000000000000009
+    },
+    {
+     "start": 1.45,
+     "end": 1.88,
+     "d_start_ms": 10.000000000000009,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 1.88,
+     "end": 2.08,
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 2.08,
+     "end": 2.42,
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 2.42,
+     "end": 2.95,
+     "d_start_ms": 0.0,
+     "d_end_ms": 50.00000000000027
+    }
+   ]
+  },
+  {
+   "name": "v0",
+   "audio": "v0/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.03617050061728903,
+   "synthesis_s": 0.11719242200001645,
+   "measured_mae_ms": 31.428571428571438,
+   "measured": [
+    {
+     "start": 0.45,
+     "end": 0.77,
+     "d_start_ms": -19.99999999999996,
+     "d_end_ms": -40.000000000000036
+    },
+    {
+     "start": 0.77,
+     "end": 1.15,
+     "d_start_ms": -40.000000000000036,
+     "d_end_ms": -20.000000000000018
+    },
+    {
+     "start": 1.18,
+     "end": 1.39,
+     "d_start_ms": 10.000000000000009,
+     "d_end_ms": -50.00000000000004
+    },
+    {
+     "start": 1.39,
+     "end": 1.84,
+     "d_start_ms": -50.00000000000004,
+     "d_end_ms": -39.999999999999815
+    },
+    {
+     "start": 1.89,
+     "end": 2.05,
+     "d_start_ms": 10.000000000000009,
+     "d_end_ms": -30.00000000000025
+    },
+    {
+     "start": 2.05,
+     "end": 2.41,
+     "d_start_ms": -30.00000000000025,
+     "d_end_ms": -9.999999999999787
+    },
+    {
+     "start": 2.41,
+     "end": 2.98,
+     "d_start_ms": -9.999999999999787,
+     "d_end_ms": 80.00000000000007
+    }
+   ]
+  }
+ ]
+}

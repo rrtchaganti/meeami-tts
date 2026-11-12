@@ -1,0 +1,140 @@
+{
+ "text": "I would like to introduce myself",
+ "normalized": "i would like to introduce myself",
+ "oov_added": [],
+ "ref_duration_s": 2.4,
+ "ref_words": [
+  {
+   "word": "i",
+   "start": 0.41,
+   "end": 0.57
+  },
+  {
+   "word": "would",
+   "start": 0.57,
+   "end": 0.76
+  },
+  {
+   "word": "like",
+   "start": 0.76,
+   "end": 1.04
+  },
+  {
+   "word": "to",
+   "start": 1.04,
+   "end": 1.1
+  },
+  {
+   "word": "introduce",
+   "start": 1.1,
+   "end": 1.68
+  },
+  {
+   "word": "myself",
+   "start": 1.68,
+   "end": 2.06
+  }
+ ],
+ "align_s": 5.987383013999533,
+ "total_s": 35.99567461599963,
+ "systems": [
+  {
+   "name": "main",
+   "audio": "main/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.037647070833675876,
+   "synthesis_s": 0.0903529700008221,
+   "measured_mae_ms": 39.999999999999986,
+   "measured": [
+    {
+     "start": 0.0,
+     "end": 0.57,
+     "d_start_ms": -410.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 0.57,
+     "end": 0.76,
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 0.76,
+     "end": 1.02,
+     "d_start_ms": 0.0,
+     "d_end_ms": -20.000000000000018
+    },
+    {
+     "start": 1.02,
+     "end": 1.11,
+     "d_start_ms": -20.000000000000018,
+     "d_end_ms": 10.000000000000009
+    },
+    {
+     "start": 1.11,
+     "end": 1.68,
+     "d_start_ms": 10.000000000000009,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 1.68,
+     "end": 2.07,
+     "d_start_ms": 0.0,
+     "d_end_ms": 9.999999999999787
+    }
+   ]
+  },
+  {
+   "name": "v0",
+   "audio": "v0/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.039796717082936084,
+   "synthesis_s": 0.0955121209990466,
+   "measured_mae_ms": 37.49999999999997,
+   "measured": [
+    {
+     "start": 0.4,
+     "end": 0.53,
+     "d_start_ms": -9.999999999999954,
+     "d_end_ms": -39.99999999999992
+    },
+    {
+     "start": 0.53,
+     "end": 0.72,
+     "d_start_ms": -39.99999999999992,
+     "d_end_ms": -40.000000000000036
+    },
+    {
+     "start": 0.72,
+     "end": 1.04,
+     "d_start_ms": -40.000000000000036,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 1.04,
+     "end": 1.11,
+     "d_start_ms": 0.0,
+     "d_end_ms": 10.000000000000009
+    },
+    {
+     "start": 1.11,
+     "end": 1.68,
+     "d_start_ms": 10.000000000000009,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 1.68,
+     "end": 2.32,
+     "d_start_ms": 0.0,
+     "d_end_ms": 259.9999999999998
+    }
+   ]
+  }
+ ]
+}

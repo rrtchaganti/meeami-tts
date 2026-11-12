@@ -1,0 +1,123 @@
+{
+ "text": "hmm, that rhythm is nice",
+ "normalized": "hmm, that rhythm is nice",
+ "oov_added": [],
+ "ref_duration_s": 2.82,
+ "ref_words": [
+  {
+   "word": "hmm",
+   "start": 0.26,
+   "end": 0.35
+  },
+  {
+   "word": "that",
+   "start": 0.35,
+   "end": 0.6
+  },
+  {
+   "word": "rhythm",
+   "start": 1.24,
+   "end": 1.77
+  },
+  {
+   "word": "is",
+   "start": 1.77,
+   "end": 1.95
+  },
+  {
+   "word": "nice",
+   "start": 1.95,
+   "end": 2.4
+  }
+ ],
+ "align_s": 6.447758284999509,
+ "total_s": 37.42935777599996,
+ "systems": [
+  {
+   "name": "main",
+   "audio": "main/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.02942495141833722,
+   "synthesis_s": 0.08297836299971095,
+   "measured_mae_ms": 13.999999999999996,
+   "measured": [
+    {
+     "start": 0.23,
+     "end": 0.34,
+     "d_start_ms": -30.0,
+     "d_end_ms": -9.999999999999954
+    },
+    {
+     "start": 0.34,
+     "end": 0.62,
+     "d_start_ms": -9.999999999999954,
+     "d_end_ms": 20.000000000000018
+    },
+    {
+     "start": 1.23,
+     "end": 1.76,
+     "d_start_ms": -10.000000000000009,
+     "d_end_ms": -10.000000000000009
+    },
+    {
+     "start": 1.76,
+     "end": 1.95,
+     "d_start_ms": -10.000000000000009,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 1.95,
+     "end": 2.44,
+     "d_start_ms": 0.0,
+     "d_end_ms": 40.000000000000036
+    }
+   ]
+  },
+  {
+   "name": "v0",
+   "audio": "v0/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.035804956737173606,
+   "synthesis_s": 0.10096997799882956,
+   "measured_mae_ms": 35.0,
+   "measured": [
+    {
+     "start": 0.24,
+     "end": 0.32,
+     "d_start_ms": -20.000000000000018,
+     "d_end_ms": -29.99999999999997
+    },
+    {
+     "start": 0.32,
+     "end": 0.63,
+     "d_start_ms": -29.99999999999997,
+     "d_end_ms": 30.00000000000003
+    },
+    {
+     "start": 1.23,
+     "end": 1.74,
+     "d_start_ms": -10.000000000000009,
+     "d_end_ms": -30.00000000000003
+    },
+    {
+     "start": 1.74,
+     "end": 1.92,
+     "d_start_ms": -30.00000000000003,
+     "d_end_ms": -30.00000000000003
+    },
+    {
+     "start": 1.92,
+     "end": 2.51,
+     "d_start_ms": -30.00000000000003,
+     "d_end_ms": 109.99999999999987
+    }
+   ]
+  }
+ ]
+}

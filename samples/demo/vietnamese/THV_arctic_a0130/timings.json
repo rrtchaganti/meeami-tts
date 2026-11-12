@@ -1,0 +1,898 @@
+{
+ "id": "THV_arctic_a0130",
+ "accent": "vietnamese",
+ "why_selected": "best main-system MAE (3.0 ms)",
+ "text": "She was his now forever",
+ "normalized": "she was his now forever",
+ "reference": "data/raw/l2arctic/THV/wav/arctic_a0130.wav",
+ "ref_duration_s": 1.95,
+ "annotation_words": [
+  {
+   "word": "she",
+   "start": 0.03,
+   "end": 0.27
+  },
+  {
+   "word": "was",
+   "start": 0.27,
+   "end": 0.51
+  },
+  {
+   "word": "his",
+   "start": 0.51,
+   "end": 0.76
+  },
+  {
+   "word": "now",
+   "start": 0.76,
+   "end": 1.08
+  },
+  {
+   "word": "forever",
+   "start": 1.08,
+   "end": 1.89
+  }
+ ],
+ "ref_words": [
+  {
+   "word": "she",
+   "start": 0.06,
+   "end": 0.27
+  },
+  {
+   "word": "was",
+   "start": 0.27,
+   "end": 0.51
+  },
+  {
+   "word": "his",
+   "start": 0.51,
+   "end": 0.77
+  },
+  {
+   "word": "now",
+   "start": 0.77,
+   "end": 1.08
+  },
+  {
+   "word": "forever",
+   "start": 1.08,
+   "end": 1.86
+  }
+ ],
+ "systems": {
+  "m1_pos_diph": {
+   "label": "main (m1_pos_diph)",
+   "planned_words": [
+    {
+     "word": "she",
+     "start": 0.058049886621315196,
+     "end": 0.26702947845804986
+    },
+    {
+     "word": "was",
+     "start": 0.26702947845804986,
+     "end": 0.5108390022675737
+    },
+    {
+     "word": "his",
+     "start": 0.5108390022675737,
+     "end": 0.7662585034013606
+    },
+    {
+     "word": "now",
+     "start": 0.7662585034013606,
+     "end": 1.0797278911564625
+    },
+    {
+     "word": "forever",
+     "start": 1.0797278911564625,
+     "end": 1.8575963718820863
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "she",
+     "start": 0.03,
+     "end": 0.27
+    },
+    {
+     "word": "was",
+     "start": 0.27,
+     "end": 0.51
+    },
+    {
+     "word": "his",
+     "start": 0.51,
+     "end": 0.77
+    },
+    {
+     "word": "now",
+     "start": 0.77,
+     "end": 1.08
+    },
+    {
+     "word": "forever",
+     "start": 1.08,
+     "end": 1.88
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "she",
+     "out": {
+      "word": "she",
+      "start": 0.03,
+      "end": 0.27
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "was",
+     "out": {
+      "word": "was",
+      "start": 0.27,
+      "end": 0.51
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "his",
+     "out": {
+      "word": "his",
+      "start": 0.51,
+      "end": 0.77
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "now",
+     "out": {
+      "word": "now",
+      "start": 0.77,
+      "end": 1.08
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "forever",
+     "out": {
+      "word": "forever",
+      "start": 1.08,
+      "end": 1.88
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 3.0,
+    "wer": 0.0,
+    "utmos": 4.3798,
+    "us_prob": 0.9996
+   },
+   "source": "results/m1_pos_diph/test/wav/THV_arctic_a0130/out.wav"
+  },
+  "m1": {
+   "label": "M1",
+   "planned_words": [
+    {
+     "word": "she",
+     "start": 0.058049886621315196,
+     "end": 0.26702947845804986
+    },
+    {
+     "word": "was",
+     "start": 0.26702947845804986,
+     "end": 0.5108390022675737
+    },
+    {
+     "word": "his",
+     "start": 0.5108390022675737,
+     "end": 0.7662585034013606
+    },
+    {
+     "word": "now",
+     "start": 0.7662585034013606,
+     "end": 1.0797278911564625
+    },
+    {
+     "word": "forever",
+     "start": 1.0797278911564625,
+     "end": 1.8575963718820863
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "she",
+     "start": 0.03,
+     "end": 0.27
+    },
+    {
+     "word": "was",
+     "start": 0.27,
+     "end": 0.52
+    },
+    {
+     "word": "his",
+     "start": 0.52,
+     "end": 0.77
+    },
+    {
+     "word": "now",
+     "start": 0.77,
+     "end": 1.08
+    },
+    {
+     "word": "forever",
+     "start": 1.08,
+     "end": 1.88
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "she",
+     "out": {
+      "word": "she",
+      "start": 0.03,
+      "end": 0.27
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "was",
+     "out": {
+      "word": "was",
+      "start": 0.27,
+      "end": 0.52
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "his",
+     "out": {
+      "word": "his",
+      "start": 0.52,
+      "end": 0.77
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "now",
+     "out": {
+      "word": "now",
+      "start": 0.77,
+      "end": 1.08
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "forever",
+     "out": {
+      "word": "forever",
+      "start": 1.08,
+      "end": 1.88
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 5.0,
+    "wer": 0.0,
+    "utmos": 3.9097,
+    "us_prob": 0.9524
+   },
+   "source": "results/m1/test/wav/THV_arctic_a0130/out.wav"
+  },
+  "m1_pos": {
+   "label": "M1 + position embedding",
+   "planned_words": [
+    {
+     "word": "she",
+     "start": 0.058049886621315196,
+     "end": 0.26702947845804986
+    },
+    {
+     "word": "was",
+     "start": 0.26702947845804986,
+     "end": 0.5108390022675737
+    },
+    {
+     "word": "his",
+     "start": 0.5108390022675737,
+     "end": 0.7662585034013606
+    },
+    {
+     "word": "now",
+     "start": 0.7662585034013606,
+     "end": 1.0797278911564625
+    },
+    {
+     "word": "forever",
+     "start": 1.0797278911564625,
+     "end": 1.8575963718820863
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "she",
+     "start": 0.04,
+     "end": 0.27
+    },
+    {
+     "word": "was",
+     "start": 0.27,
+     "end": 0.53
+    },
+    {
+     "word": "his",
+     "start": 0.53,
+     "end": 0.77
+    },
+    {
+     "word": "now",
+     "start": 0.77,
+     "end": 1.08
+    },
+    {
+     "word": "forever",
+     "start": 1.08,
+     "end": 1.89
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "she",
+     "out": {
+      "word": "she",
+      "start": 0.04,
+      "end": 0.27
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "was",
+     "out": {
+      "word": "was",
+      "start": 0.27,
+      "end": 0.53
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "his",
+     "out": {
+      "word": "his",
+      "start": 0.53,
+      "end": 0.77
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "now",
+     "out": {
+      "word": "now",
+      "start": 0.77,
+      "end": 1.08
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "forever",
+     "out": {
+      "word": "forever",
+      "start": 1.08,
+      "end": 1.89
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 7.0,
+    "wer": 0.0,
+    "utmos": 4.2606,
+    "us_prob": 0.9842
+   },
+   "source": "results/m1_pos/test/wav/THV_arctic_a0130/out.wav"
+  },
+  "abl_a_pos": {
+   "label": "Ablation A",
+   "planned_words": [
+    {
+     "word": "she",
+     "start": 0.058049886621315196,
+     "end": 0.26702947845804986
+    },
+    {
+     "word": "was",
+     "start": 0.26702947845804986,
+     "end": 0.5108390022675737
+    },
+    {
+     "word": "his",
+     "start": 0.5108390022675737,
+     "end": 0.7662585034013606
+    },
+    {
+     "word": "now",
+     "start": 0.7662585034013606,
+     "end": 1.0797278911564625
+    },
+    {
+     "word": "forever",
+     "start": 1.0797278911564625,
+     "end": 1.8575963718820863
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "she",
+     "start": 0.03,
+     "end": 0.27
+    },
+    {
+     "word": "was",
+     "start": 0.27,
+     "end": 0.5
+    },
+    {
+     "word": "his",
+     "start": 0.5,
+     "end": 0.76
+    },
+    {
+     "word": "now",
+     "start": 0.76,
+     "end": 1.08
+    },
+    {
+     "word": "forever",
+     "start": 1.08,
+     "end": 1.88
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "she",
+     "out": {
+      "word": "she",
+      "start": 0.03,
+      "end": 0.27
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "was",
+     "out": {
+      "word": "was",
+      "start": 0.27,
+      "end": 0.5
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "his",
+     "out": {
+      "word": "his",
+      "start": 0.5,
+      "end": 0.76
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "now",
+     "out": {
+      "word": "now",
+      "start": 0.76,
+      "end": 1.08
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "forever",
+     "out": {
+      "word": "forever",
+      "start": 1.08,
+      "end": 1.88
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 3.0,
+    "wer": 0.0,
+    "utmos": 4.2118,
+    "us_prob": 0.9815
+   },
+   "source": "results/abl_a_pos/test/wav/THV_arctic_a0130/out.wav"
+  },
+  "abl_b_pos": {
+   "label": "Ablation B",
+   "planned_words": [
+    {
+     "word": "she",
+     "start": 0.058049886621315196,
+     "end": 0.26702947845804986
+    },
+    {
+     "word": "was",
+     "start": 0.26702947845804986,
+     "end": 0.5108390022675737
+    },
+    {
+     "word": "his",
+     "start": 0.5108390022675737,
+     "end": 0.7662585034013606
+    },
+    {
+     "word": "now",
+     "start": 0.7662585034013606,
+     "end": 1.0913378684807256
+    },
+    {
+     "word": "forever",
+     "start": 1.0913378684807256,
+     "end": 1.8575963718820863
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "she",
+     "start": 0.03,
+     "end": 0.27
+    },
+    {
+     "word": "was",
+     "start": 0.27,
+     "end": 0.51
+    },
+    {
+     "word": "his",
+     "start": 0.51,
+     "end": 0.77
+    },
+    {
+     "word": "now",
+     "start": 0.77,
+     "end": 1.09
+    },
+    {
+     "word": "forever",
+     "start": 1.09,
+     "end": 1.88
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "she",
+     "out": {
+      "word": "she",
+      "start": 0.03,
+      "end": 0.27
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "was",
+     "out": {
+      "word": "was",
+      "start": 0.27,
+      "end": 0.51
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "his",
+     "out": {
+      "word": "his",
+      "start": 0.51,
+      "end": 0.77
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "now",
+     "out": {
+      "word": "now",
+      "start": 0.77,
+      "end": 1.09
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "forever",
+     "out": {
+      "word": "forever",
+      "start": 1.09,
+      "end": 1.88
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -10.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 5.0,
+    "wer": 0.0,
+    "utmos": 4.01,
+    "us_prob": 0.9693
+   },
+   "source": "results/abl_b_pos/test/wav/THV_arctic_a0130/out.wav"
+  },
+  "v0": {
+   "label": "V0 (pretrained VITS + MAS)",
+   "planned_words": [
+    {
+     "word": "she",
+     "start": 0.058049886621315196,
+     "end": 0.26702947845804986
+    },
+    {
+     "word": "was",
+     "start": 0.26702947845804986,
+     "end": 0.5108390022675737
+    },
+    {
+     "word": "his",
+     "start": 0.5108390022675737,
+     "end": 0.7662585034013606
+    },
+    {
+     "word": "now",
+     "start": 0.7662585034013606,
+     "end": 1.0797278911564625
+    },
+    {
+     "word": "forever",
+     "start": 1.0797278911564625,
+     "end": 1.8459863945578232
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "she",
+     "start": 0.03,
+     "end": 0.22
+    },
+    {
+     "word": "was",
+     "start": 0.22,
+     "end": 0.5
+    },
+    {
+     "word": "his",
+     "start": 0.5,
+     "end": 0.73
+    },
+    {
+     "word": "now",
+     "start": 0.73,
+     "end": 1.04
+    },
+    {
+     "word": "forever",
+     "start": 1.04,
+     "end": 1.91
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "she",
+     "out": {
+      "word": "she",
+      "start": 0.03,
+      "end": 0.22
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -50.0
+    },
+    {
+     "word": "was",
+     "out": {
+      "word": "was",
+      "start": 0.22,
+      "end": 0.5
+     },
+     "d_start_ms": -50.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "his",
+     "out": {
+      "word": "his",
+      "start": 0.5,
+      "end": 0.73
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "now",
+     "out": {
+      "word": "now",
+      "start": 0.73,
+      "end": 1.04
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": -40.0
+    },
+    {
+     "word": "forever",
+     "out": {
+      "word": "forever",
+      "start": 1.04,
+      "end": 1.91
+     },
+     "d_start_ms": -40.0,
+     "d_end_ms": 20.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 28.0,
+    "wer": 0.0,
+    "utmos": 4.2981,
+    "us_prob": 0.0897
+   },
+   "source": "results/v0/test/wav/THV_arctic_a0130/out.wav"
+  },
+  "m0": {
+   "label": "M0 (FastSpeech2)",
+   "planned_words": [
+    {
+     "word": "she",
+     "start": 0.058049886621315196,
+     "end": 0.26702947845804986
+    },
+    {
+     "word": "was",
+     "start": 0.26702947845804986,
+     "end": 0.5108390022675737
+    },
+    {
+     "word": "his",
+     "start": 0.5108390022675737,
+     "end": 0.7662585034013606
+    },
+    {
+     "word": "now",
+     "start": 0.7662585034013606,
+     "end": 1.0797278911564625
+    },
+    {
+     "word": "forever",
+     "start": 1.0797278911564625,
+     "end": 1.8575963718820863
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "she",
+     "start": 0.0,
+     "end": 0.27
+    },
+    {
+     "word": "was",
+     "start": 0.27,
+     "end": 0.53
+    },
+    {
+     "word": "his",
+     "start": 0.53,
+     "end": 0.78
+    },
+    {
+     "word": "now",
+     "start": 0.78,
+     "end": 1.09
+    },
+    {
+     "word": "forever",
+     "start": 1.09,
+     "end": 1.91
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "she",
+     "out": {
+      "word": "she",
+      "start": 0.0,
+      "end": 0.27
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "was",
+     "out": {
+      "word": "was",
+      "start": 0.27,
+      "end": 0.53
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "his",
+     "out": {
+      "word": "his",
+      "start": 0.53,
+      "end": 0.78
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "now",
+     "out": {
+      "word": "now",
+      "start": 0.78,
+      "end": 1.09
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "forever",
+     "out": {
+      "word": "forever",
+      "start": 1.09,
+      "end": 1.91
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 20.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 15.0,
+    "wer": 0.0,
+    "utmos": 3.7133,
+    "us_prob": 0.9777
+   },
+   "source": "results/m0/test/wav/THV_arctic_a0130/out.wav"
+  }
+ }
+}

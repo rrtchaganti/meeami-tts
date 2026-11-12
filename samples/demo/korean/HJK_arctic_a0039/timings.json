@@ -1,0 +1,1798 @@
+{
+ "id": "HJK_arctic_a0039",
+ "accent": "korean",
+ "why_selected": "median main-system MAE (20.5 ms)",
+ "text": "The ship should be in within a week or ten days",
+ "normalized": "the ship should be in within a week or ten days",
+ "reference": "data/raw/l2arctic/HJK/wav/arctic_a0039.wav",
+ "ref_duration_s": 3.1,
+ "annotation_words": [
+  {
+   "word": "the",
+   "start": 0.05,
+   "end": 0.27
+  },
+  {
+   "word": "ship",
+   "start": 0.27,
+   "end": 0.59
+  },
+  {
+   "word": "should",
+   "start": 0.59,
+   "end": 0.85
+  },
+  {
+   "word": "be",
+   "start": 0.85,
+   "end": 1.07
+  },
+  {
+   "word": "in",
+   "start": 1.07,
+   "end": 1.2
+  },
+  {
+   "word": "within",
+   "start": 1.2,
+   "end": 1.55
+  },
+  {
+   "word": "a",
+   "start": 1.55,
+   "end": 1.66
+  },
+  {
+   "word": "week",
+   "start": 1.69,
+   "end": 2.12
+  },
+  {
+   "word": "or",
+   "start": 2.12,
+   "end": 2.26
+  },
+  {
+   "word": "ten",
+   "start": 2.26,
+   "end": 2.55
+  },
+  {
+   "word": "days",
+   "start": 2.55,
+   "end": 3.04
+  }
+ ],
+ "ref_words": [
+  {
+   "word": "the",
+   "start": 0.07,
+   "end": 0.27
+  },
+  {
+   "word": "ship",
+   "start": 0.27,
+   "end": 0.6
+  },
+  {
+   "word": "should",
+   "start": 0.6,
+   "end": 0.92
+  },
+  {
+   "word": "be",
+   "start": 0.92,
+   "end": 1.07
+  },
+  {
+   "word": "in",
+   "start": 1.07,
+   "end": 1.22
+  },
+  {
+   "word": "within",
+   "start": 1.22,
+   "end": 1.55
+  },
+  {
+   "word": "a",
+   "start": 1.55,
+   "end": 1.65
+  },
+  {
+   "word": "week",
+   "start": 1.71,
+   "end": 2.13
+  },
+  {
+   "word": "or",
+   "start": 2.13,
+   "end": 2.25
+  },
+  {
+   "word": "ten",
+   "start": 2.25,
+   "end": 2.55
+  },
+  {
+   "word": "days",
+   "start": 2.55,
+   "end": 2.96
+  }
+ ],
+ "systems": {
+  "m1_pos_diph": {
+   "label": "main (m1_pos_diph)",
+   "planned_words": [
+    {
+     "word": "the",
+     "start": 0.06965986394557823,
+     "end": 0.22058956916099773
+    },
+    {
+     "word": "ship",
+     "start": 0.26702947845804986,
+     "end": 0.603718820861678
+    },
+    {
+     "word": "should",
+     "start": 0.603718820861678,
+     "end": 0.9171882086167801
+    },
+    {
+     "word": "be",
+     "start": 0.9171882086167801,
+     "end": 1.0681179138321995
+    },
+    {
+     "word": "in",
+     "start": 1.0681179138321995,
+     "end": 1.2190476190476192
+    },
+    {
+     "word": "within",
+     "start": 1.2190476190476192,
+     "end": 1.555736961451247
+    },
+    {
+     "word": "a",
+     "start": 1.555736961451247,
+     "end": 1.6486167800453515
+    },
+    {
+     "word": "week",
+     "start": 1.7066666666666668,
+     "end": 2.124625850340136
+    },
+    {
+     "word": "or",
+     "start": 2.124625850340136,
+     "end": 2.2523356009070294
+    },
+    {
+     "word": "ten",
+     "start": 2.2523356009070294,
+     "end": 2.5541950113378684
+    },
+    {
+     "word": "days",
+     "start": 2.5541950113378684,
+     "end": 2.9605442176870747
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "the",
+     "start": 0.0,
+     "end": 0.23
+    },
+    {
+     "word": "ship",
+     "start": 0.26,
+     "end": 0.59
+    },
+    {
+     "word": "should",
+     "start": 0.59,
+     "end": 0.91
+    },
+    {
+     "word": "be",
+     "start": 0.91,
+     "end": 1.08
+    },
+    {
+     "word": "in",
+     "start": 1.08,
+     "end": 1.22
+    },
+    {
+     "word": "within",
+     "start": 1.22,
+     "end": 1.56
+    },
+    {
+     "word": "a",
+     "start": 1.56,
+     "end": 1.67
+    },
+    {
+     "word": "week",
+     "start": 1.71,
+     "end": 2.13
+    },
+    {
+     "word": "or",
+     "start": 2.13,
+     "end": 2.25
+    },
+    {
+     "word": "ten",
+     "start": 2.25,
+     "end": 2.55
+    },
+    {
+     "word": "days",
+     "start": 2.55,
+     "end": 2.96
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.0,
+      "end": 0.23
+     },
+     "d_start_ms": -50.0,
+     "d_end_ms": -40.0
+    },
+    {
+     "word": "ship",
+     "out": {
+      "word": "ship",
+      "start": 0.26,
+      "end": 0.59
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "should",
+     "out": {
+      "word": "should",
+      "start": 0.59,
+      "end": 0.91
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 60.0
+    },
+    {
+     "word": "be",
+     "out": {
+      "word": "be",
+      "start": 0.91,
+      "end": 1.08
+     },
+     "d_start_ms": 60.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "in",
+     "out": {
+      "word": "in",
+      "start": 1.08,
+      "end": 1.22
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "within",
+     "out": {
+      "word": "within",
+      "start": 1.22,
+      "end": 1.56
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "a",
+     "out": {
+      "word": "a",
+      "start": 1.56,
+      "end": 1.67
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "week",
+     "out": {
+      "word": "week",
+      "start": 1.71,
+      "end": 2.13
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "or",
+     "out": {
+      "word": "or",
+      "start": 2.13,
+      "end": 2.25
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "ten",
+     "out": {
+      "word": "ten",
+      "start": 2.25,
+      "end": 2.55
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "days",
+     "out": {
+      "word": "days",
+      "start": 2.55,
+      "end": 2.96
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -80.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 20.4545,
+    "wer": 0.0909,
+    "utmos": 4.1169,
+    "us_prob": 0.046
+   },
+   "source": "results/m1_pos_diph/test/wav/HJK_arctic_a0039/out.wav"
+  },
+  "m1": {
+   "label": "M1",
+   "planned_words": [
+    {
+     "word": "the",
+     "start": 0.06965986394557823,
+     "end": 0.22058956916099773
+    },
+    {
+     "word": "ship",
+     "start": 0.26702947845804986,
+     "end": 0.603718820861678
+    },
+    {
+     "word": "should",
+     "start": 0.603718820861678,
+     "end": 0.9171882086167801
+    },
+    {
+     "word": "be",
+     "start": 0.9171882086167801,
+     "end": 1.0681179138321995
+    },
+    {
+     "word": "in",
+     "start": 1.0681179138321995,
+     "end": 1.2190476190476192
+    },
+    {
+     "word": "within",
+     "start": 1.2190476190476192,
+     "end": 1.555736961451247
+    },
+    {
+     "word": "a",
+     "start": 1.555736961451247,
+     "end": 1.6486167800453515
+    },
+    {
+     "word": "week",
+     "start": 1.7066666666666668,
+     "end": 2.124625850340136
+    },
+    {
+     "word": "or",
+     "start": 2.124625850340136,
+     "end": 2.2523356009070294
+    },
+    {
+     "word": "ten",
+     "start": 2.2523356009070294,
+     "end": 2.5541950113378684
+    },
+    {
+     "word": "days",
+     "start": 2.5541950113378684,
+     "end": 2.9605442176870747
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "the",
+     "start": 0.06,
+     "end": 0.26
+    },
+    {
+     "word": "ship",
+     "start": 0.26,
+     "end": 0.59
+    },
+    {
+     "word": "should",
+     "start": 0.59,
+     "end": 0.91
+    },
+    {
+     "word": "be",
+     "start": 0.91,
+     "end": 1.08
+    },
+    {
+     "word": "in",
+     "start": 1.08,
+     "end": 1.23
+    },
+    {
+     "word": "within",
+     "start": 1.23,
+     "end": 1.55
+    },
+    {
+     "word": "a",
+     "start": 1.55,
+     "end": 1.67
+    },
+    {
+     "word": "week",
+     "start": 1.7,
+     "end": 2.13
+    },
+    {
+     "word": "or",
+     "start": 2.13,
+     "end": 2.25
+    },
+    {
+     "word": "ten",
+     "start": 2.25,
+     "end": 2.55
+    },
+    {
+     "word": "days",
+     "start": 2.55,
+     "end": 2.97
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.06,
+      "end": 0.26
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "ship",
+     "out": {
+      "word": "ship",
+      "start": 0.26,
+      "end": 0.59
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "should",
+     "out": {
+      "word": "should",
+      "start": 0.59,
+      "end": 0.91
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 60.0
+    },
+    {
+     "word": "be",
+     "out": {
+      "word": "be",
+      "start": 0.91,
+      "end": 1.08
+     },
+     "d_start_ms": 60.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "in",
+     "out": {
+      "word": "in",
+      "start": 1.08,
+      "end": 1.23
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 30.0
+    },
+    {
+     "word": "within",
+     "out": {
+      "word": "within",
+      "start": 1.23,
+      "end": 1.55
+     },
+     "d_start_ms": 30.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "a",
+     "out": {
+      "word": "a",
+      "start": 1.55,
+      "end": 1.67
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "week",
+     "out": {
+      "word": "week",
+      "start": 1.7,
+      "end": 2.13
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "or",
+     "out": {
+      "word": "or",
+      "start": 2.13,
+      "end": 2.25
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "ten",
+     "out": {
+      "word": "ten",
+      "start": 2.25,
+      "end": 2.55
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "days",
+     "out": {
+      "word": "days",
+      "start": 2.55,
+      "end": 2.97
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -70.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 16.3636,
+    "wer": 0.0909,
+    "utmos": 4.4381,
+    "us_prob": 0.1144
+   },
+   "source": "results/m1/test/wav/HJK_arctic_a0039/out.wav"
+  },
+  "m1_pos": {
+   "label": "M1 + position embedding",
+   "planned_words": [
+    {
+     "word": "the",
+     "start": 0.06965986394557823,
+     "end": 0.22058956916099773
+    },
+    {
+     "word": "ship",
+     "start": 0.26702947845804986,
+     "end": 0.603718820861678
+    },
+    {
+     "word": "should",
+     "start": 0.603718820861678,
+     "end": 0.9171882086167801
+    },
+    {
+     "word": "be",
+     "start": 0.9171882086167801,
+     "end": 1.0681179138321995
+    },
+    {
+     "word": "in",
+     "start": 1.0681179138321995,
+     "end": 1.2190476190476192
+    },
+    {
+     "word": "within",
+     "start": 1.2190476190476192,
+     "end": 1.555736961451247
+    },
+    {
+     "word": "a",
+     "start": 1.555736961451247,
+     "end": 1.6486167800453515
+    },
+    {
+     "word": "week",
+     "start": 1.7066666666666668,
+     "end": 2.124625850340136
+    },
+    {
+     "word": "or",
+     "start": 2.124625850340136,
+     "end": 2.2523356009070294
+    },
+    {
+     "word": "ten",
+     "start": 2.2523356009070294,
+     "end": 2.5541950113378684
+    },
+    {
+     "word": "days",
+     "start": 2.5541950113378684,
+     "end": 2.9605442176870747
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "the",
+     "start": 0.0,
+     "end": 0.22
+    },
+    {
+     "word": "ship",
+     "start": 0.25,
+     "end": 0.6
+    },
+    {
+     "word": "should",
+     "start": 0.6,
+     "end": 0.92
+    },
+    {
+     "word": "be",
+     "start": 0.92,
+     "end": 1.08
+    },
+    {
+     "word": "in",
+     "start": 1.08,
+     "end": 1.22
+    },
+    {
+     "word": "within",
+     "start": 1.22,
+     "end": 1.55
+    },
+    {
+     "word": "a",
+     "start": 1.55,
+     "end": 1.67
+    },
+    {
+     "word": "week",
+     "start": 1.7,
+     "end": 2.13
+    },
+    {
+     "word": "or",
+     "start": 2.13,
+     "end": 2.25
+    },
+    {
+     "word": "ten",
+     "start": 2.25,
+     "end": 2.55
+    },
+    {
+     "word": "days",
+     "start": 2.55,
+     "end": 2.95
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.0,
+      "end": 0.22
+     },
+     "d_start_ms": -50.0,
+     "d_end_ms": -50.0
+    },
+    {
+     "word": "ship",
+     "out": {
+      "word": "ship",
+      "start": 0.25,
+      "end": 0.6
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "should",
+     "out": {
+      "word": "should",
+      "start": 0.6,
+      "end": 0.92
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 70.0
+    },
+    {
+     "word": "be",
+     "out": {
+      "word": "be",
+      "start": 0.92,
+      "end": 1.08
+     },
+     "d_start_ms": 70.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "in",
+     "out": {
+      "word": "in",
+      "start": 1.08,
+      "end": 1.22
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "within",
+     "out": {
+      "word": "within",
+      "start": 1.22,
+      "end": 1.55
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "a",
+     "out": {
+      "word": "a",
+      "start": 1.55,
+      "end": 1.67
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "week",
+     "out": {
+      "word": "week",
+      "start": 1.7,
+      "end": 2.13
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "or",
+     "out": {
+      "word": "or",
+      "start": 2.13,
+      "end": 2.25
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "ten",
+     "out": {
+      "word": "ten",
+      "start": 2.25,
+      "end": 2.55
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "days",
+     "out": {
+      "word": "days",
+      "start": 2.55,
+      "end": 2.95
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -90.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 22.2727,
+    "wer": 0.2727,
+    "utmos": 4.4468,
+    "us_prob": 0.0063
+   },
+   "source": "results/m1_pos/test/wav/HJK_arctic_a0039/out.wav"
+  },
+  "abl_a_pos": {
+   "label": "Ablation A",
+   "planned_words": [
+    {
+     "word": "the",
+     "start": 0.06965986394557823,
+     "end": 0.22058956916099773
+    },
+    {
+     "word": "ship",
+     "start": 0.26702947845804986,
+     "end": 0.603718820861678
+    },
+    {
+     "word": "should",
+     "start": 0.603718820861678,
+     "end": 0.9171882086167801
+    },
+    {
+     "word": "be",
+     "start": 0.9171882086167801,
+     "end": 1.0681179138321995
+    },
+    {
+     "word": "in",
+     "start": 1.0681179138321995,
+     "end": 1.2190476190476192
+    },
+    {
+     "word": "within",
+     "start": 1.2190476190476192,
+     "end": 1.555736961451247
+    },
+    {
+     "word": "a",
+     "start": 1.555736961451247,
+     "end": 1.6486167800453515
+    },
+    {
+     "word": "week",
+     "start": 1.7066666666666668,
+     "end": 2.124625850340136
+    },
+    {
+     "word": "or",
+     "start": 2.124625850340136,
+     "end": 2.2523356009070294
+    },
+    {
+     "word": "ten",
+     "start": 2.2523356009070294,
+     "end": 2.5541950113378684
+    },
+    {
+     "word": "days",
+     "start": 2.5541950113378684,
+     "end": 2.9605442176870747
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "the",
+     "start": 0.0,
+     "end": 0.23
+    },
+    {
+     "word": "ship",
+     "start": 0.26,
+     "end": 0.59
+    },
+    {
+     "word": "should",
+     "start": 0.59,
+     "end": 0.91
+    },
+    {
+     "word": "be",
+     "start": 0.91,
+     "end": 1.07
+    },
+    {
+     "word": "in",
+     "start": 1.07,
+     "end": 1.22
+    },
+    {
+     "word": "within",
+     "start": 1.22,
+     "end": 1.56
+    },
+    {
+     "word": "a",
+     "start": 1.56,
+     "end": 1.67
+    },
+    {
+     "word": "week",
+     "start": 1.7,
+     "end": 2.13
+    },
+    {
+     "word": "or",
+     "start": 2.13,
+     "end": 2.25
+    },
+    {
+     "word": "ten",
+     "start": 2.25,
+     "end": 2.55
+    },
+    {
+     "word": "days",
+     "start": 2.55,
+     "end": 2.95
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.0,
+      "end": 0.23
+     },
+     "d_start_ms": -50.0,
+     "d_end_ms": -40.0
+    },
+    {
+     "word": "ship",
+     "out": {
+      "word": "ship",
+      "start": 0.26,
+      "end": 0.59
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "should",
+     "out": {
+      "word": "should",
+      "start": 0.59,
+      "end": 0.91
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 60.0
+    },
+    {
+     "word": "be",
+     "out": {
+      "word": "be",
+      "start": 0.91,
+      "end": 1.07
+     },
+     "d_start_ms": 60.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "in",
+     "out": {
+      "word": "in",
+      "start": 1.07,
+      "end": 1.22
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "within",
+     "out": {
+      "word": "within",
+      "start": 1.22,
+      "end": 1.56
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "a",
+     "out": {
+      "word": "a",
+      "start": 1.56,
+      "end": 1.67
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "week",
+     "out": {
+      "word": "week",
+      "start": 1.7,
+      "end": 2.13
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "or",
+     "out": {
+      "word": "or",
+      "start": 2.13,
+      "end": 2.25
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "ten",
+     "out": {
+      "word": "ten",
+      "start": 2.25,
+      "end": 2.55
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "days",
+     "out": {
+      "word": "days",
+      "start": 2.55,
+      "end": 2.95
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -90.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 19.5455,
+    "wer": 0.0909,
+    "utmos": 4.3657,
+    "us_prob": 0.0268
+   },
+   "source": "results/abl_a_pos/test/wav/HJK_arctic_a0039/out.wav"
+  },
+  "abl_b_pos": {
+   "label": "Ablation B",
+   "planned_words": [
+    {
+     "word": "the",
+     "start": 0.06965986394557823,
+     "end": 0.22058956916099773
+    },
+    {
+     "word": "ship",
+     "start": 0.26702947845804986,
+     "end": 0.603718820861678
+    },
+    {
+     "word": "should",
+     "start": 0.603718820861678,
+     "end": 0.9171882086167801
+    },
+    {
+     "word": "be",
+     "start": 0.9171882086167801,
+     "end": 1.0681179138321995
+    },
+    {
+     "word": "in",
+     "start": 1.0681179138321995,
+     "end": 1.2190476190476192
+    },
+    {
+     "word": "within",
+     "start": 1.2190476190476192,
+     "end": 1.555736961451247
+    },
+    {
+     "word": "a",
+     "start": 1.555736961451247,
+     "end": 1.6486167800453515
+    },
+    {
+     "word": "week",
+     "start": 1.7066666666666668,
+     "end": 2.124625850340136
+    },
+    {
+     "word": "or",
+     "start": 2.124625850340136,
+     "end": 2.2523356009070294
+    },
+    {
+     "word": "ten",
+     "start": 2.2523356009070294,
+     "end": 2.5541950113378684
+    },
+    {
+     "word": "days",
+     "start": 2.5541950113378684,
+     "end": 2.9605442176870747
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "the",
+     "start": 0.06,
+     "end": 0.23
+    },
+    {
+     "word": "ship",
+     "start": 0.26,
+     "end": 0.6
+    },
+    {
+     "word": "should",
+     "start": 0.6,
+     "end": 0.91
+    },
+    {
+     "word": "be",
+     "start": 0.91,
+     "end": 1.07
+    },
+    {
+     "word": "in",
+     "start": 1.07,
+     "end": 1.23
+    },
+    {
+     "word": "within",
+     "start": 1.23,
+     "end": 1.56
+    },
+    {
+     "word": "a",
+     "start": 1.56,
+     "end": 1.67
+    },
+    {
+     "word": "week",
+     "start": 1.7,
+     "end": 2.13
+    },
+    {
+     "word": "or",
+     "start": 2.13,
+     "end": 2.25
+    },
+    {
+     "word": "ten",
+     "start": 2.25,
+     "end": 2.55
+    },
+    {
+     "word": "days",
+     "start": 2.55,
+     "end": 2.97
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.06,
+      "end": 0.23
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -40.0
+    },
+    {
+     "word": "ship",
+     "out": {
+      "word": "ship",
+      "start": 0.26,
+      "end": 0.6
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "should",
+     "out": {
+      "word": "should",
+      "start": 0.6,
+      "end": 0.91
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 60.0
+    },
+    {
+     "word": "be",
+     "out": {
+      "word": "be",
+      "start": 0.91,
+      "end": 1.07
+     },
+     "d_start_ms": 60.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "in",
+     "out": {
+      "word": "in",
+      "start": 1.07,
+      "end": 1.23
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 30.0
+    },
+    {
+     "word": "within",
+     "out": {
+      "word": "within",
+      "start": 1.23,
+      "end": 1.56
+     },
+     "d_start_ms": 30.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "a",
+     "out": {
+      "word": "a",
+      "start": 1.56,
+      "end": 1.67
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "week",
+     "out": {
+      "word": "week",
+      "start": 1.7,
+      "end": 2.13
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "or",
+     "out": {
+      "word": "or",
+      "start": 2.13,
+      "end": 2.25
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "ten",
+     "out": {
+      "word": "ten",
+      "start": 2.25,
+      "end": 2.55
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "days",
+     "out": {
+      "word": "days",
+      "start": 2.55,
+      "end": 2.97
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -70.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 18.6364,
+    "wer": 0.0909,
+    "utmos": 4.3142,
+    "us_prob": 0.9214
+   },
+   "source": "results/abl_b_pos/test/wav/HJK_arctic_a0039/out.wav"
+  },
+  "v0": {
+   "label": "V0 (pretrained VITS + MAS)",
+   "planned_words": [
+    {
+     "word": "the",
+     "start": 0.06965986394557823,
+     "end": 0.22058956916099773
+    },
+    {
+     "word": "ship",
+     "start": 0.26702947845804986,
+     "end": 0.603718820861678
+    },
+    {
+     "word": "should",
+     "start": 0.603718820861678,
+     "end": 0.9171882086167801
+    },
+    {
+     "word": "be",
+     "start": 0.9171882086167801,
+     "end": 1.0681179138321995
+    },
+    {
+     "word": "in",
+     "start": 1.0681179138321995,
+     "end": 1.2190476190476192
+    },
+    {
+     "word": "within",
+     "start": 1.2190476190476192,
+     "end": 1.555736961451247
+    },
+    {
+     "word": "a",
+     "start": 1.555736961451247,
+     "end": 1.6486167800453515
+    },
+    {
+     "word": "week",
+     "start": 1.7066666666666668,
+     "end": 2.124625850340136
+    },
+    {
+     "word": "or",
+     "start": 2.124625850340136,
+     "end": 2.2523356009070294
+    },
+    {
+     "word": "ten",
+     "start": 2.2523356009070294,
+     "end": 2.5541950113378684
+    },
+    {
+     "word": "days",
+     "start": 2.5541950113378684,
+     "end": 2.9605442176870747
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "the",
+     "start": 0.03,
+     "end": 0.21
+    },
+    {
+     "word": "ship",
+     "start": 0.21,
+     "end": 0.54
+    },
+    {
+     "word": "should",
+     "start": 0.54,
+     "end": 0.91
+    },
+    {
+     "word": "be",
+     "start": 0.91,
+     "end": 1.07
+    },
+    {
+     "word": "in",
+     "start": 1.07,
+     "end": 1.2
+    },
+    {
+     "word": "within",
+     "start": 1.2,
+     "end": 1.51
+    },
+    {
+     "word": "a",
+     "start": 1.51,
+     "end": 1.69
+    },
+    {
+     "word": "week",
+     "start": 1.73,
+     "end": 2.08
+    },
+    {
+     "word": "or",
+     "start": 2.12,
+     "end": 2.22
+    },
+    {
+     "word": "ten",
+     "start": 2.22,
+     "end": 2.54
+    },
+    {
+     "word": "days",
+     "start": 2.54,
+     "end": 3.02
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.03,
+      "end": 0.21
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -60.0
+    },
+    {
+     "word": "ship",
+     "out": {
+      "word": "ship",
+      "start": 0.21,
+      "end": 0.54
+     },
+     "d_start_ms": -60.0,
+     "d_end_ms": -50.0
+    },
+    {
+     "word": "should",
+     "out": {
+      "word": "should",
+      "start": 0.54,
+      "end": 0.91
+     },
+     "d_start_ms": -50.0,
+     "d_end_ms": 60.0
+    },
+    {
+     "word": "be",
+     "out": {
+      "word": "be",
+      "start": 0.91,
+      "end": 1.07
+     },
+     "d_start_ms": 60.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "in",
+     "out": {
+      "word": "in",
+      "start": 1.07,
+      "end": 1.2
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "within",
+     "out": {
+      "word": "within",
+      "start": 1.2,
+      "end": 1.51
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -40.0
+    },
+    {
+     "word": "a",
+     "out": {
+      "word": "a",
+      "start": 1.51,
+      "end": 1.69
+     },
+     "d_start_ms": -40.0,
+     "d_end_ms": 30.0
+    },
+    {
+     "word": "week",
+     "out": {
+      "word": "week",
+      "start": 1.73,
+      "end": 2.08
+     },
+     "d_start_ms": 40.0,
+     "d_end_ms": -40.0
+    },
+    {
+     "word": "or",
+     "out": {
+      "word": "or",
+      "start": 2.12,
+      "end": 2.22
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -40.0
+    },
+    {
+     "word": "ten",
+     "out": {
+      "word": "ten",
+      "start": 2.22,
+      "end": 2.54
+     },
+     "d_start_ms": -40.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "days",
+     "out": {
+      "word": "days",
+      "start": 2.54,
+      "end": 3.02
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -20.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 30.4545,
+    "wer": 0.0909,
+    "utmos": 4.4465,
+    "us_prob": 0.9995
+   },
+   "source": "results/v0/test/wav/HJK_arctic_a0039/out.wav"
+  },
+  "m0": {
+   "label": "M0 (FastSpeech2)",
+   "planned_words": [
+    {
+     "word": "the",
+     "start": 0.06965986394557823,
+     "end": 0.26702947845804986
+    },
+    {
+     "word": "ship",
+     "start": 0.26702947845804986,
+     "end": 0.603718820861678
+    },
+    {
+     "word": "should",
+     "start": 0.603718820861678,
+     "end": 0.9171882086167801
+    },
+    {
+     "word": "be",
+     "start": 0.9171882086167801,
+     "end": 1.0681179138321995
+    },
+    {
+     "word": "in",
+     "start": 1.0681179138321995,
+     "end": 1.2190476190476192
+    },
+    {
+     "word": "within",
+     "start": 1.2190476190476192,
+     "end": 1.555736961451247
+    },
+    {
+     "word": "a",
+     "start": 1.555736961451247,
+     "end": 1.6486167800453515
+    },
+    {
+     "word": "week",
+     "start": 1.7066666666666668,
+     "end": 2.124625850340136
+    },
+    {
+     "word": "or",
+     "start": 2.124625850340136,
+     "end": 2.2523356009070294
+    },
+    {
+     "word": "ten",
+     "start": 2.2523356009070294,
+     "end": 2.5541950113378684
+    },
+    {
+     "word": "days",
+     "start": 2.5541950113378684,
+     "end": 2.9605442176870747
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "the",
+     "start": 0.1,
+     "end": 0.24
+    },
+    {
+     "word": "ship",
+     "start": 0.24,
+     "end": 0.61
+    },
+    {
+     "word": "should",
+     "start": 0.61,
+     "end": 0.92
+    },
+    {
+     "word": "be",
+     "start": 0.92,
+     "end": 1.08
+    },
+    {
+     "word": "in",
+     "start": 1.08,
+     "end": 1.23
+    },
+    {
+     "word": "within",
+     "start": 1.23,
+     "end": 1.53
+    },
+    {
+     "word": "a",
+     "start": 1.53,
+     "end": 1.68
+    },
+    {
+     "word": "week",
+     "start": 1.75,
+     "end": 2.14
+    },
+    {
+     "word": "or",
+     "start": 2.14,
+     "end": 2.24
+    },
+    {
+     "word": "ten",
+     "start": 2.24,
+     "end": 2.56
+    },
+    {
+     "word": "days",
+     "start": 2.56,
+     "end": 2.96
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.1,
+      "end": 0.24
+     },
+     "d_start_ms": 50.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "ship",
+     "out": {
+      "word": "ship",
+      "start": 0.24,
+      "end": 0.61
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "should",
+     "out": {
+      "word": "should",
+      "start": 0.61,
+      "end": 0.92
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 70.0
+    },
+    {
+     "word": "be",
+     "out": {
+      "word": "be",
+      "start": 0.92,
+      "end": 1.08
+     },
+     "d_start_ms": 70.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "in",
+     "out": {
+      "word": "in",
+      "start": 1.08,
+      "end": 1.23
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 30.0
+    },
+    {
+     "word": "within",
+     "out": {
+      "word": "within",
+      "start": 1.23,
+      "end": 1.53
+     },
+     "d_start_ms": 30.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "a",
+     "out": {
+      "word": "a",
+      "start": 1.53,
+      "end": 1.68
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "week",
+     "out": {
+      "word": "week",
+      "start": 1.75,
+      "end": 2.14
+     },
+     "d_start_ms": 60.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "or",
+     "out": {
+      "word": "or",
+      "start": 2.14,
+      "end": 2.24
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "ten",
+     "out": {
+      "word": "ten",
+      "start": 2.24,
+      "end": 2.56
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "days",
+     "out": {
+      "word": "days",
+      "start": 2.56,
+      "end": 2.96
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -80.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 30.4545,
+    "wer": 0.1818,
+    "utmos": 4.0773,
+    "us_prob": 0.9898
+   },
+   "source": "results/m0/test/wav/HJK_arctic_a0039/out.wav"
+  }
+ }
+}

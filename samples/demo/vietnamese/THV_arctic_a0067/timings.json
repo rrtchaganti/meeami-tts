@@ -1,0 +1,1198 @@
+{
+ "id": "THV_arctic_a0067",
+ "accent": "vietnamese",
+ "why_selected": "worst main-system MAE (148.2 ms)",
+ "text": "Surely I will excuse you she cried",
+ "normalized": "surely i will excuse you she cried",
+ "reference": "data/raw/l2arctic/THV/wav/arctic_a0067.wav",
+ "ref_duration_s": 2.892857142857143,
+ "annotation_words": [
+  {
+   "word": "surely",
+   "start": 0.04,
+   "end": 0.63
+  },
+  {
+   "word": "i",
+   "start": 0.63,
+   "end": 0.77
+  },
+  {
+   "word": "will",
+   "start": 0.77,
+   "end": 0.96
+  },
+  {
+   "word": "excuse",
+   "start": 0.96,
+   "end": 1.4718
+  },
+  {
+   "word": "you",
+   "start": 1.4718,
+   "end": 1.7401
+  },
+  {
+   "word": "she",
+   "start": 1.8909,
+   "end": 2.27
+  },
+  {
+   "word": "cried",
+   "start": 2.27,
+   "end": 2.84
+  }
+ ],
+ "ref_words": [
+  {
+   "word": "surely",
+   "start": 0.05,
+   "end": 0.6
+  },
+  {
+   "word": "i",
+   "start": 0.6,
+   "end": 0.77
+  },
+  {
+   "word": "will",
+   "start": 0.77,
+   "end": 0.97
+  },
+  {
+   "word": "excuse",
+   "start": 0.97,
+   "end": 2.07
+  },
+  {
+   "word": "you",
+   "start": 2.07,
+   "end": 2.16
+  },
+  {
+   "word": "she",
+   "start": 2.16,
+   "end": 2.26
+  },
+  {
+   "word": "cried",
+   "start": 2.3,
+   "end": 2.85
+  }
+ ],
+ "systems": {
+  "m1_pos_diph": {
+   "label": "main (m1_pos_diph)",
+   "planned_words": [
+    {
+     "word": "surely",
+     "start": 0.046439909297052155,
+     "end": 0.603718820861678
+    },
+    {
+     "word": "i",
+     "start": 0.603718820861678,
+     "end": 0.7662585034013606
+    },
+    {
+     "word": "will",
+     "start": 0.7662585034013606,
+     "end": 0.9752380952380952
+    },
+    {
+     "word": "excuse",
+     "start": 0.9752380952380952,
+     "end": 2.066575963718821
+    },
+    {
+     "word": "you",
+     "start": 2.066575963718821,
+     "end": 2.159455782312925
+    },
+    {
+     "word": "she",
+     "start": 2.159455782312925,
+     "end": 2.2639455782312927
+    },
+    {
+     "word": "cried",
+     "start": 2.2987755102040817,
+     "end": 2.8444444444444446
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "surely",
+     "start": 0.03,
+     "end": 0.6
+    },
+    {
+     "word": "i",
+     "start": 0.6,
+     "end": 0.76
+    },
+    {
+     "word": "will",
+     "start": 0.76,
+     "end": 0.97
+    },
+    {
+     "word": "excuse",
+     "start": 0.97,
+     "end": 2.06
+    },
+    {
+     "word": "you",
+     "start": 2.06,
+     "end": 2.16
+    },
+    {
+     "word": "she",
+     "start": 2.16,
+     "end": 2.27
+    },
+    {
+     "word": "cried",
+     "start": 2.27,
+     "end": 2.74
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "surely",
+     "out": {
+      "word": "surely",
+      "start": 0.03,
+      "end": 0.6
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "i",
+     "out": {
+      "word": "i",
+      "start": 0.6,
+      "end": 0.76
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "will",
+     "out": {
+      "word": "will",
+      "start": 0.76,
+      "end": 0.97
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "excuse",
+     "out": {
+      "word": "excuse",
+      "start": 0.97,
+      "end": 2.06
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 588.2
+    },
+    {
+     "word": "you",
+     "out": {
+      "word": "you",
+      "start": 2.06,
+      "end": 2.16
+     },
+     "d_start_ms": 588.2,
+     "d_end_ms": 419.9
+    },
+    {
+     "word": "she",
+     "out": {
+      "word": "she",
+      "start": 2.16,
+      "end": 2.27
+     },
+     "d_start_ms": 269.1,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "cried",
+     "out": {
+      "word": "cried",
+      "start": 2.27,
+      "end": 2.74
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -100.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 148.2403,
+    "wer": 0.0,
+    "utmos": 4.3733,
+    "us_prob": 0.9997
+   },
+   "source": "results/m1_pos_diph/test/wav/THV_arctic_a0067/out.wav"
+  },
+  "m1": {
+   "label": "M1",
+   "planned_words": [
+    {
+     "word": "surely",
+     "start": 0.046439909297052155,
+     "end": 0.603718820861678
+    },
+    {
+     "word": "i",
+     "start": 0.603718820861678,
+     "end": 0.7662585034013606
+    },
+    {
+     "word": "will",
+     "start": 0.7662585034013606,
+     "end": 0.9752380952380952
+    },
+    {
+     "word": "excuse",
+     "start": 0.9752380952380952,
+     "end": 2.066575963718821
+    },
+    {
+     "word": "you",
+     "start": 2.066575963718821,
+     "end": 2.159455782312925
+    },
+    {
+     "word": "she",
+     "start": 2.159455782312925,
+     "end": 2.2639455782312927
+    },
+    {
+     "word": "cried",
+     "start": 2.2987755102040817,
+     "end": 2.8444444444444446
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "surely",
+     "start": 0.03,
+     "end": 0.61
+    },
+    {
+     "word": "i",
+     "start": 0.61,
+     "end": 0.76
+    },
+    {
+     "word": "will",
+     "start": 0.76,
+     "end": 0.97
+    },
+    {
+     "word": "excuse",
+     "start": 0.97,
+     "end": 2.06
+    },
+    {
+     "word": "you",
+     "start": 2.06,
+     "end": 2.17
+    },
+    {
+     "word": "she",
+     "start": 2.17,
+     "end": 2.27
+    },
+    {
+     "word": "cried",
+     "start": 2.27,
+     "end": 2.77
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "surely",
+     "out": {
+      "word": "surely",
+      "start": 0.03,
+      "end": 0.61
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "i",
+     "out": {
+      "word": "i",
+      "start": 0.61,
+      "end": 0.76
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "will",
+     "out": {
+      "word": "will",
+      "start": 0.76,
+      "end": 0.97
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "excuse",
+     "out": {
+      "word": "excuse",
+      "start": 0.97,
+      "end": 2.06
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 588.2
+    },
+    {
+     "word": "you",
+     "out": {
+      "word": "you",
+      "start": 2.06,
+      "end": 2.17
+     },
+     "d_start_ms": 588.2,
+     "d_end_ms": 429.9
+    },
+    {
+     "word": "she",
+     "out": {
+      "word": "she",
+      "start": 2.17,
+      "end": 2.27
+     },
+     "d_start_ms": 279.1,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "cried",
+     "out": {
+      "word": "cried",
+      "start": 2.27,
+      "end": 2.77
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -70.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 146.0974,
+    "wer": 0.0,
+    "utmos": 3.3101,
+    "us_prob": 0.9978
+   },
+   "source": "results/m1/test/wav/THV_arctic_a0067/out.wav"
+  },
+  "m1_pos": {
+   "label": "M1 + position embedding",
+   "planned_words": [
+    {
+     "word": "surely",
+     "start": 0.046439909297052155,
+     "end": 0.603718820861678
+    },
+    {
+     "word": "i",
+     "start": 0.603718820861678,
+     "end": 0.7662585034013606
+    },
+    {
+     "word": "will",
+     "start": 0.7662585034013606,
+     "end": 0.9752380952380952
+    },
+    {
+     "word": "excuse",
+     "start": 0.9752380952380952,
+     "end": 2.066575963718821
+    },
+    {
+     "word": "you",
+     "start": 2.066575963718821,
+     "end": 2.159455782312925
+    },
+    {
+     "word": "she",
+     "start": 2.159455782312925,
+     "end": 2.2639455782312927
+    },
+    {
+     "word": "cried",
+     "start": 2.2987755102040817,
+     "end": 2.8444444444444446
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "surely",
+     "start": 0.03,
+     "end": 0.61
+    },
+    {
+     "word": "i",
+     "start": 0.61,
+     "end": 0.75
+    },
+    {
+     "word": "will",
+     "start": 0.75,
+     "end": 0.97
+    },
+    {
+     "word": "excuse",
+     "start": 0.97,
+     "end": 2.06
+    },
+    {
+     "word": "you",
+     "start": 2.06,
+     "end": 2.16
+    },
+    {
+     "word": "she",
+     "start": 2.16,
+     "end": 2.26
+    },
+    {
+     "word": "cried",
+     "start": 2.26,
+     "end": 2.77
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "surely",
+     "out": {
+      "word": "surely",
+      "start": 0.03,
+      "end": 0.61
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "i",
+     "out": {
+      "word": "i",
+      "start": 0.61,
+      "end": 0.75
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "will",
+     "out": {
+      "word": "will",
+      "start": 0.75,
+      "end": 0.97
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "excuse",
+     "out": {
+      "word": "excuse",
+      "start": 0.97,
+      "end": 2.06
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 588.2
+    },
+    {
+     "word": "you",
+     "out": {
+      "word": "you",
+      "start": 2.06,
+      "end": 2.16
+     },
+     "d_start_ms": 588.2,
+     "d_end_ms": 419.9
+    },
+    {
+     "word": "she",
+     "out": {
+      "word": "she",
+      "start": 2.16,
+      "end": 2.26
+     },
+     "d_start_ms": 269.1,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "cried",
+     "out": {
+      "word": "cried",
+      "start": 2.26,
+      "end": 2.77
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -70.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 147.526,
+    "wer": 0.2857,
+    "utmos": 3.5598,
+    "us_prob": 0.999
+   },
+   "source": "results/m1_pos/test/wav/THV_arctic_a0067/out.wav"
+  },
+  "abl_a_pos": {
+   "label": "Ablation A",
+   "planned_words": [
+    {
+     "word": "surely",
+     "start": 0.046439909297052155,
+     "end": 0.603718820861678
+    },
+    {
+     "word": "i",
+     "start": 0.603718820861678,
+     "end": 0.7662585034013606
+    },
+    {
+     "word": "will",
+     "start": 0.7662585034013606,
+     "end": 0.9752380952380952
+    },
+    {
+     "word": "excuse",
+     "start": 0.9752380952380952,
+     "end": 2.066575963718821
+    },
+    {
+     "word": "you",
+     "start": 2.066575963718821,
+     "end": 2.159455782312925
+    },
+    {
+     "word": "she",
+     "start": 2.159455782312925,
+     "end": 2.2639455782312927
+    },
+    {
+     "word": "cried",
+     "start": 2.2987755102040817,
+     "end": 2.8444444444444446
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "surely",
+     "start": 0.03,
+     "end": 0.61
+    },
+    {
+     "word": "i",
+     "start": 0.61,
+     "end": 0.76
+    },
+    {
+     "word": "will",
+     "start": 0.76,
+     "end": 0.97
+    },
+    {
+     "word": "excuse",
+     "start": 0.97,
+     "end": 2.06
+    },
+    {
+     "word": "you",
+     "start": 2.06,
+     "end": 2.16
+    },
+    {
+     "word": "she",
+     "start": 2.16,
+     "end": 2.27
+    },
+    {
+     "word": "cried",
+     "start": 2.27,
+     "end": 2.77
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "surely",
+     "out": {
+      "word": "surely",
+      "start": 0.03,
+      "end": 0.61
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "i",
+     "out": {
+      "word": "i",
+      "start": 0.61,
+      "end": 0.76
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "will",
+     "out": {
+      "word": "will",
+      "start": 0.76,
+      "end": 0.97
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "excuse",
+     "out": {
+      "word": "excuse",
+      "start": 0.97,
+      "end": 2.06
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 588.2
+    },
+    {
+     "word": "you",
+     "out": {
+      "word": "you",
+      "start": 2.06,
+      "end": 2.16
+     },
+     "d_start_ms": 588.2,
+     "d_end_ms": 419.9
+    },
+    {
+     "word": "she",
+     "out": {
+      "word": "she",
+      "start": 2.16,
+      "end": 2.27
+     },
+     "d_start_ms": 269.1,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "cried",
+     "out": {
+      "word": "cried",
+      "start": 2.27,
+      "end": 2.77
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -70.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 144.6688,
+    "wer": 0.4286,
+    "utmos": 3.8021,
+    "us_prob": 0.9982
+   },
+   "source": "results/abl_a_pos/test/wav/THV_arctic_a0067/out.wav"
+  },
+  "abl_b_pos": {
+   "label": "Ablation B",
+   "planned_words": [
+    {
+     "word": "surely",
+     "start": 0.046439909297052155,
+     "end": 0.603718820861678
+    },
+    {
+     "word": "i",
+     "start": 0.603718820861678,
+     "end": 0.7662585034013606
+    },
+    {
+     "word": "will",
+     "start": 0.7662585034013606,
+     "end": 0.9752380952380952
+    },
+    {
+     "word": "excuse",
+     "start": 0.9752380952380952,
+     "end": 2.066575963718821
+    },
+    {
+     "word": "you",
+     "start": 2.066575963718821,
+     "end": 2.159455782312925
+    },
+    {
+     "word": "she",
+     "start": 2.159455782312925,
+     "end": 2.2639455782312927
+    },
+    {
+     "word": "cried",
+     "start": 2.2987755102040817,
+     "end": 2.8444444444444446
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "surely",
+     "start": 0.03,
+     "end": 0.61
+    },
+    {
+     "word": "i",
+     "start": 0.61,
+     "end": 0.76
+    },
+    {
+     "word": "will",
+     "start": 0.76,
+     "end": 0.97
+    },
+    {
+     "word": "excuse",
+     "start": 0.97,
+     "end": 2.06
+    },
+    {
+     "word": "you",
+     "start": 2.06,
+     "end": 2.16
+    },
+    {
+     "word": "she",
+     "start": 2.16,
+     "end": 2.27
+    },
+    {
+     "word": "cried",
+     "start": 2.27,
+     "end": 2.74
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "surely",
+     "out": {
+      "word": "surely",
+      "start": 0.03,
+      "end": 0.61
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "i",
+     "out": {
+      "word": "i",
+      "start": 0.61,
+      "end": 0.76
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "will",
+     "out": {
+      "word": "will",
+      "start": 0.76,
+      "end": 0.97
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "excuse",
+     "out": {
+      "word": "excuse",
+      "start": 0.97,
+      "end": 2.06
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 588.2
+    },
+    {
+     "word": "you",
+     "out": {
+      "word": "you",
+      "start": 2.06,
+      "end": 2.16
+     },
+     "d_start_ms": 588.2,
+     "d_end_ms": 419.9
+    },
+    {
+     "word": "she",
+     "out": {
+      "word": "she",
+      "start": 2.16,
+      "end": 2.27
+     },
+     "d_start_ms": 269.1,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "cried",
+     "out": {
+      "word": "cried",
+      "start": 2.27,
+      "end": 2.74
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -100.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 146.8117,
+    "wer": 0.0,
+    "utmos": 3.391,
+    "us_prob": 0.9997
+   },
+   "source": "results/abl_b_pos/test/wav/THV_arctic_a0067/out.wav"
+  },
+  "v0": {
+   "label": "V0 (pretrained VITS + MAS)",
+   "planned_words": [
+    {
+     "word": "surely",
+     "start": 0.046439909297052155,
+     "end": 0.603718820861678
+    },
+    {
+     "word": "i",
+     "start": 0.603718820861678,
+     "end": 0.7662585034013606
+    },
+    {
+     "word": "will",
+     "start": 0.7662585034013606,
+     "end": 0.9752380952380952
+    },
+    {
+     "word": "excuse",
+     "start": 0.9752380952380952,
+     "end": 2.066575963718821
+    },
+    {
+     "word": "you",
+     "start": 2.066575963718821,
+     "end": 2.159455782312925
+    },
+    {
+     "word": "she",
+     "start": 2.159455782312925,
+     "end": 2.2639455782312927
+    },
+    {
+     "word": "cried",
+     "start": 2.2987755102040817,
+     "end": 2.8444444444444446
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "surely",
+     "start": 0.0,
+     "end": 0.6
+    },
+    {
+     "word": "i",
+     "start": 0.6,
+     "end": 0.72
+    },
+    {
+     "word": "will",
+     "start": 0.72,
+     "end": 0.93
+    },
+    {
+     "word": "excuse",
+     "start": 0.96,
+     "end": 2.06
+    },
+    {
+     "word": "you",
+     "start": 2.06,
+     "end": 2.13
+    },
+    {
+     "word": "she",
+     "start": 2.13,
+     "end": 2.26
+    },
+    {
+     "word": "cried",
+     "start": 2.26,
+     "end": 2.86
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "surely",
+     "out": {
+      "word": "surely",
+      "start": 0.0,
+      "end": 0.6
+     },
+     "d_start_ms": -40.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "i",
+     "out": {
+      "word": "i",
+      "start": 0.6,
+      "end": 0.72
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": -50.0
+    },
+    {
+     "word": "will",
+     "out": {
+      "word": "will",
+      "start": 0.72,
+      "end": 0.93
+     },
+     "d_start_ms": -50.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "excuse",
+     "out": {
+      "word": "excuse",
+      "start": 0.96,
+      "end": 2.06
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 588.2
+    },
+    {
+     "word": "you",
+     "out": {
+      "word": "you",
+      "start": 2.06,
+      "end": 2.13
+     },
+     "d_start_ms": 588.2,
+     "d_end_ms": 389.9
+    },
+    {
+     "word": "she",
+     "out": {
+      "word": "she",
+      "start": 2.13,
+      "end": 2.26
+     },
+     "d_start_ms": 239.1,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "cried",
+     "out": {
+      "word": "cried",
+      "start": 2.26,
+      "end": 2.86
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 20.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 148.2403,
+    "wer": 0.0,
+    "utmos": 4.4064,
+    "us_prob": 0.9838
+   },
+   "source": "results/v0/test/wav/THV_arctic_a0067/out.wav"
+  },
+  "m0": {
+   "label": "M0 (FastSpeech2)",
+   "planned_words": [
+    {
+     "word": "surely",
+     "start": 0.046439909297052155,
+     "end": 0.603718820861678
+    },
+    {
+     "word": "i",
+     "start": 0.603718820861678,
+     "end": 0.7662585034013606
+    },
+    {
+     "word": "will",
+     "start": 0.7662585034013606,
+     "end": 0.9752380952380952
+    },
+    {
+     "word": "excuse",
+     "start": 0.9752380952380952,
+     "end": 2.066575963718821
+    },
+    {
+     "word": "you",
+     "start": 2.066575963718821,
+     "end": 2.159455782312925
+    },
+    {
+     "word": "she",
+     "start": 2.159455782312925,
+     "end": 2.2639455782312927
+    },
+    {
+     "word": "cried",
+     "start": 2.2987755102040817,
+     "end": 2.8444444444444446
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "surely",
+     "start": 0.03,
+     "end": 0.58
+    },
+    {
+     "word": "i",
+     "start": 0.58,
+     "end": 0.76
+    },
+    {
+     "word": "will",
+     "start": 0.76,
+     "end": 0.98
+    },
+    {
+     "word": "excuse",
+     "start": 0.98,
+     "end": 2.07
+    },
+    {
+     "word": "you",
+     "start": 2.07,
+     "end": 2.15
+    },
+    {
+     "word": "she",
+     "start": 2.15,
+     "end": 2.3
+    },
+    {
+     "word": "cried",
+     "start": 2.34,
+     "end": 2.8929
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "surely",
+     "out": {
+      "word": "surely",
+      "start": 0.03,
+      "end": 0.58
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -50.0
+    },
+    {
+     "word": "i",
+     "out": {
+      "word": "i",
+      "start": 0.58,
+      "end": 0.76
+     },
+     "d_start_ms": -50.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "will",
+     "out": {
+      "word": "will",
+      "start": 0.76,
+      "end": 0.98
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "excuse",
+     "out": {
+      "word": "excuse",
+      "start": 0.98,
+      "end": 2.07
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 598.2
+    },
+    {
+     "word": "you",
+     "out": {
+      "word": "you",
+      "start": 2.07,
+      "end": 2.15
+     },
+     "d_start_ms": 598.2,
+     "d_end_ms": 409.9
+    },
+    {
+     "word": "she",
+     "out": {
+      "word": "she",
+      "start": 2.15,
+      "end": 2.3
+     },
+     "d_start_ms": 259.1,
+     "d_end_ms": 30.0
+    },
+    {
+     "word": "cried",
+     "out": {
+      "word": "cried",
+      "start": 2.34,
+      "end": 2.8929
+     },
+     "d_start_ms": 70.0,
+     "d_end_ms": 52.9
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 156.3028,
+    "wer": 0.5714,
+    "utmos": 3.7521,
+    "us_prob": 0.9975
+   },
+   "source": "results/m0/test/wav/THV_arctic_a0067/out.wav"
+  }
+ }
+}

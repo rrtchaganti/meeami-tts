@@ -1,0 +1,1198 @@
+{
+ "id": "ABA_arctic_a0048",
+ "accent": "arabic",
+ "why_selected": "worst main-system MAE (131.4 ms)",
+ "text": "He looked at the handkerchief more closely",
+ "normalized": "he looked at the handkerchief more closely",
+ "reference": "data/raw/l2arctic/ABA/wav/arctic_a0048.wav",
+ "ref_duration_s": 3.8693650793650796,
+ "annotation_words": [
+  {
+   "word": "he",
+   "start": 0.03,
+   "end": 0.23
+  },
+  {
+   "word": "looked",
+   "start": 0.23,
+   "end": 0.57
+  },
+  {
+   "word": "at",
+   "start": 0.57,
+   "end": 1.22
+  },
+  {
+   "word": "the",
+   "start": 1.22,
+   "end": 1.33
+  },
+  {
+   "word": "handkerchief",
+   "start": 1.33,
+   "end": 2.6
+  },
+  {
+   "word": "more",
+   "start": 2.6,
+   "end": 2.99
+  },
+  {
+   "word": "closely",
+   "start": 3.26,
+   "end": 3.78
+  }
+ ],
+ "ref_words": [
+  {
+   "word": "he",
+   "start": 0.1,
+   "end": 0.24
+  },
+  {
+   "word": "looked",
+   "start": 0.24,
+   "end": 0.48
+  },
+  {
+   "word": "at",
+   "start": 0.48,
+   "end": 0.93
+  },
+  {
+   "word": "the",
+   "start": 0.93,
+   "end": 1.75
+  },
+  {
+   "word": "handkerchief",
+   "start": 1.95,
+   "end": 2.61
+  },
+  {
+   "word": "more",
+   "start": 2.61,
+   "end": 2.97
+  },
+  {
+   "word": "closely",
+   "start": 3.28,
+   "end": 3.8
+  }
+ ],
+ "systems": {
+  "m1_pos_diph": {
+   "label": "main (m1_pos_diph)",
+   "planned_words": [
+    {
+     "word": "he",
+     "start": 0.10448979591836735,
+     "end": 0.2438095238095238
+    },
+    {
+     "word": "looked",
+     "start": 0.2438095238095238,
+     "end": 0.47600907029478456
+    },
+    {
+     "word": "at",
+     "start": 0.47600907029478456,
+     "end": 0.8126984126984127
+    },
+    {
+     "word": "the",
+     "start": 0.9287981859410431,
+     "end": 1.230657596371882
+    },
+    {
+     "word": "handkerchief",
+     "start": 1.9504761904761905,
+     "end": 2.6122448979591835
+    },
+    {
+     "word": "more",
+     "start": 2.6122448979591835,
+     "end": 2.972154195011338
+    },
+    {
+     "word": "closely",
+     "start": 3.2856235827664397,
+     "end": 3.7964625850340137
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "he",
+     "start": 0.09,
+     "end": 0.24
+    },
+    {
+     "word": "looked",
+     "start": 0.24,
+     "end": 0.47
+    },
+    {
+     "word": "at",
+     "start": 0.47,
+     "end": 0.69
+    },
+    {
+     "word": "the",
+     "start": 0.95,
+     "end": 1.25
+    },
+    {
+     "word": "handkerchief",
+     "start": 1.96,
+     "end": 2.61
+    },
+    {
+     "word": "more",
+     "start": 2.61,
+     "end": 2.99
+    },
+    {
+     "word": "closely",
+     "start": 3.28,
+     "end": 3.79
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "he",
+     "out": {
+      "word": "he",
+      "start": 0.09,
+      "end": 0.24
+     },
+     "d_start_ms": 60.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "looked",
+     "out": {
+      "word": "looked",
+      "start": 0.24,
+      "end": 0.47
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -100.0
+    },
+    {
+     "word": "at",
+     "out": {
+      "word": "at",
+      "start": 0.47,
+      "end": 0.69
+     },
+     "d_start_ms": -100.0,
+     "d_end_ms": -530.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.95,
+      "end": 1.25
+     },
+     "d_start_ms": -270.0,
+     "d_end_ms": -80.0
+    },
+    {
+     "word": "handkerchief",
+     "out": {
+      "word": "handkerchief",
+      "start": 1.96,
+      "end": 2.61
+     },
+     "d_start_ms": 630.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "more",
+     "out": {
+      "word": "more",
+      "start": 2.61,
+      "end": 2.99
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "closely",
+     "out": {
+      "word": "closely",
+      "start": 3.28,
+      "end": 3.79
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 10.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 131.4286,
+    "wer": 0.0,
+    "utmos": 4.1708,
+    "us_prob": 0.7243
+   },
+   "source": "results/m1_pos_diph/test/wav/ABA_arctic_a0048/out.wav"
+  },
+  "m1": {
+   "label": "M1",
+   "planned_words": [
+    {
+     "word": "he",
+     "start": 0.10448979591836735,
+     "end": 0.2438095238095238
+    },
+    {
+     "word": "looked",
+     "start": 0.2438095238095238,
+     "end": 0.47600907029478456
+    },
+    {
+     "word": "at",
+     "start": 0.47600907029478456,
+     "end": 0.8126984126984127
+    },
+    {
+     "word": "the",
+     "start": 0.9287981859410431,
+     "end": 1.2190476190476192
+    },
+    {
+     "word": "handkerchief",
+     "start": 1.9504761904761905,
+     "end": 2.6122448979591835
+    },
+    {
+     "word": "more",
+     "start": 2.6122448979591835,
+     "end": 2.972154195011338
+    },
+    {
+     "word": "closely",
+     "start": 3.2856235827664397,
+     "end": 3.7964625850340137
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "he",
+     "start": 0.09,
+     "end": 0.24
+    },
+    {
+     "word": "looked",
+     "start": 0.24,
+     "end": 0.47
+    },
+    {
+     "word": "at",
+     "start": 0.47,
+     "end": 0.69
+    },
+    {
+     "word": "the",
+     "start": 0.95,
+     "end": 1.23
+    },
+    {
+     "word": "handkerchief",
+     "start": 1.96,
+     "end": 2.61
+    },
+    {
+     "word": "more",
+     "start": 2.61,
+     "end": 2.97
+    },
+    {
+     "word": "closely",
+     "start": 3.28,
+     "end": 3.8
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "he",
+     "out": {
+      "word": "he",
+      "start": 0.09,
+      "end": 0.24
+     },
+     "d_start_ms": 60.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "looked",
+     "out": {
+      "word": "looked",
+      "start": 0.24,
+      "end": 0.47
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -100.0
+    },
+    {
+     "word": "at",
+     "out": {
+      "word": "at",
+      "start": 0.47,
+      "end": 0.69
+     },
+     "d_start_ms": -100.0,
+     "d_end_ms": -530.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.95,
+      "end": 1.23
+     },
+     "d_start_ms": -270.0,
+     "d_end_ms": -100.0
+    },
+    {
+     "word": "handkerchief",
+     "out": {
+      "word": "handkerchief",
+      "start": 1.96,
+      "end": 2.61
+     },
+     "d_start_ms": 630.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "more",
+     "out": {
+      "word": "more",
+      "start": 2.61,
+      "end": 2.97
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "closely",
+     "out": {
+      "word": "closely",
+      "start": 3.28,
+      "end": 3.8
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 20.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 135.0,
+    "wer": 0.0,
+    "utmos": 4.0722,
+    "us_prob": 0.9534
+   },
+   "source": "results/m1/test/wav/ABA_arctic_a0048/out.wav"
+  },
+  "m1_pos": {
+   "label": "M1 + position embedding",
+   "planned_words": [
+    {
+     "word": "he",
+     "start": 0.10448979591836735,
+     "end": 0.2438095238095238
+    },
+    {
+     "word": "looked",
+     "start": 0.2438095238095238,
+     "end": 0.47600907029478456
+    },
+    {
+     "word": "at",
+     "start": 0.47600907029478456,
+     "end": 0.8243083900226758
+    },
+    {
+     "word": "the",
+     "start": 0.9287981859410431,
+     "end": 1.230657596371882
+    },
+    {
+     "word": "handkerchief",
+     "start": 1.9504761904761905,
+     "end": 2.6122448979591835
+    },
+    {
+     "word": "more",
+     "start": 2.6122448979591835,
+     "end": 2.995374149659864
+    },
+    {
+     "word": "closely",
+     "start": 3.2856235827664397,
+     "end": 3.7964625850340137
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "he",
+     "start": 0.09,
+     "end": 0.24
+    },
+    {
+     "word": "looked",
+     "start": 0.24,
+     "end": 0.47
+    },
+    {
+     "word": "at",
+     "start": 0.47,
+     "end": 0.7
+    },
+    {
+     "word": "the",
+     "start": 0.96,
+     "end": 1.24
+    },
+    {
+     "word": "handkerchief",
+     "start": 1.94,
+     "end": 2.61
+    },
+    {
+     "word": "more",
+     "start": 2.61,
+     "end": 2.97
+    },
+    {
+     "word": "closely",
+     "start": 3.28,
+     "end": 3.79
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "he",
+     "out": {
+      "word": "he",
+      "start": 0.09,
+      "end": 0.24
+     },
+     "d_start_ms": 60.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "looked",
+     "out": {
+      "word": "looked",
+      "start": 0.24,
+      "end": 0.47
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -100.0
+    },
+    {
+     "word": "at",
+     "out": {
+      "word": "at",
+      "start": 0.47,
+      "end": 0.7
+     },
+     "d_start_ms": -100.0,
+     "d_end_ms": -520.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.96,
+      "end": 1.24
+     },
+     "d_start_ms": -260.0,
+     "d_end_ms": -90.0
+    },
+    {
+     "word": "handkerchief",
+     "out": {
+      "word": "handkerchief",
+      "start": 1.94,
+      "end": 2.61
+     },
+     "d_start_ms": 610.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "more",
+     "out": {
+      "word": "more",
+      "start": 2.61,
+      "end": 2.97
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "closely",
+     "out": {
+      "word": "closely",
+      "start": 3.28,
+      "end": 3.79
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 10.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 130.7143,
+    "wer": 0.0,
+    "utmos": 4.2252,
+    "us_prob": 0.9776
+   },
+   "source": "results/m1_pos/test/wav/ABA_arctic_a0048/out.wav"
+  },
+  "abl_a_pos": {
+   "label": "Ablation A",
+   "planned_words": [
+    {
+     "word": "he",
+     "start": 0.10448979591836735,
+     "end": 0.2438095238095238
+    },
+    {
+     "word": "looked",
+     "start": 0.2438095238095238,
+     "end": 0.47600907029478456
+    },
+    {
+     "word": "at",
+     "start": 0.47600907029478456,
+     "end": 0.8126984126984127
+    },
+    {
+     "word": "the",
+     "start": 0.9287981859410431,
+     "end": 1.230657596371882
+    },
+    {
+     "word": "handkerchief",
+     "start": 1.9504761904761905,
+     "end": 2.6122448979591835
+    },
+    {
+     "word": "more",
+     "start": 2.6122448979591835,
+     "end": 2.995374149659864
+    },
+    {
+     "word": "closely",
+     "start": 3.2856235827664397,
+     "end": 3.7964625850340137
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "he",
+     "start": 0.0,
+     "end": 0.24
+    },
+    {
+     "word": "looked",
+     "start": 0.24,
+     "end": 0.48
+    },
+    {
+     "word": "at",
+     "start": 0.48,
+     "end": 0.7
+    },
+    {
+     "word": "the",
+     "start": 0.95,
+     "end": 1.27
+    },
+    {
+     "word": "handkerchief",
+     "start": 1.92,
+     "end": 2.61
+    },
+    {
+     "word": "more",
+     "start": 2.61,
+     "end": 3.0
+    },
+    {
+     "word": "closely",
+     "start": 3.29,
+     "end": 3.78
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "he",
+     "out": {
+      "word": "he",
+      "start": 0.0,
+      "end": 0.24
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "looked",
+     "out": {
+      "word": "looked",
+      "start": 0.24,
+      "end": 0.48
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -90.0
+    },
+    {
+     "word": "at",
+     "out": {
+      "word": "at",
+      "start": 0.48,
+      "end": 0.7
+     },
+     "d_start_ms": -90.0,
+     "d_end_ms": -520.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.95,
+      "end": 1.27
+     },
+     "d_start_ms": -270.0,
+     "d_end_ms": -60.0
+    },
+    {
+     "word": "handkerchief",
+     "out": {
+      "word": "handkerchief",
+      "start": 1.92,
+      "end": 2.61
+     },
+     "d_start_ms": 590.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "more",
+     "out": {
+      "word": "more",
+      "start": 2.61,
+      "end": 3.0
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "closely",
+     "out": {
+      "word": "closely",
+      "start": 3.29,
+      "end": 3.78
+     },
+     "d_start_ms": 30.0,
+     "d_end_ms": 0.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 123.5714,
+    "wer": 0.0,
+    "utmos": 3.7739,
+    "us_prob": 0.322
+   },
+   "source": "results/abl_a_pos/test/wav/ABA_arctic_a0048/out.wav"
+  },
+  "abl_b_pos": {
+   "label": "Ablation B",
+   "planned_words": [
+    {
+     "word": "he",
+     "start": 0.10448979591836735,
+     "end": 0.2438095238095238
+    },
+    {
+     "word": "looked",
+     "start": 0.2438095238095238,
+     "end": 0.47600907029478456
+    },
+    {
+     "word": "at",
+     "start": 0.47600907029478456,
+     "end": 0.7778684807256235
+    },
+    {
+     "word": "the",
+     "start": 0.9287981859410431,
+     "end": 1.18421768707483
+    },
+    {
+     "word": "handkerchief",
+     "start": 1.9504761904761905,
+     "end": 2.6122448979591835
+    },
+    {
+     "word": "more",
+     "start": 2.6122448979591835,
+     "end": 2.9837641723356008
+    },
+    {
+     "word": "closely",
+     "start": 3.2856235827664397,
+     "end": 3.7964625850340137
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "he",
+     "start": 0.09,
+     "end": 0.24
+    },
+    {
+     "word": "looked",
+     "start": 0.24,
+     "end": 0.47
+    },
+    {
+     "word": "at",
+     "start": 0.47,
+     "end": 0.65
+    },
+    {
+     "word": "the",
+     "start": 0.95,
+     "end": 1.2
+    },
+    {
+     "word": "handkerchief",
+     "start": 1.93,
+     "end": 2.62
+    },
+    {
+     "word": "more",
+     "start": 2.62,
+     "end": 3.0
+    },
+    {
+     "word": "closely",
+     "start": 3.29,
+     "end": 3.78
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "he",
+     "out": {
+      "word": "he",
+      "start": 0.09,
+      "end": 0.24
+     },
+     "d_start_ms": 60.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "looked",
+     "out": {
+      "word": "looked",
+      "start": 0.24,
+      "end": 0.47
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -100.0
+    },
+    {
+     "word": "at",
+     "out": {
+      "word": "at",
+      "start": 0.47,
+      "end": 0.65
+     },
+     "d_start_ms": -100.0,
+     "d_end_ms": -570.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.95,
+      "end": 1.2
+     },
+     "d_start_ms": -270.0,
+     "d_end_ms": -130.0
+    },
+    {
+     "word": "handkerchief",
+     "out": {
+      "word": "handkerchief",
+      "start": 1.93,
+      "end": 2.62
+     },
+     "d_start_ms": 600.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "more",
+     "out": {
+      "word": "more",
+      "start": 2.62,
+      "end": 3.0
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "closely",
+     "out": {
+      "word": "closely",
+      "start": 3.29,
+      "end": 3.78
+     },
+     "d_start_ms": 30.0,
+     "d_end_ms": 0.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 137.8571,
+    "wer": 0.0,
+    "utmos": 3.4697,
+    "us_prob": 0.9986
+   },
+   "source": "results/abl_b_pos/test/wav/ABA_arctic_a0048/out.wav"
+  },
+  "v0": {
+   "label": "V0 (pretrained VITS + MAS)",
+   "planned_words": [
+    {
+     "word": "he",
+     "start": 0.10448979591836735,
+     "end": 0.2438095238095238
+    },
+    {
+     "word": "looked",
+     "start": 0.2438095238095238,
+     "end": 0.47600907029478456
+    },
+    {
+     "word": "at",
+     "start": 0.47600907029478456,
+     "end": 0.8126984126984127
+    },
+    {
+     "word": "the",
+     "start": 0.9287981859410431,
+     "end": 1.0216780045351475
+    },
+    {
+     "word": "handkerchief",
+     "start": 1.9504761904761905,
+     "end": 2.6122448979591835
+    },
+    {
+     "word": "more",
+     "start": 2.6122448979591835,
+     "end": 2.972154195011338
+    },
+    {
+     "word": "closely",
+     "start": 3.2856235827664397,
+     "end": 3.7964625850340137
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "he",
+     "start": 0.1,
+     "end": 0.2
+    },
+    {
+     "word": "looked",
+     "start": 0.2,
+     "end": 0.45
+    },
+    {
+     "word": "at",
+     "start": 0.45,
+     "end": 0.76
+    },
+    {
+     "word": "the",
+     "start": 0.91,
+     "end": 1.0
+    },
+    {
+     "word": "handkerchief",
+     "start": 1.0,
+     "end": 2.61
+    },
+    {
+     "word": "more",
+     "start": 2.61,
+     "end": 3.08
+    },
+    {
+     "word": "closely",
+     "start": 3.28,
+     "end": 3.84
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "he",
+     "out": {
+      "word": "he",
+      "start": 0.1,
+      "end": 0.2
+     },
+     "d_start_ms": 70.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "looked",
+     "out": {
+      "word": "looked",
+      "start": 0.2,
+      "end": 0.45
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": -120.0
+    },
+    {
+     "word": "at",
+     "out": {
+      "word": "at",
+      "start": 0.45,
+      "end": 0.76
+     },
+     "d_start_ms": -120.0,
+     "d_end_ms": -460.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.91,
+      "end": 1.0
+     },
+     "d_start_ms": -310.0,
+     "d_end_ms": -330.0
+    },
+    {
+     "word": "handkerchief",
+     "out": {
+      "word": "handkerchief",
+      "start": 1.0,
+      "end": 2.61
+     },
+     "d_start_ms": -330.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "more",
+     "out": {
+      "word": "more",
+      "start": 2.61,
+      "end": 3.08
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 90.0
+    },
+    {
+     "word": "closely",
+     "out": {
+      "word": "closely",
+      "start": 3.28,
+      "end": 3.84
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 60.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 142.1429,
+    "wer": 0.0,
+    "utmos": 4.0725,
+    "us_prob": 0.8931
+   },
+   "source": "results/v0/test/wav/ABA_arctic_a0048/out.wav"
+  },
+  "m0": {
+   "label": "M0 (FastSpeech2)",
+   "planned_words": [
+    {
+     "word": "he",
+     "start": 0.10448979591836735,
+     "end": 0.2438095238095238
+    },
+    {
+     "word": "looked",
+     "start": 0.2438095238095238,
+     "end": 0.47600907029478456
+    },
+    {
+     "word": "at",
+     "start": 0.47600907029478456,
+     "end": 0.7662585034013606
+    },
+    {
+     "word": "the",
+     "start": 0.9287981859410431,
+     "end": 1.7066666666666668
+    },
+    {
+     "word": "handkerchief",
+     "start": 1.9504761904761905,
+     "end": 2.6122448979591835
+    },
+    {
+     "word": "more",
+     "start": 2.6122448979591835,
+     "end": 2.972154195011338
+    },
+    {
+     "word": "closely",
+     "start": 3.2856235827664397,
+     "end": 3.7964625850340137
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "he",
+     "start": 0.0,
+     "end": 0.24
+    },
+    {
+     "word": "looked",
+     "start": 0.24,
+     "end": 0.48
+    },
+    {
+     "word": "at",
+     "start": 0.48,
+     "end": 0.72
+    },
+    {
+     "word": "the",
+     "start": 0.96,
+     "end": 1.56
+    },
+    {
+     "word": "handkerchief",
+     "start": 1.93,
+     "end": 2.62
+    },
+    {
+     "word": "more",
+     "start": 2.62,
+     "end": 2.96
+    },
+    {
+     "word": "closely",
+     "start": 3.31,
+     "end": 3.84
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "he",
+     "out": {
+      "word": "he",
+      "start": 0.0,
+      "end": 0.24
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "looked",
+     "out": {
+      "word": "looked",
+      "start": 0.24,
+      "end": 0.48
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -90.0
+    },
+    {
+     "word": "at",
+     "out": {
+      "word": "at",
+      "start": 0.48,
+      "end": 0.72
+     },
+     "d_start_ms": -90.0,
+     "d_end_ms": -500.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 0.96,
+      "end": 1.56
+     },
+     "d_start_ms": -260.0,
+     "d_end_ms": 230.0
+    },
+    {
+     "word": "handkerchief",
+     "out": {
+      "word": "handkerchief",
+      "start": 1.93,
+      "end": 2.62
+     },
+     "d_start_ms": 600.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "more",
+     "out": {
+      "word": "more",
+      "start": 2.62,
+      "end": 2.96
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "closely",
+     "out": {
+      "word": "closely",
+      "start": 3.31,
+      "end": 3.84
+     },
+     "d_start_ms": 50.0,
+     "d_end_ms": 60.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 142.8571,
+    "wer": 0.0,
+    "utmos": 3.3447,
+    "us_prob": 0.9833
+   },
+   "source": "results/m0/test/wav/ABA_arctic_a0048/out.wav"
+  }
+ }
+}

@@ -1,0 +1,127 @@
+{
+ "text": "obc means other backward castes",
+ "normalized": "obc means other backward castes",
+ "oov_added": [],
+ "ref_duration_s": 4.08,
+ "ref_words": [
+  {
+   "word": "obc",
+   "start": 0.37,
+   "end": 0.62
+  },
+  {
+   "word": "means",
+   "start": 0.62,
+   "end": 1.73
+  },
+  {
+   "word": "other",
+   "start": 1.9,
+   "end": 2.19
+  },
+  {
+   "word": "backward",
+   "start": 2.19,
+   "end": 2.79
+  },
+  {
+   "word": "castes",
+   "start": 2.79,
+   "end": 3.25
+  }
+ ],
+ "align_s": 5.8193772610029555,
+ "total_s": 35.52898565099895,
+ "systems": [
+  {
+   "name": "main",
+   "audio": "main/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [
+    "means"
+   ],
+   "rtf_model": 0.02276284093140395,
+   "synthesis_s": 0.09287239100012812,
+   "measured_mae_ms": 51.000000000000036,
+   "measured": [
+    {
+     "start": 0.0,
+     "end": 0.62,
+     "d_start_ms": -370.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 0.62,
+     "end": 1.66,
+     "d_start_ms": 0.0,
+     "d_end_ms": -70.00000000000006
+    },
+    {
+     "start": 1.9,
+     "end": 2.19,
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 2.19,
+     "end": 2.76,
+     "d_start_ms": 0.0,
+     "d_end_ms": -30.00000000000025
+    },
+    {
+     "start": 2.76,
+     "end": 3.26,
+     "d_start_ms": -30.00000000000025,
+     "d_end_ms": 9.999999999999787
+    }
+   ]
+  },
+  {
+   "name": "v0",
+   "audio": "v0/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [
+    "means"
+   ],
+   "rtf_model": 0.02844963112728888,
+   "synthesis_s": 0.11607449499933864,
+   "measured_mae_ms": 64.99999999999997,
+   "measured": [
+    {
+     "start": 0.37,
+     "end": 0.61,
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.000000000000009
+    },
+    {
+     "start": 0.61,
+     "end": 1.66,
+     "d_start_ms": -10.000000000000009,
+     "d_end_ms": -70.00000000000006
+    },
+    {
+     "start": 1.9,
+     "end": 2.1,
+     "d_start_ms": 0.0,
+     "d_end_ms": -89.99999999999986
+    },
+    {
+     "start": 2.1,
+     "end": 2.77,
+     "d_start_ms": -89.99999999999986,
+     "d_end_ms": -20.000000000000018
+    },
+    {
+     "start": 2.77,
+     "end": 3.59,
+     "d_start_ms": -20.000000000000018,
+     "d_end_ms": 339.9999999999999
+    }
+   ]
+  }
+ ]
+}

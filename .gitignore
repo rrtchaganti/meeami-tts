@@ -54,3 +54,5 @@ __pycache__/
 /results/tune/*/*/*
 !/results/tune/*/*/per_utt.csv
 !/results/tune/*/*/summary.json
+# evidence samples (E-36): exact evaluated outputs + references, built by `make samples`
+!/samples/**

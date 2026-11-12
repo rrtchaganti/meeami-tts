@@ -1,0 +1,71 @@
+{
+ "text": "abc are three letters of english language",
+ "normalized": "abc are three letters of english language",
+ "oov_added": [],
+ "ref_duration_s": 4.44,
+ "ref_words": [
+  {
+   "word": "abc",
+   "start": 0.54,
+   "end": 1.32
+  },
+  {
+   "word": "are",
+   "start": 1.38,
+   "end": 1.75
+  },
+  {
+   "word": "three",
+   "start": 2.07,
+   "end": 2.27
+  },
+  {
+   "word": "letters",
+   "start": 2.27,
+   "end": 2.76
+  },
+  {
+   "word": "of",
+   "start": 2.76,
+   "end": 3.03
+  },
+  {
+   "word": "english",
+   "start": 3.03,
+   "end": 3.48
+  },
+  {
+   "word": "language",
+   "start": 3.48,
+   "end": 4.12
+  }
+ ],
+ "align_s": 11.100784712999484,
+ "total_s": 19.810871986000166,
+ "systems": [
+  {
+   "name": "main",
+   "audio": "main/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.051867779279131644,
+   "synthesis_s": 0.23029293999934453,
+   "measured_mae_ms": null,
+   "measured": null
+  },
+  {
+   "name": "v0",
+   "audio": "v0/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.027030700675823024,
+   "synthesis_s": 0.12001631100065424,
+   "measured_mae_ms": null,
+   "measured": null
+  }
+ ]
+}

@@ -1,0 +1,1348 @@
+{
+ "id": "HJK_arctic_a0053",
+ "accent": "korean",
+ "why_selected": "best main-system MAE (3.7 ms)",
+ "text": "Suddenly his fingers closed tightly over the handkerchief",
+ "normalized": "suddenly his fingers closed tightly over the handkerchief",
+ "reference": "data/raw/l2arctic/HJK/wav/arctic_a0053.wav",
+ "ref_duration_s": 3.547233560090703,
+ "annotation_words": [
+  {
+   "word": "suddenly",
+   "start": 0.03,
+   "end": 0.71
+  },
+  {
+   "word": "his",
+   "start": 0.71,
+   "end": 0.96
+  },
+  {
+   "word": "fingers",
+   "start": 0.96,
+   "end": 1.46
+  },
+  {
+   "word": "closed",
+   "start": 1.46,
+   "end": 1.92
+  },
+  {
+   "word": "tightly",
+   "start": 1.92,
+   "end": 2.41
+  },
+  {
+   "word": "over",
+   "start": 2.41,
+   "end": 2.63
+  },
+  {
+   "word": "the",
+   "start": 2.63,
+   "end": 2.73
+  },
+  {
+   "word": "handkerchief",
+   "start": 2.73,
+   "end": 3.32
+  }
+ ],
+ "ref_words": [
+  {
+   "word": "suddenly",
+   "start": 0.03,
+   "end": 0.73
+  },
+  {
+   "word": "his",
+   "start": 0.73,
+   "end": 0.96
+  },
+  {
+   "word": "fingers",
+   "start": 0.96,
+   "end": 1.45
+  },
+  {
+   "word": "closed",
+   "start": 1.45,
+   "end": 1.92
+  },
+  {
+   "word": "tightly",
+   "start": 1.92,
+   "end": 2.4
+  },
+  {
+   "word": "over",
+   "start": 2.4,
+   "end": 2.63
+  },
+  {
+   "word": "the",
+   "start": 2.63,
+   "end": 2.72
+  },
+  {
+   "word": "handkerchief",
+   "start": 2.72,
+   "end": 3.29
+  }
+ ],
+ "systems": {
+  "m1_pos_diph": {
+   "label": "main (m1_pos_diph)",
+   "planned_words": [
+    {
+     "word": "suddenly",
+     "start": 0.034829931972789115,
+     "end": 0.7314285714285714
+    },
+    {
+     "word": "his",
+     "start": 0.7314285714285714,
+     "end": 0.9636281179138322
+    },
+    {
+     "word": "fingers",
+     "start": 0.9636281179138322,
+     "end": 1.4512471655328798
+    },
+    {
+     "word": "closed",
+     "start": 1.4512471655328798,
+     "end": 1.9156462585034013
+    },
+    {
+     "word": "tightly",
+     "start": 1.9156462585034013,
+     "end": 2.403265306122449
+    },
+    {
+     "word": "over",
+     "start": 2.403265306122449,
+     "end": 2.6354648526077096
+    },
+    {
+     "word": "the",
+     "start": 2.6354648526077096,
+     "end": 2.716734693877551
+    },
+    {
+     "word": "handkerchief",
+     "start": 2.716734693877551,
+     "end": 3.2856235827664397
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "suddenly",
+     "start": 0.03,
+     "end": 0.71
+    },
+    {
+     "word": "his",
+     "start": 0.71,
+     "end": 0.96
+    },
+    {
+     "word": "fingers",
+     "start": 0.96,
+     "end": 1.45
+    },
+    {
+     "word": "closed",
+     "start": 1.45,
+     "end": 1.92
+    },
+    {
+     "word": "tightly",
+     "start": 1.92,
+     "end": 2.41
+    },
+    {
+     "word": "over",
+     "start": 2.41,
+     "end": 2.63
+    },
+    {
+     "word": "the",
+     "start": 2.63,
+     "end": 2.72
+    },
+    {
+     "word": "handkerchief",
+     "start": 2.72,
+     "end": 3.3
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "suddenly",
+     "out": {
+      "word": "suddenly",
+      "start": 0.03,
+      "end": 0.71
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "his",
+     "out": {
+      "word": "his",
+      "start": 0.71,
+      "end": 0.96
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "fingers",
+     "out": {
+      "word": "fingers",
+      "start": 0.96,
+      "end": 1.45
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "closed",
+     "out": {
+      "word": "closed",
+      "start": 1.45,
+      "end": 1.92
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "tightly",
+     "out": {
+      "word": "tightly",
+      "start": 1.92,
+      "end": 2.41
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "over",
+     "out": {
+      "word": "over",
+      "start": 2.41,
+      "end": 2.63
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 2.63,
+      "end": 2.72
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "handkerchief",
+     "out": {
+      "word": "handkerchief",
+      "start": 2.72,
+      "end": 3.3
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -20.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 3.75,
+    "wer": 0.0,
+    "utmos": 4.3525,
+    "us_prob": 0.9974
+   },
+   "source": "results/m1_pos_diph/test/wav/HJK_arctic_a0053/out.wav"
+  },
+  "m1": {
+   "label": "M1",
+   "planned_words": [
+    {
+     "word": "suddenly",
+     "start": 0.034829931972789115,
+     "end": 0.7314285714285714
+    },
+    {
+     "word": "his",
+     "start": 0.7314285714285714,
+     "end": 0.9636281179138322
+    },
+    {
+     "word": "fingers",
+     "start": 0.9636281179138322,
+     "end": 1.4512471655328798
+    },
+    {
+     "word": "closed",
+     "start": 1.4512471655328798,
+     "end": 1.9156462585034013
+    },
+    {
+     "word": "tightly",
+     "start": 1.9156462585034013,
+     "end": 2.403265306122449
+    },
+    {
+     "word": "over",
+     "start": 2.403265306122449,
+     "end": 2.6354648526077096
+    },
+    {
+     "word": "the",
+     "start": 2.6354648526077096,
+     "end": 2.716734693877551
+    },
+    {
+     "word": "handkerchief",
+     "start": 2.716734693877551,
+     "end": 3.2856235827664397
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "suddenly",
+     "start": 0.03,
+     "end": 0.73
+    },
+    {
+     "word": "his",
+     "start": 0.73,
+     "end": 0.96
+    },
+    {
+     "word": "fingers",
+     "start": 0.96,
+     "end": 1.45
+    },
+    {
+     "word": "closed",
+     "start": 1.45,
+     "end": 1.93
+    },
+    {
+     "word": "tightly",
+     "start": 1.93,
+     "end": 2.4
+    },
+    {
+     "word": "over",
+     "start": 2.4,
+     "end": 2.63
+    },
+    {
+     "word": "the",
+     "start": 2.63,
+     "end": 2.72
+    },
+    {
+     "word": "handkerchief",
+     "start": 2.72,
+     "end": 3.31
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "suddenly",
+     "out": {
+      "word": "suddenly",
+      "start": 0.03,
+      "end": 0.73
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "his",
+     "out": {
+      "word": "his",
+      "start": 0.73,
+      "end": 0.96
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "fingers",
+     "out": {
+      "word": "fingers",
+      "start": 0.96,
+      "end": 1.45
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "closed",
+     "out": {
+      "word": "closed",
+      "start": 1.45,
+      "end": 1.93
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "tightly",
+     "out": {
+      "word": "tightly",
+      "start": 1.93,
+      "end": 2.4
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "over",
+     "out": {
+      "word": "over",
+      "start": 2.4,
+      "end": 2.63
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 2.63,
+      "end": 2.72
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "handkerchief",
+     "out": {
+      "word": "handkerchief",
+      "start": 2.72,
+      "end": 3.31
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -10.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 8.125,
+    "wer": 0.0,
+    "utmos": 4.3316,
+    "us_prob": 0.9497
+   },
+   "source": "results/m1/test/wav/HJK_arctic_a0053/out.wav"
+  },
+  "m1_pos": {
+   "label": "M1 + position embedding",
+   "planned_words": [
+    {
+     "word": "suddenly",
+     "start": 0.034829931972789115,
+     "end": 0.7314285714285714
+    },
+    {
+     "word": "his",
+     "start": 0.7314285714285714,
+     "end": 0.9636281179138322
+    },
+    {
+     "word": "fingers",
+     "start": 0.9636281179138322,
+     "end": 1.4512471655328798
+    },
+    {
+     "word": "closed",
+     "start": 1.4512471655328798,
+     "end": 1.9156462585034013
+    },
+    {
+     "word": "tightly",
+     "start": 1.9156462585034013,
+     "end": 2.403265306122449
+    },
+    {
+     "word": "over",
+     "start": 2.403265306122449,
+     "end": 2.6354648526077096
+    },
+    {
+     "word": "the",
+     "start": 2.6354648526077096,
+     "end": 2.716734693877551
+    },
+    {
+     "word": "handkerchief",
+     "start": 2.716734693877551,
+     "end": 3.2856235827664397
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "suddenly",
+     "start": 0.0,
+     "end": 0.74
+    },
+    {
+     "word": "his",
+     "start": 0.74,
+     "end": 0.96
+    },
+    {
+     "word": "fingers",
+     "start": 0.96,
+     "end": 1.45
+    },
+    {
+     "word": "closed",
+     "start": 1.45,
+     "end": 1.91
+    },
+    {
+     "word": "tightly",
+     "start": 1.91,
+     "end": 2.4
+    },
+    {
+     "word": "over",
+     "start": 2.4,
+     "end": 2.64
+    },
+    {
+     "word": "the",
+     "start": 2.64,
+     "end": 2.72
+    },
+    {
+     "word": "handkerchief",
+     "start": 2.72,
+     "end": 3.3
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "suddenly",
+     "out": {
+      "word": "suddenly",
+      "start": 0.0,
+      "end": 0.74
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": 30.0
+    },
+    {
+     "word": "his",
+     "out": {
+      "word": "his",
+      "start": 0.74,
+      "end": 0.96
+     },
+     "d_start_ms": 30.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "fingers",
+     "out": {
+      "word": "fingers",
+      "start": 0.96,
+      "end": 1.45
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "closed",
+     "out": {
+      "word": "closed",
+      "start": 1.45,
+      "end": 1.91
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "tightly",
+     "out": {
+      "word": "tightly",
+      "start": 1.91,
+      "end": 2.4
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "over",
+     "out": {
+      "word": "over",
+      "start": 2.4,
+      "end": 2.64
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 2.64,
+      "end": 2.72
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "handkerchief",
+     "out": {
+      "word": "handkerchief",
+      "start": 2.72,
+      "end": 3.3
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -20.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 13.125,
+    "wer": 0.0,
+    "utmos": 4.4189,
+    "us_prob": 0.9884
+   },
+   "source": "results/m1_pos/test/wav/HJK_arctic_a0053/out.wav"
+  },
+  "abl_a_pos": {
+   "label": "Ablation A",
+   "planned_words": [
+    {
+     "word": "suddenly",
+     "start": 0.034829931972789115,
+     "end": 0.7314285714285714
+    },
+    {
+     "word": "his",
+     "start": 0.7314285714285714,
+     "end": 0.9636281179138322
+    },
+    {
+     "word": "fingers",
+     "start": 0.9636281179138322,
+     "end": 1.4512471655328798
+    },
+    {
+     "word": "closed",
+     "start": 1.4512471655328798,
+     "end": 1.9156462585034013
+    },
+    {
+     "word": "tightly",
+     "start": 1.9156462585034013,
+     "end": 2.403265306122449
+    },
+    {
+     "word": "over",
+     "start": 2.403265306122449,
+     "end": 2.6354648526077096
+    },
+    {
+     "word": "the",
+     "start": 2.6354648526077096,
+     "end": 2.716734693877551
+    },
+    {
+     "word": "handkerchief",
+     "start": 2.716734693877551,
+     "end": 3.2856235827664397
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "suddenly",
+     "start": 0.03,
+     "end": 0.73
+    },
+    {
+     "word": "his",
+     "start": 0.73,
+     "end": 0.96
+    },
+    {
+     "word": "fingers",
+     "start": 0.96,
+     "end": 1.45
+    },
+    {
+     "word": "closed",
+     "start": 1.45,
+     "end": 1.92
+    },
+    {
+     "word": "tightly",
+     "start": 1.92,
+     "end": 2.4
+    },
+    {
+     "word": "over",
+     "start": 2.4,
+     "end": 2.63
+    },
+    {
+     "word": "the",
+     "start": 2.63,
+     "end": 2.72
+    },
+    {
+     "word": "handkerchief",
+     "start": 2.72,
+     "end": 3.29
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "suddenly",
+     "out": {
+      "word": "suddenly",
+      "start": 0.03,
+      "end": 0.73
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "his",
+     "out": {
+      "word": "his",
+      "start": 0.73,
+      "end": 0.96
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "fingers",
+     "out": {
+      "word": "fingers",
+      "start": 0.96,
+      "end": 1.45
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "closed",
+     "out": {
+      "word": "closed",
+      "start": 1.45,
+      "end": 1.92
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "tightly",
+     "out": {
+      "word": "tightly",
+      "start": 1.92,
+      "end": 2.4
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "over",
+     "out": {
+      "word": "over",
+      "start": 2.4,
+      "end": 2.63
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 2.63,
+      "end": 2.72
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "handkerchief",
+     "out": {
+      "word": "handkerchief",
+      "start": 2.72,
+      "end": 3.29
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -30.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 8.125,
+    "wer": 0.0,
+    "utmos": 4.0712,
+    "us_prob": 0.9629
+   },
+   "source": "results/abl_a_pos/test/wav/HJK_arctic_a0053/out.wav"
+  },
+  "abl_b_pos": {
+   "label": "Ablation B",
+   "planned_words": [
+    {
+     "word": "suddenly",
+     "start": 0.034829931972789115,
+     "end": 0.7314285714285714
+    },
+    {
+     "word": "his",
+     "start": 0.7314285714285714,
+     "end": 0.9636281179138322
+    },
+    {
+     "word": "fingers",
+     "start": 0.9636281179138322,
+     "end": 1.4512471655328798
+    },
+    {
+     "word": "closed",
+     "start": 1.4512471655328798,
+     "end": 1.9156462585034013
+    },
+    {
+     "word": "tightly",
+     "start": 1.9156462585034013,
+     "end": 2.403265306122449
+    },
+    {
+     "word": "over",
+     "start": 2.403265306122449,
+     "end": 2.6354648526077096
+    },
+    {
+     "word": "the",
+     "start": 2.6354648526077096,
+     "end": 2.716734693877551
+    },
+    {
+     "word": "handkerchief",
+     "start": 2.716734693877551,
+     "end": 3.2856235827664397
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "suddenly",
+     "start": 0.03,
+     "end": 0.74
+    },
+    {
+     "word": "his",
+     "start": 0.74,
+     "end": 0.96
+    },
+    {
+     "word": "fingers",
+     "start": 0.96,
+     "end": 1.45
+    },
+    {
+     "word": "closed",
+     "start": 1.45,
+     "end": 1.9
+    },
+    {
+     "word": "tightly",
+     "start": 1.9,
+     "end": 2.4
+    },
+    {
+     "word": "over",
+     "start": 2.4,
+     "end": 2.63
+    },
+    {
+     "word": "the",
+     "start": 2.63,
+     "end": 2.72
+    },
+    {
+     "word": "handkerchief",
+     "start": 2.72,
+     "end": 3.3
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "suddenly",
+     "out": {
+      "word": "suddenly",
+      "start": 0.03,
+      "end": 0.74
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 30.0
+    },
+    {
+     "word": "his",
+     "out": {
+      "word": "his",
+      "start": 0.74,
+      "end": 0.96
+     },
+     "d_start_ms": 30.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "fingers",
+     "out": {
+      "word": "fingers",
+      "start": 0.96,
+      "end": 1.45
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "closed",
+     "out": {
+      "word": "closed",
+      "start": 1.45,
+      "end": 1.9
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "tightly",
+     "out": {
+      "word": "tightly",
+      "start": 1.9,
+      "end": 2.4
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "over",
+     "out": {
+      "word": "over",
+      "start": 2.4,
+      "end": 2.63
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 2.63,
+      "end": 2.72
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "handkerchief",
+     "out": {
+      "word": "handkerchief",
+      "start": 2.72,
+      "end": 3.3
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -20.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 11.25,
+    "wer": 0.0,
+    "utmos": 4.4,
+    "us_prob": 0.994
+   },
+   "source": "results/abl_b_pos/test/wav/HJK_arctic_a0053/out.wav"
+  },
+  "v0": {
+   "label": "V0 (pretrained VITS + MAS)",
+   "planned_words": [
+    {
+     "word": "suddenly",
+     "start": 0.034829931972789115,
+     "end": 0.7314285714285714
+    },
+    {
+     "word": "his",
+     "start": 0.7314285714285714,
+     "end": 0.9636281179138322
+    },
+    {
+     "word": "fingers",
+     "start": 0.9636281179138322,
+     "end": 1.4512471655328798
+    },
+    {
+     "word": "closed",
+     "start": 1.4512471655328798,
+     "end": 1.9156462585034013
+    },
+    {
+     "word": "tightly",
+     "start": 1.9156462585034013,
+     "end": 2.403265306122449
+    },
+    {
+     "word": "over",
+     "start": 2.403265306122449,
+     "end": 2.6354648526077096
+    },
+    {
+     "word": "the",
+     "start": 2.6354648526077096,
+     "end": 2.716734693877551
+    },
+    {
+     "word": "handkerchief",
+     "start": 2.716734693877551,
+     "end": 3.2856235827664397
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "suddenly",
+     "start": 0.0,
+     "end": 0.69
+    },
+    {
+     "word": "his",
+     "start": 0.69,
+     "end": 0.95
+    },
+    {
+     "word": "fingers",
+     "start": 0.95,
+     "end": 1.43
+    },
+    {
+     "word": "closed",
+     "start": 1.43,
+     "end": 1.92
+    },
+    {
+     "word": "tightly",
+     "start": 1.92,
+     "end": 2.38
+    },
+    {
+     "word": "over",
+     "start": 2.42,
+     "end": 2.62
+    },
+    {
+     "word": "the",
+     "start": 2.62,
+     "end": 2.68
+    },
+    {
+     "word": "handkerchief",
+     "start": 2.68,
+     "end": 3.52
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "suddenly",
+     "out": {
+      "word": "suddenly",
+      "start": 0.0,
+      "end": 0.69
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "his",
+     "out": {
+      "word": "his",
+      "start": 0.69,
+      "end": 0.95
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "fingers",
+     "out": {
+      "word": "fingers",
+      "start": 0.95,
+      "end": 1.43
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "closed",
+     "out": {
+      "word": "closed",
+      "start": 1.43,
+      "end": 1.92
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "tightly",
+     "out": {
+      "word": "tightly",
+      "start": 1.92,
+      "end": 2.38
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "over",
+     "out": {
+      "word": "over",
+      "start": 2.42,
+      "end": 2.62
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 2.62,
+      "end": 2.68
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -50.0
+    },
+    {
+     "word": "handkerchief",
+     "out": {
+      "word": "handkerchief",
+      "start": 2.68,
+      "end": 3.52
+     },
+     "d_start_ms": -50.0,
+     "d_end_ms": 200.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 31.875,
+    "wer": 0.0,
+    "utmos": 4.3735,
+    "us_prob": 0.2861
+   },
+   "source": "results/v0/test/wav/HJK_arctic_a0053/out.wav"
+  },
+  "m0": {
+   "label": "M0 (FastSpeech2)",
+   "planned_words": [
+    {
+     "word": "suddenly",
+     "start": 0.034829931972789115,
+     "end": 0.7314285714285714
+    },
+    {
+     "word": "his",
+     "start": 0.7314285714285714,
+     "end": 0.9636281179138322
+    },
+    {
+     "word": "fingers",
+     "start": 0.9636281179138322,
+     "end": 1.4512471655328798
+    },
+    {
+     "word": "closed",
+     "start": 1.4512471655328798,
+     "end": 1.9156462585034013
+    },
+    {
+     "word": "tightly",
+     "start": 1.9156462585034013,
+     "end": 2.403265306122449
+    },
+    {
+     "word": "over",
+     "start": 2.403265306122449,
+     "end": 2.6354648526077096
+    },
+    {
+     "word": "the",
+     "start": 2.6354648526077096,
+     "end": 2.716734693877551
+    },
+    {
+     "word": "handkerchief",
+     "start": 2.716734693877551,
+     "end": 3.2856235827664397
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "suddenly",
+     "start": 0.03,
+     "end": 0.73
+    },
+    {
+     "word": "his",
+     "start": 0.73,
+     "end": 0.97
+    },
+    {
+     "word": "fingers",
+     "start": 0.97,
+     "end": 1.43
+    },
+    {
+     "word": "closed",
+     "start": 1.43,
+     "end": 1.97
+    },
+    {
+     "word": "tightly",
+     "start": 1.97,
+     "end": 2.39
+    },
+    {
+     "word": "over",
+     "start": 2.39,
+     "end": 2.63
+    },
+    {
+     "word": "the",
+     "start": 2.63,
+     "end": 2.71
+    },
+    {
+     "word": "handkerchief",
+     "start": 2.71,
+     "end": 3.28
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "suddenly",
+     "out": {
+      "word": "suddenly",
+      "start": 0.03,
+      "end": 0.73
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 20.0
+    },
+    {
+     "word": "his",
+     "out": {
+      "word": "his",
+      "start": 0.73,
+      "end": 0.97
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "fingers",
+     "out": {
+      "word": "fingers",
+      "start": 0.97,
+      "end": 1.43
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "closed",
+     "out": {
+      "word": "closed",
+      "start": 1.43,
+      "end": 1.97
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": 50.0
+    },
+    {
+     "word": "tightly",
+     "out": {
+      "word": "tightly",
+      "start": 1.97,
+      "end": 2.39
+     },
+     "d_start_ms": 50.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "over",
+     "out": {
+      "word": "over",
+      "start": 2.39,
+      "end": 2.63
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "the",
+     "out": {
+      "word": "the",
+      "start": 2.63,
+      "end": 2.71
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "handkerchief",
+     "out": {
+      "word": "handkerchief",
+      "start": 2.71,
+      "end": 3.28
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -40.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 21.25,
+    "wer": 0.125,
+    "utmos": 4.4027,
+    "us_prob": 0.9952
+   },
+   "source": "results/m0/test/wav/HJK_arctic_a0053/out.wav"
+  }
+ }
+}

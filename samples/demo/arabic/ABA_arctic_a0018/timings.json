@@ -1,0 +1,898 @@
+{
+ "id": "ABA_arctic_a0018",
+ "accent": "arabic",
+ "why_selected": "best main-system MAE (6.0 ms)",
+ "text": "There was a change now",
+ "normalized": "there was a change now",
+ "reference": "data/raw/l2arctic/ABA/wav/arctic_a0018.wav",
+ "ref_duration_s": 1.3969160997732426,
+ "annotation_words": [
+  {
+   "word": "there",
+   "start": 0.03,
+   "end": 0.26
+  },
+  {
+   "word": "was",
+   "start": 0.26,
+   "end": 0.5
+  },
+  {
+   "word": "a",
+   "start": 0.5,
+   "end": 0.56
+  },
+  {
+   "word": "change",
+   "start": 0.56,
+   "end": 1.03
+  },
+  {
+   "word": "now",
+   "start": 1.03,
+   "end": 1.29
+  }
+ ],
+ "ref_words": [
+  {
+   "word": "there",
+   "start": 0.03,
+   "end": 0.26
+  },
+  {
+   "word": "was",
+   "start": 0.26,
+   "end": 0.5
+  },
+  {
+   "word": "a",
+   "start": 0.5,
+   "end": 0.55
+  },
+  {
+   "word": "change",
+   "start": 0.55,
+   "end": 1.03
+  },
+  {
+   "word": "now",
+   "start": 1.03,
+   "end": 1.29
+  }
+ ],
+ "systems": {
+  "m1_pos_diph": {
+   "label": "main (m1_pos_diph)",
+   "planned_words": [
+    {
+     "word": "there",
+     "start": 0.034829931972789115,
+     "end": 0.25541950113378686
+    },
+    {
+     "word": "was",
+     "start": 0.25541950113378686,
+     "end": 0.4992290249433107
+    },
+    {
+     "word": "a",
+     "start": 0.4992290249433107,
+     "end": 0.5456689342403628
+    },
+    {
+     "word": "change",
+     "start": 0.5456689342403628,
+     "end": 1.0332879818594105
+    },
+    {
+     "word": "now",
+     "start": 1.0332879818594105,
+     "end": 1.2887074829931973
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "there",
+     "start": 0.03,
+     "end": 0.26
+    },
+    {
+     "word": "was",
+     "start": 0.26,
+     "end": 0.5
+    },
+    {
+     "word": "a",
+     "start": 0.5,
+     "end": 0.55
+    },
+    {
+     "word": "change",
+     "start": 0.55,
+     "end": 1.04
+    },
+    {
+     "word": "now",
+     "start": 1.04,
+     "end": 1.31
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "there",
+     "out": {
+      "word": "there",
+      "start": 0.03,
+      "end": 0.26
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "was",
+     "out": {
+      "word": "was",
+      "start": 0.26,
+      "end": 0.5
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "a",
+     "out": {
+      "word": "a",
+      "start": 0.5,
+      "end": 0.55
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "change",
+     "out": {
+      "word": "change",
+      "start": 0.55,
+      "end": 1.04
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "now",
+     "out": {
+      "word": "now",
+      "start": 1.04,
+      "end": 1.31
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 20.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 6.0,
+    "wer": 0.0,
+    "utmos": 4.13,
+    "us_prob": 0.9669
+   },
+   "source": "results/m1_pos_diph/test/wav/ABA_arctic_a0018/out.wav"
+  },
+  "m1": {
+   "label": "M1",
+   "planned_words": [
+    {
+     "word": "there",
+     "start": 0.034829931972789115,
+     "end": 0.25541950113378686
+    },
+    {
+     "word": "was",
+     "start": 0.25541950113378686,
+     "end": 0.4992290249433107
+    },
+    {
+     "word": "a",
+     "start": 0.4992290249433107,
+     "end": 0.5456689342403628
+    },
+    {
+     "word": "change",
+     "start": 0.5456689342403628,
+     "end": 1.0332879818594105
+    },
+    {
+     "word": "now",
+     "start": 1.0332879818594105,
+     "end": 1.2887074829931973
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "there",
+     "start": 0.03,
+     "end": 0.24
+    },
+    {
+     "word": "was",
+     "start": 0.24,
+     "end": 0.5
+    },
+    {
+     "word": "a",
+     "start": 0.5,
+     "end": 0.55
+    },
+    {
+     "word": "change",
+     "start": 0.55,
+     "end": 1.04
+    },
+    {
+     "word": "now",
+     "start": 1.04,
+     "end": 1.32
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "there",
+     "out": {
+      "word": "there",
+      "start": 0.03,
+      "end": 0.24
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "was",
+     "out": {
+      "word": "was",
+      "start": 0.24,
+      "end": 0.5
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "a",
+     "out": {
+      "word": "a",
+      "start": 0.5,
+      "end": 0.55
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "change",
+     "out": {
+      "word": "change",
+      "start": 0.55,
+      "end": 1.04
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "now",
+     "out": {
+      "word": "now",
+      "start": 1.04,
+      "end": 1.32
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 30.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 11.0,
+    "wer": 0.0,
+    "utmos": 4.4167,
+    "us_prob": 0.998
+   },
+   "source": "results/m1/test/wav/ABA_arctic_a0018/out.wav"
+  },
+  "m1_pos": {
+   "label": "M1 + position embedding",
+   "planned_words": [
+    {
+     "word": "there",
+     "start": 0.034829931972789115,
+     "end": 0.25541950113378686
+    },
+    {
+     "word": "was",
+     "start": 0.25541950113378686,
+     "end": 0.4992290249433107
+    },
+    {
+     "word": "a",
+     "start": 0.4992290249433107,
+     "end": 0.5456689342403628
+    },
+    {
+     "word": "change",
+     "start": 0.5456689342403628,
+     "end": 1.0332879818594105
+    },
+    {
+     "word": "now",
+     "start": 1.0332879818594105,
+     "end": 1.2887074829931973
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "there",
+     "start": 0.03,
+     "end": 0.25
+    },
+    {
+     "word": "was",
+     "start": 0.25,
+     "end": 0.5
+    },
+    {
+     "word": "a",
+     "start": 0.5,
+     "end": 0.55
+    },
+    {
+     "word": "change",
+     "start": 0.55,
+     "end": 1.04
+    },
+    {
+     "word": "now",
+     "start": 1.04,
+     "end": 1.32
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "there",
+     "out": {
+      "word": "there",
+      "start": 0.03,
+      "end": 0.25
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "was",
+     "out": {
+      "word": "was",
+      "start": 0.25,
+      "end": 0.5
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "a",
+     "out": {
+      "word": "a",
+      "start": 0.5,
+      "end": 0.55
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "change",
+     "out": {
+      "word": "change",
+      "start": 0.55,
+      "end": 1.04
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "now",
+     "out": {
+      "word": "now",
+      "start": 1.04,
+      "end": 1.32
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 30.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 9.0,
+    "wer": 0.0,
+    "utmos": 4.3093,
+    "us_prob": 0.9846
+   },
+   "source": "results/m1_pos/test/wav/ABA_arctic_a0018/out.wav"
+  },
+  "abl_a_pos": {
+   "label": "Ablation A",
+   "planned_words": [
+    {
+     "word": "there",
+     "start": 0.034829931972789115,
+     "end": 0.25541950113378686
+    },
+    {
+     "word": "was",
+     "start": 0.25541950113378686,
+     "end": 0.4992290249433107
+    },
+    {
+     "word": "a",
+     "start": 0.4992290249433107,
+     "end": 0.5456689342403628
+    },
+    {
+     "word": "change",
+     "start": 0.5456689342403628,
+     "end": 1.0332879818594105
+    },
+    {
+     "word": "now",
+     "start": 1.0332879818594105,
+     "end": 1.2887074829931973
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "there",
+     "start": 0.03,
+     "end": 0.25
+    },
+    {
+     "word": "was",
+     "start": 0.25,
+     "end": 0.5
+    },
+    {
+     "word": "a",
+     "start": 0.5,
+     "end": 0.55
+    },
+    {
+     "word": "change",
+     "start": 0.55,
+     "end": 1.03
+    },
+    {
+     "word": "now",
+     "start": 1.03,
+     "end": 1.31
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "there",
+     "out": {
+      "word": "there",
+      "start": 0.03,
+      "end": 0.25
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "was",
+     "out": {
+      "word": "was",
+      "start": 0.25,
+      "end": 0.5
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "a",
+     "out": {
+      "word": "a",
+      "start": 0.5,
+      "end": 0.55
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "change",
+     "out": {
+      "word": "change",
+      "start": 0.55,
+      "end": 1.03
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "now",
+     "out": {
+      "word": "now",
+      "start": 1.03,
+      "end": 1.31
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 20.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 6.0,
+    "wer": 0.4,
+    "utmos": 4.3682,
+    "us_prob": 0.9898
+   },
+   "source": "results/abl_a_pos/test/wav/ABA_arctic_a0018/out.wav"
+  },
+  "abl_b_pos": {
+   "label": "Ablation B",
+   "planned_words": [
+    {
+     "word": "there",
+     "start": 0.034829931972789115,
+     "end": 0.25541950113378686
+    },
+    {
+     "word": "was",
+     "start": 0.25541950113378686,
+     "end": 0.4992290249433107
+    },
+    {
+     "word": "a",
+     "start": 0.4992290249433107,
+     "end": 0.5456689342403628
+    },
+    {
+     "word": "change",
+     "start": 0.5456689342403628,
+     "end": 1.0332879818594105
+    },
+    {
+     "word": "now",
+     "start": 1.0332879818594105,
+     "end": 1.2887074829931973
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "there",
+     "start": 0.03,
+     "end": 0.26
+    },
+    {
+     "word": "was",
+     "start": 0.26,
+     "end": 0.5
+    },
+    {
+     "word": "a",
+     "start": 0.5,
+     "end": 0.54
+    },
+    {
+     "word": "change",
+     "start": 0.54,
+     "end": 1.04
+    },
+    {
+     "word": "now",
+     "start": 1.04,
+     "end": 1.31
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "there",
+     "out": {
+      "word": "there",
+      "start": 0.03,
+      "end": 0.26
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "was",
+     "out": {
+      "word": "was",
+      "start": 0.26,
+      "end": 0.5
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "a",
+     "out": {
+      "word": "a",
+      "start": 0.5,
+      "end": 0.54
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "change",
+     "out": {
+      "word": "change",
+      "start": 0.54,
+      "end": 1.04
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "now",
+     "out": {
+      "word": "now",
+      "start": 1.04,
+      "end": 1.31
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 20.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 8.0,
+    "wer": 0.2,
+    "utmos": 4.3414,
+    "us_prob": 0.9988
+   },
+   "source": "results/abl_b_pos/test/wav/ABA_arctic_a0018/out.wav"
+  },
+  "v0": {
+   "label": "V0 (pretrained VITS + MAS)",
+   "planned_words": [
+    {
+     "word": "there",
+     "start": 0.034829931972789115,
+     "end": 0.25541950113378686
+    },
+    {
+     "word": "was",
+     "start": 0.25541950113378686,
+     "end": 0.4992290249433107
+    },
+    {
+     "word": "a",
+     "start": 0.4992290249433107,
+     "end": 0.5456689342403628
+    },
+    {
+     "word": "change",
+     "start": 0.5456689342403628,
+     "end": 1.0332879818594105
+    },
+    {
+     "word": "now",
+     "start": 1.0332879818594105,
+     "end": 1.2887074829931973
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "there",
+     "start": 0.03,
+     "end": 0.23
+    },
+    {
+     "word": "was",
+     "start": 0.23,
+     "end": 0.49
+    },
+    {
+     "word": "a",
+     "start": 0.49,
+     "end": 0.53
+    },
+    {
+     "word": "change",
+     "start": 0.53,
+     "end": 1.03
+    },
+    {
+     "word": "now",
+     "start": 1.03,
+     "end": 1.32
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "there",
+     "out": {
+      "word": "there",
+      "start": 0.03,
+      "end": 0.23
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "was",
+     "out": {
+      "word": "was",
+      "start": 0.23,
+      "end": 0.49
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "a",
+     "out": {
+      "word": "a",
+      "start": 0.49,
+      "end": 0.53
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "change",
+     "out": {
+      "word": "change",
+      "start": 0.53,
+      "end": 1.03
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "now",
+     "out": {
+      "word": "now",
+      "start": 1.03,
+      "end": 1.32
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 30.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 17.0,
+    "wer": 0.0,
+    "utmos": 4.4035,
+    "us_prob": 0.9906
+   },
+   "source": "results/v0/test/wav/ABA_arctic_a0018/out.wav"
+  },
+  "m0": {
+   "label": "M0 (FastSpeech2)",
+   "planned_words": [
+    {
+     "word": "there",
+     "start": 0.034829931972789115,
+     "end": 0.25541950113378686
+    },
+    {
+     "word": "was",
+     "start": 0.25541950113378686,
+     "end": 0.4992290249433107
+    },
+    {
+     "word": "a",
+     "start": 0.4992290249433107,
+     "end": 0.5456689342403628
+    },
+    {
+     "word": "change",
+     "start": 0.5456689342403628,
+     "end": 1.0332879818594105
+    },
+    {
+     "word": "now",
+     "start": 1.0332879818594105,
+     "end": 1.2887074829931973
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "there",
+     "start": 0.0,
+     "end": 0.25
+    },
+    {
+     "word": "was",
+     "start": 0.25,
+     "end": 0.5
+    },
+    {
+     "word": "a",
+     "start": 0.5,
+     "end": 0.55
+    },
+    {
+     "word": "change",
+     "start": 0.55,
+     "end": 1.04
+    },
+    {
+     "word": "now",
+     "start": 1.04,
+     "end": 1.36
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "there",
+     "out": {
+      "word": "there",
+      "start": 0.0,
+      "end": 0.25
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "was",
+     "out": {
+      "word": "was",
+      "start": 0.25,
+      "end": 0.5
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "a",
+     "out": {
+      "word": "a",
+      "start": 0.5,
+      "end": 0.55
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "change",
+     "out": {
+      "word": "change",
+      "start": 0.55,
+      "end": 1.04
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "now",
+     "out": {
+      "word": "now",
+      "start": 1.04,
+      "end": 1.36
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": 70.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 16.0,
+    "wer": 0.2,
+    "utmos": 4.3457,
+    "us_prob": 0.6565
+   },
+   "source": "results/m0/test/wav/ABA_arctic_a0018/out.wav"
+  }
+ }
+}

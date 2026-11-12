@@ -18,7 +18,7 @@ web_demo:
   host: 127.0.0.1          # local only; share it through an HTTPS tunnel (docs/DEMO.md §6)
   port: 7860
   out_dir: out/web_demo
-  keep_jobs: 50            # older job folders are deleted
+  keep_jobs: 300           # older job folders are deleted (raised from 50 in E-35: jobs are evidence)
   max_upload_mb: 20
   max_ref_seconds: 30
   max_text_chars: 400

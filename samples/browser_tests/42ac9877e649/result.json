@@ -1,0 +1,106 @@
+{
+ "text": "Hi, I'm Ravi Chaganti",
+ "normalized": "hi, i'm ravi chaganti",
+ "oov_added": [],
+ "ref_duration_s": 3.06,
+ "ref_words": [
+  {
+   "word": "hi",
+   "start": 0.37,
+   "end": 0.76
+  },
+  {
+   "word": "i'm",
+   "start": 1.03,
+   "end": 1.38
+  },
+  {
+   "word": "ravi",
+   "start": 1.38,
+   "end": 1.77
+  },
+  {
+   "word": "chaganti",
+   "start": 1.77,
+   "end": 2.34
+  }
+ ],
+ "align_s": 5.179854185000295,
+ "total_s": 35.76676243899965,
+ "systems": [
+  {
+   "name": "main",
+   "audio": "main/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.020718839216011604,
+   "synthesis_s": 0.06339964800099551,
+   "measured_mae_ms": 8.750000000000036,
+   "measured": [
+    {
+     "start": 0.37,
+     "end": 0.78,
+     "d_start_ms": 0.0,
+     "d_end_ms": 20.000000000000018
+    },
+    {
+     "start": 1.03,
+     "end": 1.4,
+     "d_start_ms": 0.0,
+     "d_end_ms": 20.000000000000018
+    },
+    {
+     "start": 1.4,
+     "end": 1.77,
+     "d_start_ms": 20.000000000000018,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 1.77,
+     "end": 2.35,
+     "d_start_ms": 0.0,
+     "d_end_ms": 10.000000000000231
+    }
+   ]
+  },
+  {
+   "name": "v0",
+   "audio": "v0/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.03366868006576897,
+   "synthesis_s": 0.10302616100125306,
+   "measured_mae_ms": 109.99999999999999,
+   "measured": [
+    {
+     "start": 0.0,
+     "end": 0.89,
+     "d_start_ms": -370.0,
+     "d_end_ms": 130.0
+    },
+    {
+     "start": 1.04,
+     "end": 1.32,
+     "d_start_ms": 10.000000000000009,
+     "d_end_ms": -59.99999999999983
+    },
+    {
+     "start": 1.35,
+     "end": 1.75,
+     "d_start_ms": -29.999999999999805,
+     "d_end_ms": -20.000000000000018
+    },
+    {
+     "start": 1.75,
+     "end": 2.58,
+     "d_start_ms": -20.000000000000018,
+     "d_end_ms": 240.00000000000023
+    }
+   ]
+  }
+ ]
+}

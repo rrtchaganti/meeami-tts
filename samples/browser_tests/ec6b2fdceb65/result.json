@@ -1,0 +1,81 @@
+{
+ "text": "bcd are three letters of english language",
+ "normalized": "b c d are three letters of english language",
+ "oov_added": [],
+ "ref_duration_s": 4.5,
+ "ref_words": [
+  {
+   "word": "b",
+   "start": 0.42,
+   "end": 0.59
+  },
+  {
+   "word": "c",
+   "start": 0.59,
+   "end": 0.87
+  },
+  {
+   "word": "d",
+   "start": 0.87,
+   "end": 1.13
+  },
+  {
+   "word": "are",
+   "start": 1.13,
+   "end": 1.58
+  },
+  {
+   "word": "three",
+   "start": 1.82,
+   "end": 1.99
+  },
+  {
+   "word": "letters",
+   "start": 1.99,
+   "end": 2.39
+  },
+  {
+   "word": "of",
+   "start": 2.39,
+   "end": 2.61
+  },
+  {
+   "word": "english",
+   "start": 2.64,
+   "end": 3.06
+  },
+  {
+   "word": "language",
+   "start": 3.06,
+   "end": 3.57
+  }
+ ],
+ "align_s": 6.775730688000294,
+ "total_s": 13.53290382599971,
+ "systems": [
+  {
+   "name": "main",
+   "audio": "main/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.06133396177776578,
+   "synthesis_s": 0.276002827999946,
+   "measured_mae_ms": null,
+   "measured": null
+  },
+  {
+   "name": "v0",
+   "audio": "v0/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.029149464888784376,
+   "synthesis_s": 0.1311725919995297,
+   "measured_mae_ms": null,
+   "measured": null
+  }
+ ]
+}

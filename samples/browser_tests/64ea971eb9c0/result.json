@@ -1,0 +1,108 @@
+{
+ "text": "may I know you?",
+ "normalized": "may i know you?",
+ "oov_added": [],
+ "ref_duration_s": 3.0,
+ "ref_words": [
+  {
+   "word": "may",
+   "start": 0.33,
+   "end": 0.86
+  },
+  {
+   "word": "i",
+   "start": 1.03,
+   "end": 1.39
+  },
+  {
+   "word": "know",
+   "start": 1.39,
+   "end": 1.69
+  },
+  {
+   "word": "you",
+   "start": 1.69,
+   "end": 2.11
+  }
+ ],
+ "align_s": 4.950466440001037,
+ "total_s": 34.45438040299996,
+ "systems": [
+  {
+   "name": "main",
+   "audio": "main/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [
+    "i"
+   ],
+   "rtf_model": 0.025847672000054445,
+   "synthesis_s": 0.07754301600016333,
+   "measured_mae_ms": 50.00000000000001,
+   "measured": [
+    {
+     "start": 0.0,
+     "end": 0.87,
+     "d_start_ms": -330.0,
+     "d_end_ms": 10.000000000000009
+    },
+    {
+     "start": 1.03,
+     "end": 1.37,
+     "d_start_ms": 0.0,
+     "d_end_ms": -19.999999999999794
+    },
+    {
+     "start": 1.4,
+     "end": 1.68,
+     "d_start_ms": 10.000000000000009,
+     "d_end_ms": -10.000000000000009
+    },
+    {
+     "start": 1.68,
+     "end": 2.12,
+     "d_start_ms": -10.000000000000009,
+     "d_end_ms": 10.000000000000231
+    }
+   ]
+  },
+  {
+   "name": "v0",
+   "audio": "v0/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.03075600900046993,
+   "synthesis_s": 0.09226802700140979,
+   "measured_mae_ms": 50.0,
+   "measured": [
+    {
+     "start": 0.31,
+     "end": 0.96,
+     "d_start_ms": -20.000000000000018,
+     "d_end_ms": 99.99999999999997
+    },
+    {
+     "start": 1.06,
+     "end": 1.35,
+     "d_start_ms": 30.00000000000003,
+     "d_end_ms": -39.999999999999815
+    },
+    {
+     "start": 1.35,
+     "end": 1.63,
+     "d_start_ms": -39.999999999999815,
+     "d_end_ms": -60.00000000000006
+    },
+    {
+     "start": 1.63,
+     "end": 2.16,
+     "d_start_ms": -60.00000000000006,
+     "d_end_ms": 50.00000000000027
+    }
+   ]
+  }
+ ]
+}

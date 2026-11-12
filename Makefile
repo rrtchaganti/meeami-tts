@@ -190,13 +190,19 @@ text-stress:
 	$(TTS_RUN) python -m tts.text.stress $(if $(TEXT),--text "$(TEXT)" --phones,) $(ARGS)
 
 # --- D-95: hosted checkpoints (Hugging Face) -------------------------------------------------
-.PHONY: models export-infer publish-models
+.PHONY: models export-infer publish-models outputs publish-outputs samples
 models:          # download export/<system>/infer.pt + baseline weights, sha256-checked
 	$(TTS_RUN) python scripts/fetch_models.py
 export-infer:    # owner: export/<system>/ckpt_last.pt -> infer.pt (generator only), verified
 	$(TTS_RUN) python scripts/export_infer.py --verify $(foreach n,m1_pos_diph m1 m1_pos abl_a_pos abl_b_pos,--name $(n))
 publish-models:  # owner: upload to hosting.hf_repo (configs/base.yaml)
 	$(TTS_RUN) python scripts/fetch_models.py --publish
+outputs:         # download every evaluated test output (hosting.outputs) into results/<system>/test/
+	$(TTS_RUN) python scripts/publish_outputs.py
+publish-outputs: # owner: tar results/<system>/test/ and upload them (E-36)
+	$(TTS_RUN) python scripts/publish_outputs.py --publish
+samples:         # owner: rebuild samples/ (exact evaluated outputs + references + word timings, E-36)
+	$(TTS_RUN) python scripts/export_samples.py
 
 # --- inference on any reference: make infer REF=their.wav TEXT="what it says" [SYS=m1_pos_diph|v0|m0]
 SYS ?= $(MAIN)

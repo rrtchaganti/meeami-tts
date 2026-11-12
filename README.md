@@ -12,6 +12,19 @@ make infer REF=ref.wav TEXT="Will we ever forget it."
 # -> out/infer/out.wav (exact reference length), timings.json, timing.png
 ```
 
+## Assignment deliverables: where each one is
+
+| Requirement | Where |
+| --- | --- |
+| **Demonstration:** input text, reference and output side by side, word timings of both, ≥ 2 accents | [`samples/`](samples/README.md): 21 held-out test samples in **3 accents** (Arabic, Korean, Vietnamese). Each sample has the text, the reference (ground truth), all 7 systems' outputs, a word-timing table (human annotation, MFA on the reference, MFA on the output) and `timing.png`. Live: `make live-demo`, browser demo `make web-demo` ([DEMO.md](docs/DEMO.md)) |
+| Output audio samples | [`samples/`](samples/README.md): byte-exact copies of the evaluated outputs. All 1,248 test utterances × 7 systems are on the Hugging Face Hub (`make outputs`) |
+| Q1: data strategy, architecture, training, losses | [REPORT §4](docs/REPORT.md#4-data-and-the-accent-disjoint-split) data, [§7](docs/REPORT.md#7-models) models, training and losses (§7.2), [§10](docs/REPORT.md#10-the-projects-journey-experiments-and-the-reasoning-behind-each) experiments |
+| Q2: motivation and detailed architecture | [REPORT §3](docs/REPORT.md#3-design-principle-one-source-per-output-property), [§7](docs/REPORT.md#7-models), [§8](docs/REPORT.md#8-inference-pipeline-transferring-word-timing); [How it works](#how-it-works) |
+| Q3: params, MACs, latency, RTF, plots | [REPORT §12](docs/REPORT.md#12-efficiency), [`results/profile_*.json`](results), [`results/plots/`](results/plots) (09_efficiency and 10 more analysis plots), [§11](docs/REPORT.md#11-final-results-on-held-out-accents) test results |
+| Q4: code walkthrough, inference on the interviewers' files | [Repository layout](#repository-layout); `make infer REF=… TEXT=…`, `make live-demo`, `make web-demo` |
+| Slides | [`slides/meeami-tts_v2.pptx`](slides/meeami-tts_v2.pptx) |
+| Evidence for every claim and decision | [REPORT §16](docs/REPORT.md#16-claim--evidence-index) (claim → result file → code → samples), [`docs/DECISIONS.md`](docs/DECISIONS.md) (every decision and error) |
+
 ## Quick start: inference and demo (fresh clone, ~15 min, no dataset needed)
 
 ```bash
@@ -577,12 +590,13 @@ tts/
   infer/      pipeline.py (Section 5 steps 1-10) · systems.py · ctc.py · edge_cases.py · batch.py
   eval/       metrics.py · scorers.py · asr.py · paired.py · phone_dynamics.py · fidelity.py · tune.py · plots.py
   guard.py    test-split lock          splits.py · stats.py · audio.py · config.py
-scripts/    train.py · infer.py · evaluate.py · profile.py · make_demo.py · demo.py (live demo) · web_demo.py (browser demo) · export_infer.py · fetch_models.py (HF Hub) · GPU bundle/setup/export
+scripts/    train.py · infer.py · evaluate.py · profile.py · make_demo.py · demo.py (live demo) · web_demo.py (browser demo) · export_infer.py · fetch_models.py (HF Hub) · export_samples.py · publish_outputs.py · GPU bundle/setup/export
 tests/      unit tests (one per module) + edge_cases/ (21 committed WAV/TXT cases)
 stats/      phone_logdur.json (LJ per-phone log-duration mean, σ) · l2_dev_pace.json (Ablation B)
 reports/    data splits, lexicon, LJ alignment QC, MFA error on accented speech, augmentation
 results/    <system>/<split>/{per_utt.csv, summary.json} · paired/ · phone_dynamics/ · fidelity/ · tune/ · plots/ · profile_*.json · _rejected/
 docs/       REPORT.md · PLAN.md · DECISIONS.md · HANDOFF.md
+samples/    exact evaluated outputs + references + word timings (make samples, E-36): demo/ · listening/ · browser_tests/
 slides/     meeami-tts_v2.pptx + build_v2.js (current) · meeami-tts.pptx + build.js (v1)
 data/ runs/ export/ out/   git-ignored (datasets, training runs, checkpoints, demo)
 ```

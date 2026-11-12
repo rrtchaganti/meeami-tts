@@ -1,0 +1,242 @@
+{
+ "text": "It costs $5.50 at 3:30pm",
+ "normalized": "it costs five dollars and fifty cents at three: thirty p m",
+ "oov_added": [],
+ "ref_duration_s": 4.8,
+ "ref_words": [
+  {
+   "word": "it",
+   "start": 0.18,
+   "end": 0.44
+  },
+  {
+   "word": "costs",
+   "start": 0.44,
+   "end": 0.95
+  },
+  {
+   "word": "five",
+   "start": 0.95,
+   "end": 1.31
+  },
+  {
+   "word": "dollars",
+   "start": 1.31,
+   "end": 2.05
+  },
+  {
+   "word": "and",
+   "start": 2.08,
+   "end": 2.3
+  },
+  {
+   "word": "fifty",
+   "start": 2.3,
+   "end": 2.59
+  },
+  {
+   "word": "cents",
+   "start": 2.59,
+   "end": 3.06
+  },
+  {
+   "word": "at",
+   "start": 3.16,
+   "end": 3.36
+  },
+  {
+   "word": "three",
+   "start": 3.45,
+   "end": 3.59
+  },
+  {
+   "word": "thirty",
+   "start": 3.59,
+   "end": 3.96
+  },
+  {
+   "word": "p",
+   "start": 3.96,
+   "end": 4.22
+  },
+  {
+   "word": "m",
+   "start": 4.22,
+   "end": 4.42
+  }
+ ],
+ "align_s": 8.59695251499761,
+ "total_s": 41.28426935300013,
+ "systems": [
+  {
+   "name": "main",
+   "audio": "main/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.021317673333290564,
+   "synthesis_s": 0.1023248319997947,
+   "measured_mae_ms": 8.333333333333341,
+   "measured": [
+    {
+     "start": 0.18,
+     "end": 0.43,
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.000000000000009
+    },
+    {
+     "start": 0.43,
+     "end": 0.95,
+     "d_start_ms": -10.000000000000009,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 0.95,
+     "end": 1.32,
+     "d_start_ms": 0.0,
+     "d_end_ms": 10.000000000000009
+    },
+    {
+     "start": 1.32,
+     "end": 2.08,
+     "d_start_ms": 10.000000000000009,
+     "d_end_ms": 30.00000000000025
+    },
+    {
+     "start": 2.08,
+     "end": 2.26,
+     "d_start_ms": 0.0,
+     "d_end_ms": -40.000000000000036
+    },
+    {
+     "start": 2.26,
+     "end": 2.59,
+     "d_start_ms": -40.000000000000036,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 2.59,
+     "end": 3.06,
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 3.15,
+     "end": 3.38,
+     "d_start_ms": -10.000000000000231,
+     "d_end_ms": 20.000000000000018
+    },
+    {
+     "start": 3.46,
+     "end": 3.59,
+     "d_start_ms": 9.999999999999787,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 3.59,
+     "end": 3.96,
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 3.96,
+     "end": 4.22,
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 4.22,
+     "end": 4.43,
+     "d_start_ms": 0.0,
+     "d_end_ms": 9.999999999999787
+    }
+   ]
+  },
+  {
+   "name": "v0",
+   "audio": "v0/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.02557693145831763,
+   "synthesis_s": 0.12276927099992463,
+   "measured_mae_ms": 26.250000000000043,
+   "measured": [
+    {
+     "start": 0.17,
+     "end": 0.44,
+     "d_start_ms": -9.99999999999998,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 0.44,
+     "end": 0.94,
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.000000000000009
+    },
+    {
+     "start": 0.94,
+     "end": 1.33,
+     "d_start_ms": -10.000000000000009,
+     "d_end_ms": 20.000000000000018
+    },
+    {
+     "start": 1.33,
+     "end": 2.07,
+     "d_start_ms": 20.000000000000018,
+     "d_end_ms": 20.000000000000018
+    },
+    {
+     "start": 2.07,
+     "end": 2.25,
+     "d_start_ms": -10.000000000000231,
+     "d_end_ms": -49.99999999999982
+    },
+    {
+     "start": 2.25,
+     "end": 2.55,
+     "d_start_ms": -49.99999999999982,
+     "d_end_ms": -40.000000000000036
+    },
+    {
+     "start": 2.55,
+     "end": 3.09,
+     "d_start_ms": -40.000000000000036,
+     "d_end_ms": 29.999999999999805
+    },
+    {
+     "start": 3.16,
+     "end": 3.4,
+     "d_start_ms": 0.0,
+     "d_end_ms": 40.000000000000036
+    },
+    {
+     "start": 3.45,
+     "end": 3.55,
+     "d_start_ms": 0.0,
+     "d_end_ms": -40.000000000000036
+    },
+    {
+     "start": 3.55,
+     "end": 3.92,
+     "d_start_ms": -40.000000000000036,
+     "d_end_ms": -40.000000000000036
+    },
+    {
+     "start": 3.92,
+     "end": 4.23,
+     "d_start_ms": -40.000000000000036,
+     "d_end_ms": 10.000000000000675
+    },
+    {
+     "start": 4.23,
+     "end": 4.52,
+     "d_start_ms": 10.000000000000675,
+     "d_end_ms": 99.99999999999964
+    }
+   ]
+  }
+ ]
+}

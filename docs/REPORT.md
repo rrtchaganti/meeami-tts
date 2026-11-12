@@ -937,6 +937,17 @@ The robust alternative is a learned normaliser that decides from context whether
 
 ## 16. Claim → evidence index
 
+**Audio evidence** ([`samples/`](../samples/README.md), E-36): every output there is a byte-exact copy of the evaluated file (`samples/SOURCES.tsv`, `MANIFEST.sha256`). For each demo sample the word-boundary MAE is recomputed from the committed TextGrids against the L2-ARCTIC human annotation and checked against `per_utt.csv` when the folder is built. All 1,248 test outputs per system are on the Hugging Face Hub (`make outputs`, pinned revision `e6bf851`).
+
+| Claim needing audio | Samples |
+| --- | --- |
+| Time-aligned output on ≥ 2 held-out accents; length error 0 | [`samples/demo/`](../samples/demo): 3 accents, headline prompt × 12 speakers + best/median/worst per accent |
+| Main system vs V0 (−16.5 ms) | each demo sample's README (main and V0 MAE side by side) |
+| "Words end sharply" → m1_pos (§10.3) | [`samples/listening/p2a_word_endings/`](../samples/listening/p2a_word_endings) |
+| "cry" heard as "cra" → diphthong split; US-prob drops inaudible (§10.5) | [`samples/listening/p2c_diphthongs/`](../samples/listening/p2c_diphthongs) (`cry_*`, `us_drop_*`) |
+| Spoken letters, "I", MFA cache (§15, E-35) | [`samples/browser_tests/`](../samples/browser_tests) (the owner's recordings, before/after the fix) |
+
+
 | Claim | Evidence | Code |
 | --- | --- | --- |
 | Output length is exact for every output | `length_error` column = 0 in every `results/*/test/per_utt.csv` | [`pipeline.py#L176`](../tts/infer/pipeline.py#L176), [`pipeline.py#L322`](../tts/infer/pipeline.py#L322) |

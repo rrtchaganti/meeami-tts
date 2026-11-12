@@ -1,0 +1,176 @@
+{
+ "text": "a b c are three letters of english",
+ "normalized": "a b c are three letters of english",
+ "oov_added": [],
+ "ref_duration_s": 3.3,
+ "ref_words": [
+  {
+   "word": "a",
+   "start": 0.03,
+   "end": 0.06
+  },
+  {
+   "word": "b",
+   "start": 0.83,
+   "end": 1.19
+  },
+  {
+   "word": "c",
+   "start": 1.19,
+   "end": 1.53
+  },
+  {
+   "word": "are",
+   "start": 1.53,
+   "end": 1.84
+  },
+  {
+   "word": "three",
+   "start": 1.84,
+   "end": 2.01
+  },
+  {
+   "word": "letters",
+   "start": 2.01,
+   "end": 2.38
+  },
+  {
+   "word": "of",
+   "start": 2.38,
+   "end": 2.52
+  },
+  {
+   "word": "english",
+   "start": 2.56,
+   "end": 3.03
+  }
+ ],
+ "align_s": 7.866973191001307,
+ "total_s": 37.52240169700053,
+ "systems": [
+  {
+   "name": "main",
+   "audio": "main/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [
+    "b"
+   ],
+   "rtf_model": 0.023634783030336788,
+   "synthesis_s": 0.0779947840001114,
+   "measured_mae_ms": 18.125000000000036,
+   "measured": [
+    {
+     "start": 0.0,
+     "end": 0.14,
+     "d_start_ms": -30.0,
+     "d_end_ms": 80.00000000000001
+    },
+    {
+     "start": 0.88,
+     "end": 1.16,
+     "d_start_ms": 50.00000000000004,
+     "d_end_ms": -30.00000000000003
+    },
+    {
+     "start": 1.19,
+     "end": 1.53,
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 1.53,
+     "end": 1.84,
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 1.84,
+     "end": 2.02,
+     "d_start_ms": 0.0,
+     "d_end_ms": 10.000000000000231
+    },
+    {
+     "start": 2.02,
+     "end": 2.38,
+     "d_start_ms": 10.000000000000231,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 2.38,
+     "end": 2.49,
+     "d_start_ms": 0.0,
+     "d_end_ms": -29.999999999999805
+    },
+    {
+     "start": 2.55,
+     "end": 3.07,
+     "d_start_ms": -10.000000000000231,
+     "d_end_ms": 40.000000000000036
+    }
+   ]
+  },
+  {
+   "name": "v0",
+   "audio": "v0/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.03353777515120314,
+   "synthesis_s": 0.11067465799897036,
+   "measured_mae_ms": 64.99999999999997,
+   "measured": [
+    {
+     "start": 0.0,
+     "end": 0.34,
+     "d_start_ms": -30.0,
+     "d_end_ms": 280.0
+    },
+    {
+     "start": 0.81,
+     "end": 1.03,
+     "d_start_ms": -19.999999999999908,
+     "d_end_ms": -159.99999999999991
+    },
+    {
+     "start": 1.03,
+     "end": 1.53,
+     "d_start_ms": -159.99999999999991,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 1.57,
+     "end": 1.8,
+     "d_start_ms": 40.000000000000036,
+     "d_end_ms": -40.000000000000036
+    },
+    {
+     "start": 1.8,
+     "end": 1.98,
+     "d_start_ms": -40.000000000000036,
+     "d_end_ms": -29.999999999999805
+    },
+    {
+     "start": 1.98,
+     "end": 2.35,
+     "d_start_ms": -29.999999999999805,
+     "d_end_ms": -29.999999999999805
+    },
+    {
+     "start": 2.35,
+     "end": 2.52,
+     "d_start_ms": -29.999999999999805,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 2.55,
+     "end": 3.17,
+     "d_start_ms": -10.000000000000231,
+     "d_end_ms": 140.0000000000001
+    }
+   ]
+  }
+ ]
+}

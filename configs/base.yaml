@@ -334,3 +334,12 @@ hosting:
   # (ensure_words), so an existing copy is never overwritten
   if_missing:
     lexicon/lexicon.txt: data/lexicon/lexicon.txt
+  # every evaluated output of the held-out test set (E-36, scripts/publish_outputs.py): one tar per
+  # system under outputs/<split>/, members relative to results/<system>/<split>/; the exact files
+  # behind each row of results/<system>/<split>/per_utt.csv
+  outputs:
+    revision: e6bf85158a38a1c6b7f9d34aa4195862f1c420ca   # pinned upload commit (E-36)
+    split: test
+    systems: [m1_pos_diph, m1, m1_pos, abl_a_pos, abl_b_pos, v0, m0]
+    members: [wav, align_out, per_utt.csv, summary.json, scores.jsonl]
+    tar_dir: export/outputs

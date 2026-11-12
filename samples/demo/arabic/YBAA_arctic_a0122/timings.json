@@ -1,0 +1,1498 @@
+{
+ "id": "YBAA_arctic_a0122",
+ "accent": "arabic",
+ "why_selected": "median main-system MAE (22.2 ms)",
+ "text": "Two years ago I gave up civilization for this",
+ "normalized": "two years ago i gave up civilization for this",
+ "reference": "data/raw/l2arctic/YBAA/wav/arctic_a0122.wav",
+ "ref_duration_s": 3.7,
+ "annotation_words": [
+  {
+   "word": "two",
+   "start": 0.05,
+   "end": 0.24
+  },
+  {
+   "word": "years",
+   "start": 0.24,
+   "end": 0.45
+  },
+  {
+   "word": "ago",
+   "start": 0.45,
+   "end": 0.84
+  },
+  {
+   "word": "i",
+   "start": 1.0,
+   "end": 1.19
+  },
+  {
+   "word": "gave",
+   "start": 1.19,
+   "end": 1.5
+  },
+  {
+   "word": "up",
+   "start": 1.5,
+   "end": 1.68
+  },
+  {
+   "word": "civilization",
+   "start": 1.68,
+   "end": 2.63
+  },
+  {
+   "word": "for",
+   "start": 2.99,
+   "end": 3.27
+  },
+  {
+   "word": "this",
+   "start": 3.27,
+   "end": 3.65
+  }
+ ],
+ "ref_words": [
+  {
+   "word": "two",
+   "start": 0.08,
+   "end": 0.2
+  },
+  {
+   "word": "years",
+   "start": 0.2,
+   "end": 0.45
+  },
+  {
+   "word": "ago",
+   "start": 0.45,
+   "end": 0.81
+  },
+  {
+   "word": "i",
+   "start": 1.03,
+   "end": 1.17
+  },
+  {
+   "word": "gave",
+   "start": 1.17,
+   "end": 1.48
+  },
+  {
+   "word": "up",
+   "start": 1.48,
+   "end": 1.67
+  },
+  {
+   "word": "civilization",
+   "start": 1.67,
+   "end": 2.58
+  },
+  {
+   "word": "for",
+   "start": 3.0,
+   "end": 3.26
+  },
+  {
+   "word": "this",
+   "start": 3.26,
+   "end": 3.63
+  }
+ ],
+ "systems": {
+  "m1_pos_diph": {
+   "label": "main (m1_pos_diph)",
+   "planned_words": [
+    {
+     "word": "two",
+     "start": 0.08126984126984127,
+     "end": 0.19736961451247165
+    },
+    {
+     "word": "years",
+     "start": 0.19736961451247165,
+     "end": 0.4527891156462585
+    },
+    {
+     "word": "ago",
+     "start": 0.4527891156462585,
+     "end": 0.8126984126984127
+    },
+    {
+     "word": "i",
+     "start": 1.0332879818594105,
+     "end": 1.172607709750567
+    },
+    {
+     "word": "gave",
+     "start": 1.172607709750567,
+     "end": 1.474467120181406
+    },
+    {
+     "word": "up",
+     "start": 1.474467120181406,
+     "end": 1.6718367346938776
+    },
+    {
+     "word": "civilization",
+     "start": 1.6718367346938776,
+     "end": 2.5774149659863945
+    },
+    {
+     "word": "for",
+     "start": 2.995374149659864,
+     "end": 3.2624036281179136
+    },
+    {
+     "word": "this",
+     "start": 3.2624036281179136,
+     "end": 3.633922902494331
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "two",
+     "start": 0.06,
+     "end": 0.18
+    },
+    {
+     "word": "years",
+     "start": 0.18,
+     "end": 0.45
+    },
+    {
+     "word": "ago",
+     "start": 0.45,
+     "end": 0.81
+    },
+    {
+     "word": "i",
+     "start": 1.03,
+     "end": 1.17
+    },
+    {
+     "word": "gave",
+     "start": 1.17,
+     "end": 1.47
+    },
+    {
+     "word": "up",
+     "start": 1.47,
+     "end": 1.68
+    },
+    {
+     "word": "civilization",
+     "start": 1.68,
+     "end": 2.58
+    },
+    {
+     "word": "for",
+     "start": 2.99,
+     "end": 3.26
+    },
+    {
+     "word": "this",
+     "start": 3.26,
+     "end": 3.61
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "two",
+     "out": {
+      "word": "two",
+      "start": 0.06,
+      "end": 0.18
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -60.0
+    },
+    {
+     "word": "years",
+     "out": {
+      "word": "years",
+      "start": 0.18,
+      "end": 0.45
+     },
+     "d_start_ms": -60.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "ago",
+     "out": {
+      "word": "ago",
+      "start": 0.45,
+      "end": 0.81
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "i",
+     "out": {
+      "word": "i",
+      "start": 1.03,
+      "end": 1.17
+     },
+     "d_start_ms": 30.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "gave",
+     "out": {
+      "word": "gave",
+      "start": 1.17,
+      "end": 1.47
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "up",
+     "out": {
+      "word": "up",
+      "start": 1.47,
+      "end": 1.68
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "civilization",
+     "out": {
+      "word": "civilization",
+      "start": 1.68,
+      "end": 2.58
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -50.0
+    },
+    {
+     "word": "for",
+     "out": {
+      "word": "for",
+      "start": 2.99,
+      "end": 3.26
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "this",
+     "out": {
+      "word": "this",
+      "start": 3.26,
+      "end": 3.61
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -40.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 22.2222,
+    "wer": 0.0,
+    "utmos": 4.4051,
+    "us_prob": 0.007
+   },
+   "source": "results/m1_pos_diph/test/wav/YBAA_arctic_a0122/out.wav"
+  },
+  "m1": {
+   "label": "M1",
+   "planned_words": [
+    {
+     "word": "two",
+     "start": 0.08126984126984127,
+     "end": 0.19736961451247165
+    },
+    {
+     "word": "years",
+     "start": 0.19736961451247165,
+     "end": 0.4527891156462585
+    },
+    {
+     "word": "ago",
+     "start": 0.4527891156462585,
+     "end": 0.8126984126984127
+    },
+    {
+     "word": "i",
+     "start": 1.0332879818594105,
+     "end": 1.172607709750567
+    },
+    {
+     "word": "gave",
+     "start": 1.172607709750567,
+     "end": 1.474467120181406
+    },
+    {
+     "word": "up",
+     "start": 1.474467120181406,
+     "end": 1.6718367346938776
+    },
+    {
+     "word": "civilization",
+     "start": 1.6718367346938776,
+     "end": 2.5774149659863945
+    },
+    {
+     "word": "for",
+     "start": 2.995374149659864,
+     "end": 3.2624036281179136
+    },
+    {
+     "word": "this",
+     "start": 3.2624036281179136,
+     "end": 3.633922902494331
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "two",
+     "start": 0.06,
+     "end": 0.18
+    },
+    {
+     "word": "years",
+     "start": 0.18,
+     "end": 0.45
+    },
+    {
+     "word": "ago",
+     "start": 0.45,
+     "end": 0.85
+    },
+    {
+     "word": "i",
+     "start": 1.03,
+     "end": 1.17
+    },
+    {
+     "word": "gave",
+     "start": 1.17,
+     "end": 1.47
+    },
+    {
+     "word": "up",
+     "start": 1.47,
+     "end": 1.67
+    },
+    {
+     "word": "civilization",
+     "start": 1.67,
+     "end": 2.57
+    },
+    {
+     "word": "for",
+     "start": 2.99,
+     "end": 3.26
+    },
+    {
+     "word": "this",
+     "start": 3.26,
+     "end": 3.61
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "two",
+     "out": {
+      "word": "two",
+      "start": 0.06,
+      "end": 0.18
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -60.0
+    },
+    {
+     "word": "years",
+     "out": {
+      "word": "years",
+      "start": 0.18,
+      "end": 0.45
+     },
+     "d_start_ms": -60.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "ago",
+     "out": {
+      "word": "ago",
+      "start": 0.45,
+      "end": 0.85
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "i",
+     "out": {
+      "word": "i",
+      "start": 1.03,
+      "end": 1.17
+     },
+     "d_start_ms": 30.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "gave",
+     "out": {
+      "word": "gave",
+      "start": 1.17,
+      "end": 1.47
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "up",
+     "out": {
+      "word": "up",
+      "start": 1.47,
+      "end": 1.67
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "civilization",
+     "out": {
+      "word": "civilization",
+      "start": 1.67,
+      "end": 2.57
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -60.0
+    },
+    {
+     "word": "for",
+     "out": {
+      "word": "for",
+      "start": 2.99,
+      "end": 3.26
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "this",
+     "out": {
+      "word": "this",
+      "start": 3.26,
+      "end": 3.61
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -40.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 22.7778,
+    "wer": 0.0,
+    "utmos": 4.3164,
+    "us_prob": 0.0
+   },
+   "source": "results/m1/test/wav/YBAA_arctic_a0122/out.wav"
+  },
+  "m1_pos": {
+   "label": "M1 + position embedding",
+   "planned_words": [
+    {
+     "word": "two",
+     "start": 0.08126984126984127,
+     "end": 0.19736961451247165
+    },
+    {
+     "word": "years",
+     "start": 0.19736961451247165,
+     "end": 0.4527891156462585
+    },
+    {
+     "word": "ago",
+     "start": 0.4527891156462585,
+     "end": 0.8126984126984127
+    },
+    {
+     "word": "i",
+     "start": 1.0332879818594105,
+     "end": 1.172607709750567
+    },
+    {
+     "word": "gave",
+     "start": 1.172607709750567,
+     "end": 1.474467120181406
+    },
+    {
+     "word": "up",
+     "start": 1.474467120181406,
+     "end": 1.6718367346938776
+    },
+    {
+     "word": "civilization",
+     "start": 1.6718367346938776,
+     "end": 2.5774149659863945
+    },
+    {
+     "word": "for",
+     "start": 2.995374149659864,
+     "end": 3.2624036281179136
+    },
+    {
+     "word": "this",
+     "start": 3.2624036281179136,
+     "end": 3.633922902494331
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "two",
+     "start": 0.06,
+     "end": 0.18
+    },
+    {
+     "word": "years",
+     "start": 0.18,
+     "end": 0.45
+    },
+    {
+     "word": "ago",
+     "start": 0.45,
+     "end": 0.84
+    },
+    {
+     "word": "i",
+     "start": 1.03,
+     "end": 1.17
+    },
+    {
+     "word": "gave",
+     "start": 1.17,
+     "end": 1.47
+    },
+    {
+     "word": "up",
+     "start": 1.47,
+     "end": 1.67
+    },
+    {
+     "word": "civilization",
+     "start": 1.67,
+     "end": 2.58
+    },
+    {
+     "word": "for",
+     "start": 2.99,
+     "end": 3.26
+    },
+    {
+     "word": "this",
+     "start": 3.26,
+     "end": 3.61
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "two",
+     "out": {
+      "word": "two",
+      "start": 0.06,
+      "end": 0.18
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -60.0
+    },
+    {
+     "word": "years",
+     "out": {
+      "word": "years",
+      "start": 0.18,
+      "end": 0.45
+     },
+     "d_start_ms": -60.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "ago",
+     "out": {
+      "word": "ago",
+      "start": 0.45,
+      "end": 0.84
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "i",
+     "out": {
+      "word": "i",
+      "start": 1.03,
+      "end": 1.17
+     },
+     "d_start_ms": 30.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "gave",
+     "out": {
+      "word": "gave",
+      "start": 1.17,
+      "end": 1.47
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "up",
+     "out": {
+      "word": "up",
+      "start": 1.47,
+      "end": 1.67
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "civilization",
+     "out": {
+      "word": "civilization",
+      "start": 1.67,
+      "end": 2.58
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -50.0
+    },
+    {
+     "word": "for",
+     "out": {
+      "word": "for",
+      "start": 2.99,
+      "end": 3.26
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "this",
+     "out": {
+      "word": "this",
+      "start": 3.26,
+      "end": 3.61
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -40.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 21.6667,
+    "wer": 0.0,
+    "utmos": 4.4632,
+    "us_prob": 0.033
+   },
+   "source": "results/m1_pos/test/wav/YBAA_arctic_a0122/out.wav"
+  },
+  "abl_a_pos": {
+   "label": "Ablation A",
+   "planned_words": [
+    {
+     "word": "two",
+     "start": 0.08126984126984127,
+     "end": 0.19736961451247165
+    },
+    {
+     "word": "years",
+     "start": 0.19736961451247165,
+     "end": 0.4527891156462585
+    },
+    {
+     "word": "ago",
+     "start": 0.4527891156462585,
+     "end": 0.8126984126984127
+    },
+    {
+     "word": "i",
+     "start": 1.0332879818594105,
+     "end": 1.172607709750567
+    },
+    {
+     "word": "gave",
+     "start": 1.172607709750567,
+     "end": 1.474467120181406
+    },
+    {
+     "word": "up",
+     "start": 1.474467120181406,
+     "end": 1.6718367346938776
+    },
+    {
+     "word": "civilization",
+     "start": 1.6718367346938776,
+     "end": 2.5774149659863945
+    },
+    {
+     "word": "for",
+     "start": 2.995374149659864,
+     "end": 3.2624036281179136
+    },
+    {
+     "word": "this",
+     "start": 3.2624036281179136,
+     "end": 3.633922902494331
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "two",
+     "start": 0.06,
+     "end": 0.18
+    },
+    {
+     "word": "years",
+     "start": 0.18,
+     "end": 0.45
+    },
+    {
+     "word": "ago",
+     "start": 0.45,
+     "end": 0.84
+    },
+    {
+     "word": "i",
+     "start": 1.03,
+     "end": 1.17
+    },
+    {
+     "word": "gave",
+     "start": 1.17,
+     "end": 1.47
+    },
+    {
+     "word": "up",
+     "start": 1.47,
+     "end": 1.67
+    },
+    {
+     "word": "civilization",
+     "start": 1.67,
+     "end": 2.57
+    },
+    {
+     "word": "for",
+     "start": 3.0,
+     "end": 3.26
+    },
+    {
+     "word": "this",
+     "start": 3.26,
+     "end": 3.61
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "two",
+     "out": {
+      "word": "two",
+      "start": 0.06,
+      "end": 0.18
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -60.0
+    },
+    {
+     "word": "years",
+     "out": {
+      "word": "years",
+      "start": 0.18,
+      "end": 0.45
+     },
+     "d_start_ms": -60.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "ago",
+     "out": {
+      "word": "ago",
+      "start": 0.45,
+      "end": 0.84
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "i",
+     "out": {
+      "word": "i",
+      "start": 1.03,
+      "end": 1.17
+     },
+     "d_start_ms": 30.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "gave",
+     "out": {
+      "word": "gave",
+      "start": 1.17,
+      "end": 1.47
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "up",
+     "out": {
+      "word": "up",
+      "start": 1.47,
+      "end": 1.67
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "civilization",
+     "out": {
+      "word": "civilization",
+      "start": 1.67,
+      "end": 2.57
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -60.0
+    },
+    {
+     "word": "for",
+     "out": {
+      "word": "for",
+      "start": 3.0,
+      "end": 3.26
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "this",
+     "out": {
+      "word": "this",
+      "start": 3.26,
+      "end": 3.61
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -40.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 22.7778,
+    "wer": 0.0,
+    "utmos": 3.9759,
+    "us_prob": 0.4169
+   },
+   "source": "results/abl_a_pos/test/wav/YBAA_arctic_a0122/out.wav"
+  },
+  "abl_b_pos": {
+   "label": "Ablation B",
+   "planned_words": [
+    {
+     "word": "two",
+     "start": 0.08126984126984127,
+     "end": 0.19736961451247165
+    },
+    {
+     "word": "years",
+     "start": 0.19736961451247165,
+     "end": 0.4527891156462585
+    },
+    {
+     "word": "ago",
+     "start": 0.4527891156462585,
+     "end": 0.8126984126984127
+    },
+    {
+     "word": "i",
+     "start": 1.0332879818594105,
+     "end": 1.172607709750567
+    },
+    {
+     "word": "gave",
+     "start": 1.172607709750567,
+     "end": 1.474467120181406
+    },
+    {
+     "word": "up",
+     "start": 1.474467120181406,
+     "end": 1.6718367346938776
+    },
+    {
+     "word": "civilization",
+     "start": 1.6718367346938776,
+     "end": 2.5774149659863945
+    },
+    {
+     "word": "for",
+     "start": 2.995374149659864,
+     "end": 3.2624036281179136
+    },
+    {
+     "word": "this",
+     "start": 3.2624036281179136,
+     "end": 3.633922902494331
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "two",
+     "start": 0.07,
+     "end": 0.18
+    },
+    {
+     "word": "years",
+     "start": 0.18,
+     "end": 0.45
+    },
+    {
+     "word": "ago",
+     "start": 0.45,
+     "end": 0.84
+    },
+    {
+     "word": "i",
+     "start": 1.03,
+     "end": 1.17
+    },
+    {
+     "word": "gave",
+     "start": 1.17,
+     "end": 1.47
+    },
+    {
+     "word": "up",
+     "start": 1.47,
+     "end": 1.68
+    },
+    {
+     "word": "civilization",
+     "start": 1.68,
+     "end": 2.58
+    },
+    {
+     "word": "for",
+     "start": 2.99,
+     "end": 3.26
+    },
+    {
+     "word": "this",
+     "start": 3.26,
+     "end": 3.61
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "two",
+     "out": {
+      "word": "two",
+      "start": 0.07,
+      "end": 0.18
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": -60.0
+    },
+    {
+     "word": "years",
+     "out": {
+      "word": "years",
+      "start": 0.18,
+      "end": 0.45
+     },
+     "d_start_ms": -60.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "ago",
+     "out": {
+      "word": "ago",
+      "start": 0.45,
+      "end": 0.84
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "i",
+     "out": {
+      "word": "i",
+      "start": 1.03,
+      "end": 1.17
+     },
+     "d_start_ms": 30.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "gave",
+     "out": {
+      "word": "gave",
+      "start": 1.17,
+      "end": 1.47
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "up",
+     "out": {
+      "word": "up",
+      "start": 1.47,
+      "end": 1.68
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "civilization",
+     "out": {
+      "word": "civilization",
+      "start": 1.68,
+      "end": 2.58
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -50.0
+    },
+    {
+     "word": "for",
+     "out": {
+      "word": "for",
+      "start": 2.99,
+      "end": 3.26
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "this",
+     "out": {
+      "word": "this",
+      "start": 3.26,
+      "end": 3.61
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": -40.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 21.1111,
+    "wer": 0.0,
+    "utmos": 4.3728,
+    "us_prob": 0.0032
+   },
+   "source": "results/abl_b_pos/test/wav/YBAA_arctic_a0122/out.wav"
+  },
+  "v0": {
+   "label": "V0 (pretrained VITS + MAS)",
+   "planned_words": [
+    {
+     "word": "two",
+     "start": 0.08126984126984127,
+     "end": 0.19736961451247165
+    },
+    {
+     "word": "years",
+     "start": 0.19736961451247165,
+     "end": 0.4527891156462585
+    },
+    {
+     "word": "ago",
+     "start": 0.4527891156462585,
+     "end": 0.8126984126984127
+    },
+    {
+     "word": "i",
+     "start": 1.0332879818594105,
+     "end": 1.172607709750567
+    },
+    {
+     "word": "gave",
+     "start": 1.172607709750567,
+     "end": 1.474467120181406
+    },
+    {
+     "word": "up",
+     "start": 1.474467120181406,
+     "end": 1.6718367346938776
+    },
+    {
+     "word": "civilization",
+     "start": 1.6718367346938776,
+     "end": 2.5774149659863945
+    },
+    {
+     "word": "for",
+     "start": 2.995374149659864,
+     "end": 3.2624036281179136
+    },
+    {
+     "word": "this",
+     "start": 3.2624036281179136,
+     "end": 3.633922902494331
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "two",
+     "start": 0.05,
+     "end": 0.15
+    },
+    {
+     "word": "years",
+     "start": 0.15,
+     "end": 0.44
+    },
+    {
+     "word": "ago",
+     "start": 0.44,
+     "end": 0.84
+    },
+    {
+     "word": "i",
+     "start": 1.07,
+     "end": 1.15
+    },
+    {
+     "word": "gave",
+     "start": 1.15,
+     "end": 1.43
+    },
+    {
+     "word": "up",
+     "start": 1.46,
+     "end": 1.64
+    },
+    {
+     "word": "civilization",
+     "start": 1.64,
+     "end": 2.61
+    },
+    {
+     "word": "for",
+     "start": 3.0,
+     "end": 3.24
+    },
+    {
+     "word": "this",
+     "start": 3.24,
+     "end": 3.65
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "two",
+     "out": {
+      "word": "two",
+      "start": 0.05,
+      "end": 0.15
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -90.0
+    },
+    {
+     "word": "years",
+     "out": {
+      "word": "years",
+      "start": 0.15,
+      "end": 0.44
+     },
+     "d_start_ms": -90.0,
+     "d_end_ms": -10.0
+    },
+    {
+     "word": "ago",
+     "out": {
+      "word": "ago",
+      "start": 0.44,
+      "end": 0.84
+     },
+     "d_start_ms": -10.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "i",
+     "out": {
+      "word": "i",
+      "start": 1.07,
+      "end": 1.15
+     },
+     "d_start_ms": 70.0,
+     "d_end_ms": -40.0
+    },
+    {
+     "word": "gave",
+     "out": {
+      "word": "gave",
+      "start": 1.15,
+      "end": 1.43
+     },
+     "d_start_ms": -40.0,
+     "d_end_ms": -70.0
+    },
+    {
+     "word": "up",
+     "out": {
+      "word": "up",
+      "start": 1.46,
+      "end": 1.64
+     },
+     "d_start_ms": -40.0,
+     "d_end_ms": -40.0
+    },
+    {
+     "word": "civilization",
+     "out": {
+      "word": "civilization",
+      "start": 1.64,
+      "end": 2.61
+     },
+     "d_start_ms": -40.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "for",
+     "out": {
+      "word": "for",
+      "start": 3.0,
+      "end": 3.24
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "this",
+     "out": {
+      "word": "this",
+      "start": 3.24,
+      "end": 3.65
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": 0.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 35.0,
+    "wer": 0.0,
+    "utmos": 4.4422,
+    "us_prob": 0.0135
+   },
+   "source": "results/v0/test/wav/YBAA_arctic_a0122/out.wav"
+  },
+  "m0": {
+   "label": "M0 (FastSpeech2)",
+   "planned_words": [
+    {
+     "word": "two",
+     "start": 0.08126984126984127,
+     "end": 0.19736961451247165
+    },
+    {
+     "word": "years",
+     "start": 0.19736961451247165,
+     "end": 0.4527891156462585
+    },
+    {
+     "word": "ago",
+     "start": 0.4527891156462585,
+     "end": 0.8126984126984127
+    },
+    {
+     "word": "i",
+     "start": 1.0332879818594105,
+     "end": 1.172607709750567
+    },
+    {
+     "word": "gave",
+     "start": 1.172607709750567,
+     "end": 1.474467120181406
+    },
+    {
+     "word": "up",
+     "start": 1.474467120181406,
+     "end": 1.6718367346938776
+    },
+    {
+     "word": "civilization",
+     "start": 1.6718367346938776,
+     "end": 2.5774149659863945
+    },
+    {
+     "word": "for",
+     "start": 2.995374149659864,
+     "end": 3.2624036281179136
+    },
+    {
+     "word": "this",
+     "start": 3.2624036281179136,
+     "end": 3.633922902494331
+    }
+   ],
+   "measured_words": [
+    {
+     "word": "two",
+     "start": 0.0,
+     "end": 0.2
+    },
+    {
+     "word": "years",
+     "start": 0.2,
+     "end": 0.46
+    },
+    {
+     "word": "ago",
+     "start": 0.46,
+     "end": 0.78
+    },
+    {
+     "word": "i",
+     "start": 1.09,
+     "end": 1.17
+    },
+    {
+     "word": "gave",
+     "start": 1.17,
+     "end": 1.48
+    },
+    {
+     "word": "up",
+     "start": 1.48,
+     "end": 1.68
+    },
+    {
+     "word": "civilization",
+     "start": 1.68,
+     "end": 2.58
+    },
+    {
+     "word": "for",
+     "start": 3.01,
+     "end": 3.24
+    },
+    {
+     "word": "this",
+     "start": 3.24,
+     "end": 3.67
+    }
+   ],
+   "per_word_error_ms": [
+    {
+     "word": "two",
+     "out": {
+      "word": "two",
+      "start": 0.0,
+      "end": 0.2
+     },
+     "d_start_ms": -50.0,
+     "d_end_ms": -40.0
+    },
+    {
+     "word": "years",
+     "out": {
+      "word": "years",
+      "start": 0.2,
+      "end": 0.46
+     },
+     "d_start_ms": -40.0,
+     "d_end_ms": 10.0
+    },
+    {
+     "word": "ago",
+     "out": {
+      "word": "ago",
+      "start": 0.46,
+      "end": 0.78
+     },
+     "d_start_ms": 10.0,
+     "d_end_ms": -60.0
+    },
+    {
+     "word": "i",
+     "out": {
+      "word": "i",
+      "start": 1.09,
+      "end": 1.17
+     },
+     "d_start_ms": 90.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "gave",
+     "out": {
+      "word": "gave",
+      "start": 1.17,
+      "end": 1.48
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": -20.0
+    },
+    {
+     "word": "up",
+     "out": {
+      "word": "up",
+      "start": 1.48,
+      "end": 1.68
+     },
+     "d_start_ms": -20.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "word": "civilization",
+     "out": {
+      "word": "civilization",
+      "start": 1.68,
+      "end": 2.58
+     },
+     "d_start_ms": 0.0,
+     "d_end_ms": -50.0
+    },
+    {
+     "word": "for",
+     "out": {
+      "word": "for",
+      "start": 3.01,
+      "end": 3.24
+     },
+     "d_start_ms": 20.0,
+     "d_end_ms": -30.0
+    },
+    {
+     "word": "this",
+     "out": {
+      "word": "this",
+      "start": 3.24,
+      "end": 3.67
+     },
+     "d_start_ms": -30.0,
+     "d_end_ms": 20.0
+    }
+   ],
+   "metrics": {
+    "status": "ok",
+    "aligner": "mfa",
+    "length_error": 0.0,
+    "wb_mae_ms": 29.4444,
+    "wer": 0.1111,
+    "utmos": 4.3556,
+    "us_prob": 0.9858
+   },
+   "source": "results/m0/test/wav/YBAA_arctic_a0122/out.wav"
+  }
+ }
+}

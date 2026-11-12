@@ -1407,3 +1407,51 @@ docs/HANDOFF.md instead of being worked around.
       - `abd`, `bc`, `abc` are right only via CMUdict.
     - **Other limits:** a wrong G2P guess persists in the lexicon; one alignment at a time.
     - Written into REPORT §15 and the README known failure modes.
+- **D-103 / E-36 Clean evidence: exact samples for every claim (owner: "for each claim, decision
+  made, the github repo must have the exact generated samples and their ground truths").**
+  - **Audit result:** the numeric claims already pointed to tracked CSV/JSON files (checked: every
+    path in README/REPORT/DEMO exists in git, except datasets, checkpoints and local outputs, which
+    are meant to stay out). But **no generated audio was in git**: the demo site (`out/demo_site`)
+    and all evaluated outputs (`results/*/*/wav/`) were git-ignored.
+  - **E-36 found:** the demo-site wavs are **not** the evaluated outputs. They were synthesized
+    again, and VITS sampling noise makes them differ (md5 differs for every system checked). So
+    they cannot back a reported number. Samples are now copied from `results/*/test/wav/`.
+  - **E-36 found:** the browser demo keeps only 50 jobs and had already deleted the owner's first
+    test ("Hi there, I'm chaganti"; its recording survives in a later re-run job). All jobs were
+    archived to `out/web_demo_archive/`, and `web_demo.keep_jobs` was raised to 300 (not an
+    experiment config).
+  - **`samples/`** (`make samples`, `scripts/export_samples.py`, `configs/samples.yaml`), 76 MB:
+    - **demo/:** 21 test samples in 3 accents. The selection was fixed in the config: the
+      headline prompt for all 12 test speakers, plus best/median/worst main-system MAE per
+      accent, so failures are shown too. Each sample has:
+      - `reference.wav` and `reference_annotation.TextGrid` (L2-ARCTIC human word timing, the
+        ground truth of the MAE);
+      - text, all 7 outputs, `timings.json`, `timing.png` and a README.
+    - **Self-check:** the build recomputes all 147 MAE values from the committed files and stops
+      if any differs from `per_utt.csv`; none did.
+    - **listening/:** the p2a and p2c sets, copied unchanged. Their output wavs are
+      byte-identical to the dev evaluation outputs, verified per file.
+    - **browser_tests/:** all 50 of the owner's browser-demo jobs, unfiltered and in order (29
+      before and 21 after the fix). Each has the recording as uploaded, the main and V0 outputs,
+      the MFA TextGrids, and the after-fix and `a EY1` re-alignments.
+    - **The owner chose to include their own voice** (asked: yes, recommended option).
+    - The 16 kHz wav copies of the recordings were dropped: derived files, 5.7 MB, and the
+      webm plays in browsers.
+  - **Full test outputs on the Hub** (owner chose: test set to HF):
+    - **What:** `scripts/publish_outputs.py` (`make publish-outputs` / `make outputs`) wrote 7
+      deterministic tars of 207 MB each (wav + timings, the measured TextGrids, per_utt.csv,
+      summary.json, scores.jsonl) to `outputs/test/` with a sha256 manifest.
+    - **Revision:** commit `e6bf85158a38a1c6b7f9d34aa4195862f1c420ca`, pinned as
+      `hosting.outputs.revision`.
+    - **Verified:** the manifest lists 7 tars; `v0.tar` matches its hash; HKK_arctic_a0003's V0
+      wav inside it is byte-identical to the committed sample.
+    - **Not re-hosted:** dev outputs (laptop only) and the L2-ARCTIC references (dataset;
+      named in each timings.json).
+  - **Docs:**
+    - README: "Assignment deliverables: where each one is" (requirement → file) and the layout;
+    - REPORT §16: an audio-evidence table;
+    - tests: `tests/test_samples.py` (selection, metric match, unmatched words, deterministic
+      tar, config consistency).
+  - **Access:** the GitHub repo answers 404 to unauthenticated requests and the HF repo is
+    private, so the interviewers need access granted (or the repos made public) before the
+    interview. Left to the owner.

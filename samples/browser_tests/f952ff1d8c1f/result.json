@@ -1,0 +1,106 @@
+{
+ "text": "ac is air conditioner",
+ "normalized": "ac is air conditioner",
+ "oov_added": [],
+ "ref_duration_s": 2.7,
+ "ref_words": [
+  {
+   "word": "ac",
+   "start": 0.39,
+   "end": 1.08
+  },
+  {
+   "word": "is",
+   "start": 1.08,
+   "end": 1.32
+  },
+  {
+   "word": "air",
+   "start": 1.42,
+   "end": 1.63
+  },
+  {
+   "word": "conditioner",
+   "start": 1.63,
+   "end": 2.25
+  }
+ ],
+ "align_s": 8.794094334001784,
+ "total_s": 40.158941723999305,
+ "systems": [
+  {
+   "name": "main",
+   "audio": "main/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.02925215518526211,
+   "synthesis_s": 0.0789808190002077,
+   "measured_mae_ms": 54.99999999999998,
+   "measured": [
+    {
+     "start": 0.03,
+     "end": 1.1,
+     "d_start_ms": -360.0,
+     "d_end_ms": 20.000000000000018
+    },
+    {
+     "start": 1.1,
+     "end": 1.33,
+     "d_start_ms": 20.000000000000018,
+     "d_end_ms": 10.000000000000009
+    },
+    {
+     "start": 1.42,
+     "end": 1.63,
+     "d_start_ms": 0.0,
+     "d_end_ms": 0.0
+    },
+    {
+     "start": 1.63,
+     "end": 2.28,
+     "d_start_ms": 0.0,
+     "d_end_ms": 29.999999999999805
+    }
+   ]
+  },
+  {
+   "name": "v0",
+   "audio": "v0/out.wav",
+   "aligner": "mfa",
+   "mfa_fallback_reason": null,
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.03674197777770503,
+   "synthesis_s": 0.09920333999980357,
+   "measured_mae_ms": 39.99999999999998,
+   "measured": [
+    {
+     "start": 0.39,
+     "end": 1.11,
+     "d_start_ms": 0.0,
+     "d_end_ms": 30.00000000000003
+    },
+    {
+     "start": 1.11,
+     "end": 1.35,
+     "d_start_ms": 30.00000000000003,
+     "d_end_ms": 30.00000000000003
+    },
+    {
+     "start": 1.45,
+     "end": 1.59,
+     "d_start_ms": 30.00000000000003,
+     "d_end_ms": -39.999999999999815
+    },
+    {
+     "start": 1.59,
+     "end": 2.37,
+     "d_start_ms": -39.999999999999815,
+     "d_end_ms": 120.00000000000011
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,66 @@
+# Evidence samples committed under samples/ (DECISIONS E-36; scripts/export_samples.py, `make samples`).
+# Not an experiment config: it only selects which already-evaluated outputs are copied. Every
+# audio file is a byte-exact copy of the file the metrics were computed on (checked by sha256).
+inherit: base.yaml
+exp: samples
+samples:
+  out_dir: samples
+  split: test
+  main: m1_pos_diph
+  # display order; every system's evaluated test outputs (results/<system>/test/wav/<id>/out.wav)
+  systems: [m1_pos_diph, m1, m1_pos, abl_a_pos, abl_b_pos, v0, m0]
+  labels:
+    m1_pos_diph: "main (m1_pos_diph)"
+    m1: "M1"
+    m1_pos: "M1 + position embedding"
+    abl_a_pos: "Ablation A"
+    abl_b_pos: "Ablation B"
+    v0: "V0 (pretrained VITS + MAS)"
+    m0: "M0 (FastSpeech2)"
+  # selection, fixed before looking at any audio: the headline prompt for every test speaker, plus
+  # the main system's best, median and worst utterance (word-boundary MAE) per accent
+  headline_prompt: arctic_a0003
+  quantiles: {best: 0.0, median: 0.5, worst: 1.0}
+  plot_dpi: 80
+  # listening sets behind phase-2 decisions (dev split; files are the dev evaluation outputs)
+  listening:
+    p2a_word_endings:
+      src: export/listen_p2a
+      decision: "D-76..D-78 (REPORT §10.3)"
+      claim: >-
+        "Words end sharply" (M1). m1_pos was chosen over m1_cont after listening; US probability
+        0.769 vs 0.680. Each folder: the L2-ARCTIC reference and m1, m1_cont, m1_pos outputs.
+      outputs: {m1: m1, m1_cont: m1_cont, m1_pos: m1_pos}
+    p2c_diphthongs:
+      src: export/listen_p2c
+      decision: "D-80..D-85 (REPORT §10.5)"
+      claim: >-
+        "cry" heard as "cra" (folder cry_*: m1_pos holds /a/, m1_pos_diph glides to /ɪ/), the four
+        largest US-probability drops (us_drop_*: no audible difference), and the 12 random refs.
+      outputs: {m1_pos: m1_pos, m1_pos_diph: m1_pos_diph}
+  # the owner's browser-demo recordings on 2026-11-12 (E-35); every archived job is included
+  browser_tests:
+    src: [out/web_demo, out/web_demo_archive]   # live jobs first (original timestamps)
+    realigned: out/e35_realign       # <job>.TextGrid after the cache fix, <job>_ay.TextGrid with a EY1
+    first_job_after_fix: 9272ab5d54f7
+    systems: [main, v0]              # the failures are in the shared front end/aligner
+    cases:
+      letter_a: "letter `a` read and aligned as AH0 ('uh'): collapses to 30-120 ms"
+      i_after_vowel: "`I` after a vowel (EY->AY): collapses to 30 ms"
+      new_word_ctc: "word added at inference unknown to MFA (stale cache): CTC fallback (fixed)"
+      g2p_letters: "letter string read as a word by G2P"
+    tags:
+      994f7bd5cba1: letter_a
+      7cdc5446b89f: letter_a
+      100220176c8e: letter_a
+      6541f5b1e2c7: letter_a
+      abe487d0f980: letter_a
+      2e53c8f7ae66: letter_a
+      4f0239ed9458: letter_a
+      18b6073bfc19: letter_a
+      6c41ee1a96ee: i_after_vowel
+      ac96a8d9836b: i_after_vowel
+      703f7b4f16b0: new_word_ctc
+      8bee7ff4bd2a: new_word_ctc
+      97a5de018ad4: [new_word_ctc, g2p_letters]
+      331b15db404e: g2p_letters

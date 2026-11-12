@@ -1,0 +1,89 @@
+{
+ "text": "lakshmi is here",
+ "normalized": "lakshmi is here",
+ "oov_added": [],
+ "ref_duration_s": 2.52,
+ "ref_words": [
+  {
+   "word": "lakshmi",
+   "start": 0.46368000000000004,
+   "end": 0.86688
+  },
+  {
+   "word": "is",
+   "start": 1.0483200000000001,
+   "end": 1.27008
+  },
+  {
+   "word": "here",
+   "start": 1.27008,
+   "end": 1.7136
+  }
+ ],
+ "align_s": 4.877434879002976,
+ "total_s": 34.17246979899937,
+ "systems": [
+  {
+   "name": "main",
+   "audio": "main/out.wav",
+   "aligner": "ctc",
+   "mfa_fallback_reason": "spn",
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.03176319444300755,
+   "synthesis_s": 0.08004324999637902,
+   "measured_mae_ms": 95.22666666666669,
+   "measured": [
+    {
+     "start": 0.0,
+     "end": 0.89,
+     "d_start_ms": -463.68000000000006,
+     "d_end_ms": 23.12000000000003
+    },
+    {
+     "start": 1.04,
+     "end": 1.3,
+     "d_start_ms": -8.320000000000105,
+     "d_end_ms": 29.919999999999945
+    },
+    {
+     "start": 1.3,
+     "end": 1.73,
+     "d_start_ms": 29.919999999999945,
+     "d_end_ms": 16.39999999999997
+    }
+   ]
+  },
+  {
+   "name": "v0",
+   "audio": "v0/out.wav",
+   "aligner": "ctc",
+   "mfa_fallback_reason": "spn",
+   "length_error_samples": 0,
+   "capped_words": [],
+   "rtf_model": 0.04022044801483086,
+   "synthesis_s": 0.10135552899737377,
+   "measured_mae_ms": 47.506666666666696,
+   "measured": [
+    {
+     "start": 0.45,
+     "end": 1.01,
+     "d_start_ms": -13.680000000000025,
+     "d_end_ms": 143.12000000000003
+    },
+    {
+     "start": 1.05,
+     "end": 1.24,
+     "d_start_ms": 1.6799999999999038,
+     "d_end_ms": -30.080000000000105
+    },
+    {
+     "start": 1.24,
+     "end": 1.78,
+     "d_start_ms": -30.080000000000105,
+     "d_end_ms": 66.40000000000002
+    }
+   ]
+  }
+ ]
+}
