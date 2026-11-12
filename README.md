@@ -22,6 +22,7 @@ make infer REF=ref.wav TEXT="Will we ever forget it."
 | Q2: motivation and detailed architecture | [REPORT §3](docs/REPORT.md#3-design-principle-one-source-per-output-property), [§7](docs/REPORT.md#7-models), [§8](docs/REPORT.md#8-inference-pipeline-transferring-word-timing); [How it works](#how-it-works) |
 | Q3: params, MACs, latency, RTF, plots | [REPORT §12](docs/REPORT.md#12-efficiency), [`results/profile_*.json`](results), [`results/plots/`](results/plots) (09_efficiency and 10 more analysis plots), [§11](docs/REPORT.md#11-final-results-on-held-out-accents) test results |
 | Q4: code walkthrough, inference on the interviewers' files | [Repository layout](#repository-layout); `make infer REF=… TEXT=…`, `make live-demo`, `make web-demo` |
+| **Project report (PDF)** | [`docs/meeami-tts_report.pdf`](docs/meeami-tts_report.pdf): 16 pages; methods, ablations, results, plots and metrics, every table and figure generated from the committed results (`make env-report && make report-pdf`). Longer version with a code link for every claim: [`docs/REPORT.md`](docs/REPORT.md) |
 | Slides | [`slides/meeami-tts_v3.pptx`](slides/meeami-tts_v3.pptx): 34 slides with speaker notes; slide 2 maps the four key questions to slides; demonstration slides embed the exact evaluated audio |
 | Evidence for every claim and decision | [REPORT §16](docs/REPORT.md#16-claim--evidence-index) (claim → result file → code → samples), [`docs/DECISIONS.md`](docs/DECISIONS.md) (every decision and error) |
 
@@ -596,7 +597,7 @@ tests/      unit tests (one per module) + edge_cases/ (21 committed WAV/TXT case
 stats/      phone_logdur.json (LJ per-phone log-duration mean, σ) · l2_dev_pace.json (Ablation B)
 reports/    data splits, lexicon, LJ alignment QC, MFA error on accented speech, augmentation
 results/    <system>/<split>/{per_utt.csv, summary.json} · paired/ · phone_dynamics/ · fidelity/ · tune/ · plots/ · profile_*.json · _rejected/
-docs/       REPORT.md · PLAN.md · DECISIONS.md · HANDOFF.md
+docs/       meeami-tts_report.pdf (make report-pdf) · REPORT.md · PLAN.md · DECISIONS.md · HANDOFF.md
 samples/    exact evaluated outputs + references + word timings (make samples, E-36): demo/ · listening/ · browser_tests/
 slides/     meeami-tts_v3.pptx + build_v3.js (current) · v2 (build_v2.js) · v1 (build.js), kept unchanged
 data/ runs/ export/ out/   git-ignored (datasets, training runs, checkpoints, demo)

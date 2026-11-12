@@ -1549,3 +1549,35 @@ docs/HANDOFF.md instead of being worked around.
     - **§16:** four claim rows.
   - **Corrected:** the stale unit-test count (166 → 308; 300 on a clean clone), and the
     demo-page "backup" line now says its audio is re-synthesized and is not the evidence.
+- **D-107 PDF project report (owner: "a detailed report in a pdf format with methods, ablations,
+  results, plots, metrics etc., organised well").**
+  - **What:** `docs/meeami-tts_report.pdf`, 16 pages: cover with headline numbers and abstract,
+    contents, introduction, data, method (design principle, front end, MFA, models, training,
+    inference), evaluation methodology, experiments and ablations (tuning, phases 1 / 2a / 2b / 2c,
+    V0 and duration fidelity), held-out test results, efficiency, robustness and live testing,
+    limitations, reproducibility, and appendices (deviations, claim → evidence).
+  - **No typed numbers in results tables or figures:** `scripts/build_report_pdf.py` reads
+    `results/*/test/summary.json`, `per_utt.csv`, `results/paired/`, `results/fidelity/`,
+    `results/phone_dynamics/`, `results/tune/` and the headline sample in `samples/demo/`.
+    Configuration is in `configs/report_pdf.yaml`. Nine new figures: pipeline, headline
+    waveforms + word times, MAE CDF, per accent with CIs, MAE by stretch bin, tuning grid,
+    forest plot of every paired test, duration fidelity, phone dynamics. Four existing plots are
+    reused (MFA error, training, efficiency, pace). The figure palette was checked with the
+    dataviz validator (CVD separation passes; the aqua slot is low-contrast, so every figure has
+    a legend or a table next to it).
+  - **New env `report`** (`envs/report.yml`: reportlab 5.0.1, matplotlib 3.10.9, numpy, pillow,
+    omegaconf, pyyaml), with `make env-report` and `make report-pdf`. Reason: no PDF library
+    was in `tts`, and `tts` is a pinned env that should not change after the freeze. It is a
+    docs-only tool env, like the `slides` env used for the deck. Fonts are the DejaVu TTFs
+    shipped with matplotlib, so no system fonts are needed.
+  - **Test:** `tests/test_report_pdf.py` (5 tests: quantile, MAE filtering, stretch binning by
+    the main system's ratio, labels/p formatting, every configured input file exists).
+    `make test`: 313 passed, 1 skipped.
+  - **Correction found while building it:** REPORT §11's 90th percentiles for M0 and M1 (45.8 /
+    36.4 ms) came from a different quantile rule than numpy's default linear interpolation.
+    With linear interpolation they are 45.6 / 36.3 ms. Main and V0 are unchanged (35.5 / 56.8),
+    and so is slide 23. REPORT now states the method and uses the linear values, the same ones
+    the PDF uses.
+  - **Visual QA:** every page rendered to PNG (pypdfium2 in a scratch folder) and checked.
+    Fixed: near-empty pages from forced page breaks (headings now keep with the next block),
+    overlapping labels in the pipeline, CDF, stretch, per-accent and tuning figures.

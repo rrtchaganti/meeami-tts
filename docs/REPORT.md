@@ -7,6 +7,7 @@ Chaganti Raja Ravi Teja · November 2026 · code frozen at git tag `freeze-v1` (
 How to read this report:
 - Each claim points to the code that implements it and to the result file that measures it.
 - Line links point to the frozen code. The one exception is V0, the immediate baseline (the original VITS with MAS). It was added after the freeze as new files (§7.0, §10.6, D-90), and its links point to those files.
+- **A 16-page PDF version** with figures is [meeami-tts_report.pdf](meeami-tts_report.pdf) (`make report-pdf`; every table and figure is generated from the committed results).
 - `D-n` and `E-n` are entries in [DECISIONS.md](DECISIONS.md), the running log of every decision and error.
 - The original specification is [PLAN.md](PLAN.md). Section 13 lists every deviation from it.
 - **After the freeze**, only inference tooling and evidence were added, never model code or experiment configs: the typed-text pre-pass (§5.1), hosting, the live and browser demos, `samples/` and the outsider check (§14.1), and the live-testing findings (§15). The test numbers in §11 are unchanged by all of them.
@@ -823,7 +824,7 @@ The table is in §2. Paired tests on test (D-86, [`results/paired/`](../results/
 | | V0 | M0 | M1 | m1_pos_diph |
 | --- | --- | --- | --- | --- |
 | Median per-reference MAE | 38.0 ms | 29.4 ms | 21.9 ms | **21.5 ms** |
-| 90th percentile | 56.8 ms | 45.8 ms | 36.4 ms | **35.5 ms** |
+| 90th percentile (linear interpolation) | 56.8 ms | 45.6 ms | 36.3 ms | **35.5 ms** |
 | Word boundaries within 20 ms / 50 ms | 41.2% / 75.8% | 55.3% / 84.3% | 69.3% / 90.3% | **69.6% / 90.4%** |
 | MAE at stretch < 0.8 / 0.9–1.1 / > 1.2 | 35.2 / 39.8–40.1 / 42.4 | 30.7 / 30.8–30.9 / 32.7 | 26.0 / 23.0–23.3 / 26.1 | 24.7 / 22.8 / 26.1 |
 

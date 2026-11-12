@@ -1,0 +1,54 @@
+# PDF project report (D-107; scripts/build_report_pdf.py, `make report-pdf`, env `report`).
+# Not an experiment config: it only reads committed results and draws figures and tables from them.
+inherit: base.yaml
+exp: report_pdf
+report_pdf:
+  out: docs/meeami-tts_report.pdf
+  fig_dir: export/report_pdf          # generated figures (gitignored; rebuilt on every run)
+  fig_dpi: 200
+  split: test
+  main: m1_pos_diph
+  # the four systems of the headline comparison, in display order, and every evaluated system
+  core: [v0, m0, m1, m1_pos_diph]
+  systems: [v0, m0, m1, m1_pos, m1_pos_diph, abl_a_pos, abl_b_pos]
+  labels:
+    v0: "V0 (VITS + MAS)"
+    m0: "M0 (FastSpeech2)"
+    m1: "M1 (VITS-MFA)"
+    m1_pos: "m1_pos"
+    m1_pos_diph: "m1_pos_diph (main)"
+    abl_a_pos: "abl_a_pos"
+    abl_b_pos: "abl_b_pos"
+  # categorical palette validated with the dataviz validator (light mode, adjacent + all pairs for the core 4)
+  colors:
+    m1_pos_diph: "#2a78d6"
+    v0: "#eb6834"
+    m0: "#1baf7a"
+    m1: "#6250d6"
+    m1_pos: "#eda100"
+    abl_a_pos: "#e87ba4"
+    abl_b_pos: "#008300"
+  accents: [arabic, korean, vietnamese]
+  stretch_bins: [0.0, 0.8, 0.9, 1.1, 1.2, 99.0]
+  headline_sample: samples/demo/arabic/YBAA_arctic_a0003
+  # paired comparisons drawn in the forest plot: [split, system, control]
+  paired:
+    - [dev, m1_pos_diph, m1_pos]
+    - [dev, abl_a_pos, m1_pos]
+    - [dev, abl_b_pos, m1_pos]
+    - [test, m1_pos_diph, m1_pos]
+    - [test, abl_a_pos, m1_pos]
+    - [test, abl_b_pos, m1_pos]
+    - [test, m1_pos_diph, m1]
+    - [test, m1, v0]
+    - [test, m1_pos_diph, v0]
+  alpha: 0.05
+  # plots already produced by `make eval-all` / `make profile`, reused as they are
+  reuse_plots:
+    mfa_error: results/plots/03_mfa_error_dev.png
+    training: results/plots/10_training.png
+    efficiency: results/plots/09_efficiency.png
+    pace: results/plots/08_rho_dev_test.png
+  links:
+    github: https://github.com/rrtchaganti/meeami-tts
+    hf: https://huggingface.co/Raviteja546/meeami-tts

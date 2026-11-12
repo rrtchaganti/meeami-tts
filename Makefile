@@ -5,6 +5,7 @@ CONDA ?= conda
 # MEEAMI_MFA_ENV carries the MFA env name to the Python code (configs/base.yaml mfa.conda_env)
 TTS_ENV ?= tts
 MFA_ENV ?= mfa
+REPORT_ENV ?= report
 export MEEAMI_MFA_ENV := $(MFA_ENV)
 TTS_RUN := $(CONDA) run --no-capture-output -n $(TTS_ENV)
 MFA_RUN := $(CONDA) run --no-capture-output -n $(MFA_ENV)
@@ -203,6 +204,15 @@ publish-outputs: # owner: tar results/<system>/test/ and upload them (E-36)
 	$(TTS_RUN) python scripts/publish_outputs.py --publish
 samples:         # owner: rebuild samples/ (exact evaluated outputs + references + word timings, E-36)
 	$(TTS_RUN) python scripts/export_samples.py
+.PHONY: env-report report-pdf
+env-report:      # docs-only env for the PDF report (envs/report.yml, D-107)
+	@if $(CONDA) env list | awk '{print $$1}' | grep -qx $(REPORT_ENV); then \
+		$(CONDA) env update -n $(REPORT_ENV) -f envs/report.yml --prune; \
+	else \
+		$(CONDA) env create -n $(REPORT_ENV) -f envs/report.yml; \
+	fi
+report-pdf:      # docs/meeami-tts_report.pdf from the committed results (needs make env-report; D-107)
+	$(CONDA) run --no-capture-output -n $(REPORT_ENV) python scripts/build_report_pdf.py
 
 # --- inference on any reference: make infer REF=their.wav TEXT="what it says" [SYS=m1_pos_diph|v0|m0]
 SYS ?= $(MAIN)
