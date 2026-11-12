@@ -168,3 +168,17 @@ def test_zero_frame_phone_searches_beyond_neighbours():
     d = [0, 1, 0, 1, 6, 0]
     assert _fill_zero_phones(ph, d) == 1
     assert d == [0, 1, 1, 1, 5, 0] and sum(d) == 8
+
+
+def test_align_one_tmp_follows_lexicon(tmp_path):
+    """E-35: MFA caches the parsed dictionary, so align_one's temp dir is keyed by the lexicon hash."""
+    cfg = load_config(REPO_ROOT / "configs" / "base.yaml")
+    cfg.paths.lexicon = str(tmp_path / "lex.txt")
+    cfg.paths.mfa_tmp = str(tmp_path / "tmp")
+    (tmp_path / "lex.txt").write_text("a\tAH0\n")
+    first = mfa.align_one_tmp(cfg)
+    assert first == mfa.align_one_tmp(cfg) and first.parent == tmp_path / "tmp"
+    first.mkdir(parents=True)
+    (tmp_path / "lex.txt").write_text("a\tAH0\nbcd\tB EH1 D\n")
+    second = mfa.align_one_tmp(cfg)
+    assert second != first and not first.exists()   # the stale cache is removed

@@ -878,6 +878,18 @@ Main checkpoint, from [`scripts/profile.py`](../scripts/profile.py) → [`result
 - **Fixed alignments flatten phones** (§7.4): every MFA-trained model moves 14–16% less inside phones than LJ. V0 keeps slightly better WER and UTMOS (§10.6).
 - **The ablations were branched late (20k steps from M1),** so they test late-stage augmentation, not augmentation from the start of fine-tuning.
 
+**Found in live testing of the browser demo (2026-11-12, E-35).** Spoken letters and the word "I", recorded by the owner through the browser demo. Each row was re-aligned with MFA after the fixes.
+
+| Input (as typed) | What happened | Cause | Status |
+|---|---|---|---|
+| `abc`, `chaganti`, `lakshmi` (words first seen at inference) | MFA returned `<unk>`/`spn`, so the demo used the coarser CTC fallback | MFA cached its parsed copy of the lexicon in `data/mfa_tmp` and never saw words that G2P added later | **Fixed**: `align_one` uses a cache keyed by the lexicon's hash. Re-aligned with MFA: `abc` 0.54–1.32 s, `chaganti` 1.47–2.13 s |
+| `bcd`, `xyz` (letters run together, no vowel) | G2P made up a word: `bcd` → B EH1 D ("bed") | Nothing told G2P that the token is a letter string | **Fixed**: unknown lowercase tokens of 3+ letters with no vowel are spelled out (`b c d`), like all-caps `GPU` |
+| letter `a` in `a, b, c` / `g,a,c` / `have a,b,c` | `a` aligned to 30–80 ms. The spoken "ay" went to the silence or the next letter, and the output says "uh" | The lexicon has one pronunciation for `a`: AH0, the article. Checked: with an extra EY1 entry in a scratch lexicon, `a` aligned to 220–330 ms | **Open**: needs a letter-context rule plus a letter-name pronunciation, used by both MFA and synthesis |
+| `I` in `may I know you` (2 of 3 recordings) | `i` got 30 ms (MFA's 3-frame minimum); `may` took the whole EY+AY stretch, so the output nearly drops "I". Measured error was 50–84 ms, against about 8 ms typical | Vowel-to-vowel junction (EY1→AY1) with no consonant, so MFA cannot place the boundary. The pronunciation (AY1) is right | **Open**: fine when there is a pause (3rd recording: 0.36 s), sentence-initially (`I would like…`: 0.16 s) and in `i, b, c` (0.27 s) |
+| `a e i o u`, `b c d`, `g, i, c`, `p q` | correct | (`a` alone between pauses has no neighbour to lose its vowel to) | — |
+
+The held-out results (§11) are unaffected. Every evaluation word was in the lexicon when MFA's cache was first built. The words added at inference (hi, ravi, dala, chaganti, lakshmi, abc, bcd, lexicon, normalized) all came from demo sessions.
+
 **Future work, ranked by expected value:**
 1. Learn the alignment again inside MFA's word spans: MAS within each word, with the word boundaries fixed. This restores the alignment–latent feedback (§7.4) and keeps timing control.
 2. A word-boundary or word-final flag on the encoder input (D-75c).
@@ -885,6 +897,7 @@ Main checkpoint, from [`scripts/profile.py`](../scripts/profile.py) → [`result
 4. Splitting other dynamic phones (CH, JH, ER) the same way.
 5. A listening test (MOS or MUSHRA, plus accent ratings) to replace the classifier as the accent judge.
 6. A faster aligner for live use: keep MFA loaded in memory, or use a stronger CTC aligner.
+7. Letter names and vowel-to-vowel junctions (E-35): read a single letter in a letter list as its name (`a` → EY1), and give MFA a minimum duration for vowel-only words such as `I` and `a`.
 
 **Takeaway.** Make durations an input, copy word timing (not phone timing), and check the tokens before adding data. Replacing MAS cut word error from 40.5 to 24 ms; the biggest later gain came from a two-token diphthong, not from more training data.
 

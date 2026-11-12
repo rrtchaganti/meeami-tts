@@ -192,4 +192,12 @@ class InputRules:
                     self._known(w) or (len(w) > self.spell_max and re.search("[AEIOU]", w))):
                 return " " + " ".join(w) + " "
             return w
-        return re.sub(r"\b([A-Z]{2,5})(?=\d|\b)", caps, text)
+        text = re.sub(r"\b([A-Z]{2,5})(?=\d|\b)", caps, text)
+
+        # lowercase tokens of 3+ letters without a vowel letter that are not words (bcd, xyz): spell
+        # them instead of letting G2P invent a word (E-35). "hmm", "shh", "nth" are in cmudict;
+        # 3+ letters keeps false starts like "cl" in L2 transcripts unchanged.
+        def lower(m):
+            w = m.group(1)
+            return w if self._known(w) else " " + " ".join(w) + " "
+        return re.sub(r"(?<![\w'])([b-df-hj-np-tv-z]{3,5})(?![\w'])", lower, text)

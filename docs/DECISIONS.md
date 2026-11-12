@@ -1357,3 +1357,40 @@ docs/HANDOFF.md instead of being worked around.
     - headless Chrome rendered the result link with the Record button enabled (https is a
       secure context).
     - Microphone capture is left to the owner on a real device.
+- **E-35 Spoken letters and "I" fail in the browser demo (owner's tests: "abc", "a,b,c", "a b c",
+  "may I know you").** Diagnosed from the owner's 30 demo jobs (`out/web_demo/*/result.json`,
+  reference TextGrids). The 13 relevant recordings were re-aligned after the fixes.
+  - **Bug 1, fixed:**
+    - **Symptom:** `abc`, `bcd`, `chaganti` and `lakshmi` came back from MFA as `<unk>`/`spn`,
+      so the demo fell back to CTC.
+    - **Cause:** `mfa align_one` keeps its parsed dictionary in `--temporary_directory`
+      (`data/mfa_tmp`) and does not re-read the lexicon file when it grows. Words that G2P
+      appended at inference were therefore unknown to MFA. Re-aligning one recording with a
+      fresh directory gave `abc` = EY1 B IY2 S IY2 at 0.54–1.32 s.
+    - **Fix:** `tts/align/mfa.py` `align_one_tmp()`: the temporary directory is
+      `mfa_tmp/align_one_<sha256(lexicon)[:12]>`, and older ones (~8 MB each) are deleted.
+    - **Scope:** inference pipeline only; no model code or experiment config changed. The
+      held-out results are unaffected, because all evaluation words were in the lexicon before
+      the cache was built.
+  - **Bug 2, fixed:**
+    - **Symptom:** `bcd` → G2P "B EH1 D" ("bed").
+    - **Fix:** `InputRules` spells unknown lowercase tokens of 3+ letters with no vowel letter
+      (y counts as a consonant): `bcd` → `b c d`, `xyz` → `x y z`. cmudict words are kept
+      (`hmm`, `shh`, `nth`, `rhythm`). 2-letter tokens are kept, because the L2 transcript false
+      start `cl` must not change (`test_corpus_word_sequences_unchanged` caught it with
+      2-letter matching).
+  - **Open 1: the letter `a`.**
+    - **Symptom:** the lexicon's only pronunciation of `a` is AH0, so a spoken "ay" in
+      `a, b, c` aligns to 30–80 ms, and synthesis says "uh".
+    - **Checked:** with `a EY1` added to a scratch copy of the lexicon, MFA gave `a` 220–330
+      ms.
+    - **Not fixed today:** it needs a letter-name pronunciation in the lexicon (the only
+      pronunciation source) plus a letter-context rule. This was judged too risky on
+      submission day.
+  - **Open 2: `I` after a vowel.**
+    - **Symptom:** `may I know you` gave `i` 30 ms in 2 of 3 recordings. The phone tier shows
+      EY1 230 ms then AY1 30 ms, and the measured error was 50–84 ms.
+    - **Cause:** a vowel-vowel junction; the pronunciation is correct. `I` is fine after a
+      pause, at the start of a sentence, and in letter lists.
+  - **Documented** in REPORT §15 (case table) and the README known failure modes. Tests: 4
+    stress cases (`initialisms`) and `test_align_one_tmp_follows_lexicon`.

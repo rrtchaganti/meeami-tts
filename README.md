@@ -608,6 +608,13 @@ data/ runs/ export/ out/   git-ignored (datasets, training runs, checkpoints, de
   `elastic`.
 - **Undecodable audio:** reference audio is decoded with libsndfile, then ffmpeg. Anything
   neither can read fails cleanly.
+- **Spoken letters and "I" (E-35, [REPORT §15](docs/REPORT.md)):**
+  - The letter `a` (`a, b, c`) is read and aligned as the article "uh" (AH0). Its alignment
+    collapses to about 30 ms.
+  - `I` right after a vowel (`may I know you`) can collapse to 30 ms, because MFA cannot place
+    an EY→AY boundary.
+  - Fixed: words new to the lexicon (`abc`, names) used to fall back to CTC because of MFA's
+    stale dictionary cache. Vowel-less letter strings (`bcd`) are now spelled out.
 - **Abbreviation periods:** title abbreviations need their period, as in LJSpeech (`Dr.`, not
   `Dr`). Without it, `Dr` is read as "drive" (D-74).
 

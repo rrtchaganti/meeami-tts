@@ -5,6 +5,7 @@ bundleable). Alignment commands are added in T4.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import shutil
@@ -113,8 +114,25 @@ def align_corpus(cfg: DictConfig, corpus: Path, out: Path, single_speaker: bool,
 def align_one(cfg: DictConfig, wav: Path, lab: Path, out: Path,
               root: Path = REPO_ROOT) -> subprocess.CompletedProcess:
     """Section 3: `mfa align_one ref.wav ref.lab <lexicon> english_us_arpa ref.TextGrid
-    --beam 100 --retry_beam 400` (used from T5/T10)."""
-    args = ["mfa", "align_one", str(wav), str(lab), str(repo_path(cfg.paths.lexicon, root)),
+    --beam 100 --retry_beam 400` (used from T5/T10).
+
+    MFA caches the parsed dictionary in its temporary directory and does not notice when the
+    lexicon file changes, so words added at inference came back as <unk>/spn (E-35). The
+    temporary directory is therefore keyed by the lexicon's content hash."""
+    lexicon = repo_path(cfg.paths.lexicon, root)
+    args = ["mfa", "align_one", str(wav), str(lab), str(lexicon),
             cfg.mfa.acoustic_model.name, str(out), *passthrough_args(cfg, root),
-            "--temporary_directory", str(repo_path(cfg.paths.mfa_tmp, root))]
+            "--temporary_directory", str(align_one_tmp(cfg, root))]
     return run_in_mfa(cfg, args, root)
+
+
+def align_one_tmp(cfg: DictConfig, root: Path = REPO_ROOT) -> Path:
+    """mfa_tmp/align_one_<first 12 hex of sha256(lexicon)>: a new MFA cache whenever the lexicon
+    changes (E-35). Caches of older lexicon versions (~8 MB each) are deleted."""
+    digest = hashlib.sha256(repo_path(cfg.paths.lexicon, root).read_bytes()).hexdigest()[:12]
+    tmp = repo_path(cfg.paths.mfa_tmp, root) / f"align_one_{digest}"
+    if tmp.parent.is_dir():
+        for old in tmp.parent.glob("align_one_*"):
+            if old != tmp:
+                shutil.rmtree(old, ignore_errors=True)
+    return tmp
