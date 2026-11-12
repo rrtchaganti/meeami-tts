@@ -1455,3 +1455,15 @@ docs/HANDOFF.md instead of being worked around.
   - **Access:** the GitHub repo answers 404 to unauthenticated requests and the HF repo is
     private, so the interviewers need access granted (or the repos made public) before the
     interview. Left to the owner.
+- **E-37 `make web-demo` failed with "OSError: [Errno 98] Address already in use" (owner, in a
+  terminal).**
+  - **Cause:** the demo server started from this session was still running on port 7860. The code
+    was right, but the failure came only after the ~15 s model load, as a traceback.
+  - **Fix:**
+    - `scripts/web_demo.py` checks the port before loading. If it is busy, it exits 2 in ~1.5 s
+      and says what to do: use the running demo, `pkill -f scripts/web_demo.py`, or
+      `make web-demo WEB_PORT=7861`.
+    - The Makefile now passes `--port $(WEB_PORT)` to the server; before, only `web-tunnel`
+      used `WEB_PORT`.
+  - **Docs and tests:** DEMO.md §6 has a troubleshooting entry;
+    `test_port_in_use_is_reported_before_loading`.

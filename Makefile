@@ -222,8 +222,8 @@ rehearse:        # every case in configs/live_demo.yaml -> out/live_demo/REHEARS
 
 # --- D-101: browser demo (record/upload + text -> every system); share via an HTTPS tunnel ------
 .PHONY: web-demo web-tunnel
-web-demo:        # http://localhost:7860/?key=<printed>; MEEAMI_DEMO_KEY=... fixes the key
-	$(TTS_RUN) python scripts/web_demo.py $(ARGS)
+web-demo:        # http://localhost:$(WEB_PORT)/?key=<printed>; MEEAMI_DEMO_KEY=... fixes the key; WEB_PORT=7861 runs a second one
+	$(TTS_RUN) python scripts/web_demo.py --port $(WEB_PORT) $(ARGS)
 WEB_PORT ?= 7860
 web-tunnel:      # second terminal: public https URL for the running web-demo (cloudflared quick tunnel)
 	@command -v cloudflared >/dev/null || { echo "cloudflared not found; install: docs/DEMO.md §6"; exit 2; }

@@ -119,3 +119,16 @@ def test_input_limits(server):
     assert req(f"{base}/api/synthesize?key=k3y&text=hi&example=NOPE", b"")[0] == 400
     long = "a" * (int(CFG.web_demo.max_text_chars) + 1)
     assert req(f"{base}/api/synthesize?key=k3y&text={long}", b"a")[0] == 400
+
+
+def test_port_in_use_is_reported_before_loading():
+    """A second `make web-demo` must fail at once with what to do, not after loading models."""
+    import socket
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(("127.0.0.1", 0))
+        s.listen()
+        port = s.getsockname()[1]
+        msg = wd.port_in_use_message("127.0.0.1", port)
+        assert msg and f"WEB_PORT={port + 1}" in msg and "pkill -f scripts/web_demo.py" in msg
+    assert wd.port_in_use_message("127.0.0.1", port) is None    # free again once closed

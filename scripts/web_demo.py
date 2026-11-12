@@ -282,6 +282,22 @@ def make_handler(cfg, jobs: Jobs, key: str, page: str):
     return H
 
 
+def port_in_use_message(host: str, port: int) -> str | None:
+    """None if `host:port` can be bound; otherwise what to do (checked before the ~15 s model
+    load, so a second `make web-demo` fails at once and says why)."""
+    import socket
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        try:
+            s.bind((host, port))
+        except OSError:
+            return (f"[web] port {port} is already in use, most likely by a web demo that is still "
+                    f"running (open http://localhost:{port}/?key=<its key>, or stop it with "
+                    f"`pkill -f scripts/web_demo.py`). Or use another port: "
+                    f"make web-demo WEB_PORT={port + 1}  (and make web-tunnel WEB_PORT={port + 1})")
+    return None
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--config", default=str(REPO_ROOT / "configs" / "web_demo.yaml"))
@@ -294,6 +310,10 @@ def main() -> int:
     host, port = a.host or str(cfg.web_demo.host), a.port or int(cfg.web_demo.port)
     key = str(cfg.web_demo.key) or secrets.token_urlsafe(9)
     page = (REPO_ROOT / "scripts" / "web_demo.html").read_text(encoding="utf-8")
+    busy = port_in_use_message(host, port)
+    if busy:
+        print(busy, file=sys.stderr)
+        return 2
     print("[web] loading every system (one-time, ~30 s) ...")
     jobs = Jobs(Runner(cfg, a.device), repo_path(cfg.web_demo.out_dir), int(cfg.web_demo.keep_jobs))
     srv = ThreadingHTTPServer((host, port), make_handler(cfg, jobs, key, page))

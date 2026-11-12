@@ -137,6 +137,12 @@ make web-tunnel          # terminal 2: prints https://<random>.trycloudflare.com
     https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 \
     && chmod +x ~/.local/bin/cloudflared   # ~/.local/bin must be on PATH
   ```
+- **"port 7860 is already in use":** a web demo is already running. It may be one started
+  earlier in another terminal or in the background. Either use it (its key is in its first
+  output lines, or in `logs/web_demo.log` when it was started with a redirect), or stop it with
+  `pkill -f scripts/web_demo.py`. To run a second one alongside it:
+  `make web-demo WEB_PORT=7861` and `make web-tunnel WEB_PORT=7861`. The check runs before the
+  models load, so this fails in about a second.
 - **First seconds of a tunnel:** cloudflared may log `ERR Register tunnel error ... Tunnel not
   found` a few times, and the URL answers 530, until it prints `Registered tunnel connection`
   (~10 s in the test). The `WRN ... ping_group_range` / ICMP lines are harmless: ping is not
@@ -153,7 +159,7 @@ make web-tunnel          # terminal 2: prints https://<random>.trycloudflare.com
 - **Limits** (`configs/web_demo.yaml`): 30 s of audio, 20 MB per upload, 400 characters of text.
   Any format ffmpeg reads works; browser recordings arrive as webm/opus.
 - **Result links:** after a run the address bar holds `&job=<id>`, so the page can be reloaded or
-  shared. Results stay in `out/web_demo/<id>/` (the last 50 are kept).
+  shared. Results stay in `out/web_demo/<id>/` (the last 300 are kept; E-36).
 - **Keep the laptop awake** and on power during the session. The GPU holds all 7 models in
   ~1.5 GB.
 - **Same text rule as everywhere:** the text must be what the recording says. An extra word is
