@@ -1494,3 +1494,41 @@ docs/HANDOFF.md instead of being worked around.
   - **HF model card:** it now lists `lexicon/` and `outputs/test/` with their licence and links the
     GitHub repo. Uploaded as HF commit `dbd88b0`; the pinned revisions are unchanged and still
     valid.
+- **D-105 Slide deck v3 (owner: "pptx in a new version, do not edit the previous ones; include the
+  changes after v2; add what the assignment asks, only what belongs in slides").**
+  - **Files:** `slides/build_v3.js` → `slides/meeami-tts_v3.pptx`, 34 slides with speaker notes.
+    v1 and v2 (files and build scripts) are unchanged.
+  - **Kept from v2:** all 23 slides. Their "slide N" cross-references are now computed from one
+    `ORDER` list, so inserted slides cannot leave them stale. The build fails if the slides made
+    differ from `ORDER`.
+  - **New for the key questions and guidelines:**
+    - **slide 2:** the four key questions → short answer → slides;
+    - **slide 4:** assumptions and their consequences;
+    - **slide 23:** test analysis. Native charts from `per_utt.csv`: the per-reference MAE
+      distribution (median 21.5 vs 38.0 ms, main vs V0) and MAE by stretch ratio (the gain over
+      V0 holds in every bin); within-20 ms 70% vs 41%; length error 0 for all 8,736 outputs;
+    - **slides 24–26:** demonstration in three held-out accents (YBAA, HKK, HQTV headline prompt;
+      main MAE 23.6/24.1/25.9 ms, typical of the 23.9 mean). Each has the input text, the
+      reference and the main/V0 outputs as embedded audio (the 9 wavs are byte-identical to
+      `samples/`), and the samples' word-timing plot;
+    - **slide 29:** efficiency analysis: RTF vs output length on GPU and CPU (12 and 1 thread),
+      latency p50 by stage (MFA is 98% on the GPU), MACs linear in length;
+    - **slide 33:** code walkthrough map (part → file → functions);
+    - **slide 32:** shared and reproducible: the clone steps, `samples/`, the HF Hub and
+      integrity checks.
+  - **New from after v2:**
+    - **slide 15:** the typed-text front end (D-94; 119/121 stress cases, rehearsal 12/12);
+    - **slide 30:** the live-testing failures (E-35: cache fixed, spelling heuristic and its
+      misses, open letter "a" / "I");
+    - **limitations:** the front-end limits added;
+    - **final demo slide:** `make infer` / `live-demo` / `web-demo` + `web-tunnel` instead of
+      the raw `scripts/infer.py` call, with the plot taken from `samples/`.
+  - **Build:**
+    - `NODE_PATH=<dir with pptxgenjs 4.0.1> SKILL=<pptx skill dir> node slides/build_v3.js out.pptx`,
+      using the `slides` conda env's node. pptxgenjs was installed in a scratch folder; there is
+      no persistent install.
+    - The skill's `validate.py` passes; it caught `outEnd` labels on the stacked latency chart,
+      now fixed to `ctr`.
+  - **Visual QA:** all 34 slides exported through the owner's PowerPoint on Windows (COM,
+    read-only, a temp folder deleted afterwards). Fixed: an overflowing table on slide 2 and a
+    footnote overlapping the table on slide 33.

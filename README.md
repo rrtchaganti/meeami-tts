@@ -22,7 +22,7 @@ make infer REF=ref.wav TEXT="Will we ever forget it."
 | Q2: motivation and detailed architecture | [REPORT §3](docs/REPORT.md#3-design-principle-one-source-per-output-property), [§7](docs/REPORT.md#7-models), [§8](docs/REPORT.md#8-inference-pipeline-transferring-word-timing); [How it works](#how-it-works) |
 | Q3: params, MACs, latency, RTF, plots | [REPORT §12](docs/REPORT.md#12-efficiency), [`results/profile_*.json`](results), [`results/plots/`](results/plots) (09_efficiency and 10 more analysis plots), [§11](docs/REPORT.md#11-final-results-on-held-out-accents) test results |
 | Q4: code walkthrough, inference on the interviewers' files | [Repository layout](#repository-layout); `make infer REF=… TEXT=…`, `make live-demo`, `make web-demo` |
-| Slides | [`slides/meeami-tts_v2.pptx`](slides/meeami-tts_v2.pptx) |
+| Slides | [`slides/meeami-tts_v3.pptx`](slides/meeami-tts_v3.pptx): 34 slides with speaker notes; slide 2 maps the four key questions to slides; demonstration slides embed the exact evaluated audio |
 | Evidence for every claim and decision | [REPORT §16](docs/REPORT.md#16-claim--evidence-index) (claim → result file → code → samples), [`docs/DECISIONS.md`](docs/DECISIONS.md) (every decision and error) |
 
 ## Quick start: inference and demo (fresh clone, ~15 min, no dataset needed)
@@ -77,7 +77,7 @@ No GPU? Add `ARGS="--device cpu"` (same output, slower synthesis; MFA runs on th
 | [docs/PLAN.md](docs/PLAN.md) | The original specification (code comments cite its sections) |
 | [docs/DECISIONS.md](docs/DECISIONS.md) | The running log of every decision (D-n) and error (E-n), in order |
 | [docs/HANDOFF.md](docs/HANDOFF.md) | Status log and the GPU-instance runbook |
-| [slides/meeami-tts_v2.pptx](slides/meeami-tts_v2.pptx) | 23-slide presentation with speaker notes (current draft, D-91; v1: [meeami-tts.pptx](slides/meeami-tts.pptx)) |
+| [slides/meeami-tts_v3.pptx](slides/meeami-tts_v3.pptx) | 34-slide presentation with speaker notes (current, D-105; earlier versions kept: [v2](slides/meeami-tts_v2.pptx), [v1](slides/meeami-tts.pptx)) |
 | `make demo` → `out/demo_site/index.html` | Demo page: reference vs every system's output and timing plot |
 | **[docs/DEMO.md](docs/DEMO.md)** | **Live demo runbook:** `make models`, `make live-demo`, `make rehearse`, what to say, what to do when something fails |
 
@@ -598,7 +598,7 @@ reports/    data splits, lexicon, LJ alignment QC, MFA error on accented speech,
 results/    <system>/<split>/{per_utt.csv, summary.json} · paired/ · phone_dynamics/ · fidelity/ · tune/ · plots/ · profile_*.json · _rejected/
 docs/       REPORT.md · PLAN.md · DECISIONS.md · HANDOFF.md
 samples/    exact evaluated outputs + references + word timings (make samples, E-36): demo/ · listening/ · browser_tests/
-slides/     meeami-tts_v2.pptx + build_v2.js (current) · meeami-tts.pptx + build.js (v1)
+slides/     meeami-tts_v3.pptx + build_v3.js (current) · v2 (build_v2.js) · v1 (build.js), kept unchanged
 data/ runs/ export/ out/   git-ignored (datasets, training runs, checkpoints, demo)
 ```
 
