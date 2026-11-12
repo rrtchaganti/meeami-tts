@@ -592,7 +592,20 @@ def build_pdf(cfg, out):
               bottomMargin=1.8 * cm, title="meeami-tts: Project Report", author="Chaganti Raja Ravi Teja",
               subject="Time-aligned US-English text-to-speech on the word timing of a non-US reference")
     frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id="f")
-    doc.addPageTemplates([PageTemplate("cover", [frame]), PageTemplate("main", [frame], onPage=deco)])
+    note_style = ParagraphStyle("note", fontName="Sans", fontSize=7.4, leading=9.8, textColor=MUTED)
+
+    def cover_note(canv, doc):
+        """Author's footnote at the bottom of the cover page (configs/report_pdf.yaml cover_note)."""
+        canv.saveState()
+        para = Paragraph(str(cfg.cover_note), note_style)
+        _, h = para.wrap(doc.width - 12, 3 * cm)        # frame padding is 6 pt a side
+        y, x = doc.bottomMargin + 6, doc.leftMargin + 6
+        canv.setStrokeColor(RULE); canv.setLineWidth(0.5)
+        canv.line(x, y + h + 5, x + 4 * cm, y + h + 5)
+        para.drawOn(canv, x, y)
+        canv.restoreState()
+
+    doc.addPageTemplates([PageTemplate("cover", [frame], onPage=cover_note), PageTemplate("main", [frame], onPage=deco)])
 
     S = []
     P = lambda t, st=body: S.append(Paragraph(t, st))  # noqa: E731

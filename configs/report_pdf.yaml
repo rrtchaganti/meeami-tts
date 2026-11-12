@@ -52,6 +52,11 @@ report_pdf:
       "GPU (RTX 4060 laptop)": results/profile_cuda.json
       "CPU, 12 threads": results/profile_cpu_12t.json
       "CPU, 1 thread": results/profile_cpu_1t.json
+  # footnote at the bottom of the cover page, in the author's words (D-111)
+  cover_note: >-
+    I used Claude (Anthropic), an AI assistant, to speed up specialised parts of the work, such as
+    tooling, evaluation scripts, figures and documentation. The research direction, design choices,
+    listening judgements and final decisions are mine.
   links:
     github: https://github.com/rrtchaganti/meeami-tts
     hf: https://huggingface.co/Raviteja546/meeami-tts

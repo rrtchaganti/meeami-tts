@@ -1629,3 +1629,8 @@ docs/HANDOFF.md instead of being worked around.
   - **Tests:** `tests/test_report_pdf.py` (+2: curves/smoothing, glossary coverage) and
     `tests/test_report_data.py` (2).
   - The PDF is now 21 pages, and every page was rendered and checked.
+- **D-111 AI-assistance footnote on the PDF cover (owner's wording, approved).** The cover page ends
+  with a small footnote, set in `report_pdf.cover_note` (configs/report_pdf.yaml): "I used Claude
+  (Anthropic), an AI assistant, to speed up specialised parts of the work, such as tooling,
+  evaluation scripts, figures and documentation. The research direction, design choices, listening
+  judgements and final decisions are mine." The cover page only; other pages unchanged.
