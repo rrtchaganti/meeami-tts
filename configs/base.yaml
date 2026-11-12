@@ -322,7 +322,7 @@ demo:
 hosting:
   hf_repo: Raviteja546/meeami-tts
   revision: 0daebb79df6fc87b4addab2612d9b09c0719095d   # pinned upload commit (D-95; + lexicon D-100)
-  private: true             # the owner flips visibility on the Hub when sharing
+  private: false            # public since 2026-11-12 (the owner flipped it on the Hub)
   systems: [m1_pos_diph, m1, m1_pos, abl_a_pos, abl_b_pos]   # vits_mfa/<name>/infer.pt
   # repo path -> local path (third-party baseline weights, mirrored unmodified with licences)
   baselines:

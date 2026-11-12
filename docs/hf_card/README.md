@@ -10,9 +10,9 @@ Inference checkpoints for **meeami-tts**, a time-aligned US-English TTS. Give it
 recording of that sentence by a non-US speaker. It says the sentence in the LJSpeech voice with a
 US accent, on the reference's word timing, and the output is exactly as long as the reference.
 
-Code, report and decision log: the meeami-tts project repository (`docs/REPORT.md`). These files
-are fetched by `make models` (`scripts/fetch_models.py`), which checks every file against
-`MANIFEST.sha256`.
+Code, report and decision log: https://github.com/rrtchaganti/meeami-tts (`docs/REPORT.md`). The
+checkpoints are fetched by `make models` (`scripts/fetch_models.py`), which checks every file
+against `MANIFEST.sha256`; the test outputs by `make outputs` (`outputs/test/MANIFEST.sha256`).
 
 ## Files
 
@@ -25,6 +25,9 @@ are fetched by `make models` (`scripts/fetch_models.py`), which checks every fil
 | `vits_mfa/abl_b_pos/infer.pt` | Ablation B: m1_pos + 40% pace-augmented clips (dev-accent pace statistics) | 141 MB |
 | `baselines/vits/pretrained_ljs.pth` | V0 baseline: unmodified mirror of the official pretrained LJSpeech VITS (jaywalnut310/vits) | 146 MB |
 | `baselines/fastspeech2/900000.pth.tar`, `.../hifigan/generator_LJSpeech.pth.tar` | M0 baseline: unmodified mirror of ming024/FastSpeech2's LJSpeech checkpoint and HiFi-GAN | 474 MB |
+
+| `lexicon/lexicon.txt` | The frozen pronunciation lexicon (the only pronunciation source) | 0.4 MB |
+| `outputs/test/<system>.tar` (7) | **Every evaluated held-out test output**: 1,248 utterances per system, each `wav/<id>/out.wav` + `timings.json`, the MFA TextGrid measured on it (`align_out/`), and `per_utt.csv` / `summary.json` / `scores.jsonl`. The exact files behind every reported number | 207 MB each |
 
 Each `infer.pt` holds only what inference reads: the generator weights (`net_g`), the training
 config and the step. The discriminators and optimizer states are dropped, which takes the file
@@ -49,4 +52,7 @@ checkpoint (`scripts/export_infer.py --verify`), and `source.sha256` names that 
   **non-commercial research only**, to be safe.
 - `baselines/`: unmodified third-party weights, mirrored with their MIT licences (see
   `LICENSES.md`).
-- **No L2-ARCTIC audio is stored in this repository.**
+- `outputs/test/`: synthesized speech only (the LJSpeech voice), but its texts and word timings
+  come from L2-ARCTIC test recordings (CC BY-NC 4.0): **non-commercial research only**.
+- **No L2-ARCTIC audio is stored in this repository.** Each `timings.json` names the reference
+  file it used.

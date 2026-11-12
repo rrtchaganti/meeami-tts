@@ -1467,3 +1467,30 @@ docs/HANDOFF.md instead of being worked around.
       used `WEB_PORT`.
   - **Docs and tests:** DEMO.md §6 has a troubleshooting entry;
     `test_port_in_use_is_reported_before_loading`.
+- **D-104 Outsider check after the Hub went public (owner: "Any outsider can clone and run it?";
+  HF repo made public by the owner, GitHub to follow).**
+  - **Anonymous access:**
+    - the HF model API, the pinned model manifest and the pinned outputs manifest answer 200
+      without a token;
+    - GitHub still answered 404, because it was not public yet; the clone below used the
+      owner's SSH key.
+  - **Fresh clone at 4863709:** existing conda envs (envs/ unchanged since the D-100 env build),
+    with `HF_HOME` / `HF_HUB_CACHE` in an empty scratch folder and no token. Results:
+    - `make models`: 6 min; every file downloaded and sha256-checked;
+    - `make assets`: ok;
+    - `make infer` on `norm_date.wav`: length error 0, aligner mfa;
+    - `make rehearse`: 12/12;
+    - `make text-stress`: G2P 2, PASS 119 of 121;
+    - `make test`: 300 passed, 9 skipped;
+    - `make outputs`: 5.5 min; 7 tars verified and unpacked, 1,248 utterances per system, and
+      HKK_arctic_a0003's V0 wav is byte-identical to the committed sample.
+  - **Doc fixes for outsiders:**
+    - README/DEMO clone with https (SSH needs a GitHub key);
+    - the `hf auth login` step was removed;
+    - test counts (~300 + 9 skipped) and stress counts (121) updated;
+    - "what lives where" now names `samples/` and the hosted test outputs;
+    - README licences cover samples and outputs (non-commercial: L2-ARCTIC texts and timings);
+    - `hosting.private: false`.
+  - **HF model card:** it now lists `lexicon/` and `outputs/test/` with their licence and links the
+    GitHub repo. Uploaded as HF commit `dbd88b0`; the pinned revisions are unchanged and still
+    valid.

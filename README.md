@@ -28,13 +28,12 @@ make infer REF=ref.wav TEXT="Will we ever forget it."
 ## Quick start: inference and demo (fresh clone, ~15 min, no dataset needed)
 
 ```bash
-git clone git@github.com:rrtchaganti/meeami-tts.git && cd meeami-tts
+git clone https://github.com/rrtchaganti/meeami-tts.git && cd meeami-tts
 make env            # conda envs `tts` + `mfa` from envs/*.yml (~3-5 min)
                     # names taken already? use others:  export TTS_ENV=tts2 MFA_ENV=mfa2  (then make env)
-hf auth login       # only while the model repo Raviteja546/meeami-tts is private
-make models         # checkpoints, baseline weights and the frozen lexicon from the HF Hub, sha256-checked (~1.3 GB)
+make models         # checkpoints, baseline weights and the frozen lexicon from the public HF Hub repo, sha256-checked (~1.3 GB, no login)
 make assets         # pinned MFA english_us_arpa models + NLTK data (~1-2 min)
-make test           # unit tests: ~284 pass; ~9 skip because they need the training data
+make test           # unit tests: ~300 pass; 9 skip because they need the training data
 ```
 
 The datasets are needed only to retrain or re-evaluate (see "Setup"). The demo's reference clips
@@ -56,7 +55,7 @@ make infer REF=their.wav TEXT="..." SYS=v0         # the original VITS (MAS) bas
 make live-demo
 make live-demo UTT=YBAA_arctic_a0003 TEXT="For the 20th time that evening, the two men shook hands."
 make rehearse       # 12 end-to-end cases (typed text, refusals) -> out/live_demo/REHEARSAL.md
-make text-stress    # 117 typed-text cases through the normalizer, no audio
+make text-stress    # 121 typed-text cases through the normalizer, no audio
 
 # browser demo on this machine: record/upload + text -> all 7 systems side by side (docs/DEMO.md §6)
 make web-demo       # prints http://localhost:7860/?key=...;  make web-tunnel  shares it over https
@@ -68,7 +67,9 @@ No GPU? Add `ARGS="--device cpu"` (same output, slower synthesis; MFA runs on th
 | --- | --- |
 | Code, configs, tests, docs, slides, result tables and plots, demo reference clips | this repository |
 | Inference checkpoints (5 systems, 141 MB each), the two baselines' weights, the frozen lexicon | Hugging Face `Raviteja546/meeami-tts` (`make models`, pinned by `hosting.revision` in [`configs/base.yaml`](configs/base.yaml)) |
-| Datasets, full training checkpoints (with discriminators, 956 MB each), synthesized test audio | the author's machine only (git-ignored); hashes in [`results/checkpoints.sha256`](results/checkpoints.sha256) |
+| Exact evaluated outputs with references and word timings (21 test samples, listening sets, browser tests) | this repository, [`samples/`](samples/README.md) |
+| Every evaluated test output (1,248 utterances × 7 systems, with measured TextGrids and metric files) | Hugging Face, `outputs/test/` (`make outputs`, ~1.4 GB, pinned by `hosting.outputs.revision`) |
+| Datasets, full training checkpoints (with discriminators, 956 MB each), dev-set outputs | the author's machine only (git-ignored); hashes in [`results/checkpoints.sha256`](results/checkpoints.sha256) |
 
 | Document | What it gives you |
 | --- | --- |
@@ -200,8 +201,8 @@ make models   # inference checkpoints + baseline weights + the frozen lexicon (H
               # the lexicon only if missing, since inference appends new words to it)
 make assets   # pinned MFA models + NLTK corpora (sha256-checked)
 make lexicon  # rebuild data/lexicon/lexicon.txt from the corpus texts (needs the datasets; D-98)
-make test     # unit tests: 292 pass with the full data (author's machine); 284 pass and 9 skip
-              # on a clean clone without datasets (D-100)
+make test     # unit tests: 308 pass with the full data (author's machine); 300 pass and 9 skip
+              # on a clean clone without datasets (D-100, rechecked in D-104)
 make help     # every target
 ```
 
@@ -566,7 +567,7 @@ make fidelity SPLIT=dev ; make fidelity SPLIT=test   # duration fidelity + align
 # --- live demo (D-94..D-96; docs/DEMO.md) ------------------------------------------------------
 make infer REF=their.wav TEXT="..."  # one reference -> out/infer/ (SYS=v0|m0|<system>)
 make models                          # export/<system>/infer.pt + baseline weights from the HF Hub (sha256-checked)
-make text-stress                     # 117 typed-text cases through the normalizer (TEXT="..." for one input)
+make text-stress                     # 121 typed-text cases through the normalizer (TEXT="..." for one input)
 make rehearse                        # 12 end-to-end cases -> out/live_demo/REHEARSAL.md
 make live-demo                       # main vs V0 on one test-accent sentence, measured word times
 make live-demo UTT=YBAA_arctic_a0003 TEXT="For the 20th time that evening, the two men shook hands."
@@ -661,3 +662,6 @@ data/ runs/ export/ out/   git-ignored (datasets, training runs, checkpoints, de
   pretrained VITS on LJSpeech (public domain). `abl_b_pos` follows pace statistics from
   L2-ARCTIC, so treat it as non-commercial. The baseline weights are unmodified mirrors with
   their MIT licences ([`docs/hf_card/LICENSES.md`](docs/hf_card/LICENSES.md)).
+- **Samples and hosted test outputs** (`samples/`, Hugging Face `outputs/test/`): the references
+  and the owner's browser recordings are as recorded. The synthesized outputs follow L2-ARCTIC
+  texts and word timings (CC BY-NC 4.0), so use them for **non-commercial research only**.

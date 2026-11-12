@@ -6,12 +6,11 @@ Everything here runs the frozen main system; nothing changes a model or an exper
 ## 0a. On a fresh machine (~15 min, no dataset needed; tested from a clean clone: D-100)
 
 ```bash
-git clone git@github.com:rrtchaganti/meeami-tts.git && cd meeami-tts
+git clone https://github.com/rrtchaganti/meeami-tts.git && cd meeami-tts
 make env                 # envs `tts` + `mfa`; if those names exist: export TTS_ENV=tts2 MFA_ENV=mfa2 first
-hf auth login            # the model repo Raviteja546/meeami-tts is private
 make models              # 5 checkpoints + 3 baseline weights + the frozen lexicon, sha256-checked
 make assets              # pinned MFA english_us_arpa models + NLTK data
-make test                # ~284 passed, ~9 skipped (the skips need the training data)
+make test                # ~300 passed, 9 skipped (the skips need the training data)
 ```
 
 The demo's 8 reference clips ship in `demo/clips/` (L2-ARCTIC test speakers, CC BY-NC 4.0), so
@@ -22,7 +21,7 @@ The demo's 8 reference clips ship in `demo/clips/` (L2-ARCTIC test speakers, CC 
 ```bash
 make models            # export/<system>/infer.pt + baseline weights from the HF repo, sha256-checked (D-95)
 make test              # must be green
-make text-stress       # 117 typed-text cases through the normalizer: expect "G2P 2 | PASS 115"
+make text-stress       # 121 typed-text cases through the normalizer: expect "G2P 2 | PASS 119"
 make rehearse          # 12 end-to-end cases -> out/live_demo/REHEARSAL.md: expect "12/12 cases as expected"
 make live-demo         # the headline sentence; leaves a backup copy in out/live_demo/HKK_arctic_a0003/
 ```
@@ -107,7 +106,7 @@ The words stay the ones the speaker said. It also covers:
 
 ## 5. The normalizer stress set (`make text-stress`, tests/data/text_cases.tsv)
 
-The set has 117 cases in 12 groups: numbers, dates, times, money, units, symbols, abbreviations,
+The set has 121 cases in 12 groups: numbers, dates, times, money, units, symbols, abbreviations,
 initialisms, names and Roman numerals, punctuation, and inputs that must be refused. Before D-94,
 58 failed: `12/03` was read as "twelve thirds", `Dr Smith` as "drive Smith", `10km` as
 "ten km", `GPU` as a g2p guess, `World War II` as "ii", and Devanagari was transliterated into
