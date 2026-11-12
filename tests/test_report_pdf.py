@@ -53,5 +53,22 @@ def test_config_points_at_committed_results():
         assert (REPO_ROOT / "results" / "paired" / f"{sp}_{a}_vs_{b}.csv").is_file()
         assert set(rep.paired(sp, a, b)) >= {"wb_mae_ms", "wer", "utmos", "us_prob"}
     assert set(CFG.core) <= set(CFG.systems) and set(CFG.colors) == set(CFG.systems)
-    for p in CFG.reuse_plots.values():
+    for k in ("mfa_error", "training", "pace"):
+        assert (REPO_ROOT / CFG.data[k]).is_file()
+    for p in CFG.data.profiles.values():
         assert (REPO_ROOT / p).is_file()
+
+
+def test_training_curves_and_smoothing(tmp_path):
+    p = tmp_path / "c.csv"
+    p.write_text("tag,step,value\nval/dur,0,1.0\nval/dur,100,0.5\nloss/d,0,3\n")
+    c = rep.read_curves(p)
+    assert c["val/dur"] == ([0, 100], [1.0, 0.5]) and c["loss/d"] == ([0], [3.0])
+    assert rep.moving_average([1, 2, 3, 4], 2) == [1.0, 1.5, 2.5, 3.5]
+
+
+def test_glossary_covers_every_system_and_key_term():
+    terms = " ".join(t for _, items in rep.GLOSSARY for t, _ in items)
+    for t in ["V0", "M0", "M1", "m1_pos", "m1_pos_diph", "abl_a_pos", "MAS", "MFA", "CTC", "VITS", "UTMOS", "WER",
+              "MAE", "CI", "Holm", "Wilcoxon", "RTF", "MACs", "ARPAbet", "G2P", "OOV", "F1", "LPC", "WSOLA", "LJ"]:
+        assert t in terms, t

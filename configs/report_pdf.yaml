@@ -43,12 +43,23 @@ report_pdf:
     - [test, m1, v0]
     - [test, m1_pos_diph, v0]
   alpha: 0.05
-  # plots already produced by `make eval-all` / `make profile`, reused as they are
-  reuse_plots:
-    mfa_error: results/plots/03_mfa_error_dev.png
-    training: results/plots/10_training.png
-    efficiency: results/plots/09_efficiency.png
-    pace: results/plots/08_rho_dev_test.png
+  # committed inputs of the remaining tables and figures (all redrawn here with plain-language labels)
+  data:
+    mfa_error: results/mfa_l2_dev.json
+    training: results/report_data/m1_training_curves.csv
+    pace: results/report_data/pace_rho.csv
+    profiles:
+      "GPU (RTX 4060 laptop)": results/profile_cuda.json
+      "CPU, 12 threads": results/profile_cpu_12t.json
+      "CPU, 1 thread": results/profile_cpu_1t.json
   links:
     github: https://github.com/rrtchaganti/meeami-tts
     hf: https://huggingface.co/Raviteja546/meeami-tts
+# small derived tables the PDF needs, exported once from laptop-only inputs (scripts/report_data.py,
+# `make report-data`, tts env): training curves from export/<run>/tb, reference pace per utterance
+report_data:
+  out_dir: results/report_data
+  training_run: m1                      # phase-1 training (114k steps on the L40S)
+  tb_dir: export/m1/tb
+  tags: ["val/mel_l1", "val/dur", "loss/d", "loss/fm", "loss/adv"]
+  pace_splits: [dev, test]

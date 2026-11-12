@@ -1591,8 +1591,9 @@ docs/HANDOFF.md instead of being worked around.
   - Test counts brought up to date after D-107: 313 passed on the author's machine, 305 passed and
     9 skipped on a clean clone (the 5 new report tests pass in a fresh clone).
 - **D-109 Repository cleanup for reviewers (owner's choice).**
-  - `docs/HANDOFF.md` (the private status log and GPU-instance runbook) is no longer tracked and
-    is excluded locally (`.git/info/exclude`); it stays on the laptop. The training commands it held are already in README
+  - `docs/HANDOFF.md` (the private status log and GPU-instance runbook) was untracked, then
+    **tracked again on the owner's decision**, because `scripts/train.py` (frozen) points to it.
+    The README layout lists it again. The training commands it held are already in README
     "Commands in run order", which now also notes tmux and `--resume` (checkpoint every 2,000 steps,
     `train.ckpt_interval`). README, Makefile help and a Makefile comment no longer point to it.
     One pointer remains in an error message of `scripts/train.py`, which is frozen code
@@ -1605,3 +1606,26 @@ docs/HANDOFF.md instead of being worked around.
     (9bf09f2 → 2b34e43, 8a5ca41 → 3c4f5a0, 4863709 → da6d81c).
   - Kept on purpose: CLAUDE.md, results, reports (including the rejected R3 reports), samples,
     demo clips and this log.
+- **D-110 PDF report readable without prior knowledge (owner: "make sure any short forms or names
+  you use have been explained properly ... everywhere in the report").**
+  - **Glossary:** a "Terms and abbreviations" section right after the contents, grouped into systems,
+    data and speech, models and methods, metrics, statistics, efficiency and project terms. It covers
+    every system name (V0, M0, M1, m1_pos, ...), every model and tool (VITS, MAS, MFA, CTC/MMS,
+    FastSpeech2, HiFi-GAN, G2P, CMUdict, ARPAbet, IPA, WSOLA), every metric (MAE, WER/CER, pause F1,
+    UTMOS/MOS, US-accent probability, ECAPA) and every statistic (CI, p-value, Wilcoxon, Holm, n.s.,
+    tercile, percentile, Spearman). A test checks that the key terms are present.
+  - **In the text:** each term is also explained in plain words where it first appears; formants F1/F2
+    are kept apart from the pause F1 score.
+  - **Figures:** axis labels, titles and legends in plain words ("mean word-boundary error (ms)",
+    "change in word error rate (% points), lower = better", "filled dot = statistically significant,
+    p < 0.05 after Holm correction"); every caption explains its symbols.
+  - **Four old plots replaced** (MFA error, training curves, efficiency, pace), because they carried
+    internal labels (`loss/kl`, `profile_cpu_12t`, `mfa_align_one`). The MFA error is now a table read
+    from `results/mfa_l2_dev.json`; the other three are redrawn. Their inputs were laptop-only
+    (TensorBoard logs, per-reference word timings), so `scripts/report_data.py` (`make report-data`,
+    tts env) exports them once to `results/report_data/` (M1 training curves, 3,534 rows; reference
+    pace, 2,448 rows, dev median 1.12×, test 1.16×, matching plot 8). The PDF builds only from
+    committed files.
+  - **Tests:** `tests/test_report_pdf.py` (+2: curves/smoothing, glossary coverage) and
+    `tests/test_report_data.py` (2).
+  - The PDF is now 21 pages, and every page was rendered and checked.

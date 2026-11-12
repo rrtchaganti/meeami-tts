@@ -905,7 +905,7 @@ Main checkpoint, from [`scripts/profile.py`](../scripts/profile.py) → [`result
   - alignment failures (an unspoken word, a false start, a forced CTC path).
   - Pass means exact length or a clean fallback. **21/21 on GPU and CPU** with the main checkpoint.
 - **Failure handling.** Any failure in `scripts/infer.py --pairs_dir` prints a one-line reason and continues with the next pair.
-- **Unit tests.** `make test` gives 313 passed, 1 skipped on the author's machine. That is 158 at the freeze; V0 and the fidelity probe added 8, and the post-freeze tooling of §14.1 and the PDF report builder added the rest. On a clean clone without the datasets it gives 305 passed, 9 skipped. The skip on the full machine is the pre-freeze lock test, which skips by design once the tag exists. Every module has a test and a make target.
+- **Unit tests.** `make test` gives 317 passed, 1 skipped on the author's machine. That is 158 at the freeze; V0 and the fidelity probe added 8, and the post-freeze tooling of §14.1 and the PDF report builder added the rest. On a clean clone without the datasets it gives 309 passed, 9 skipped. The skip on the full machine is the pre-freeze lock test, which skips by design once the tag exists. Every module has a test and a make target.
 - **Backup outputs for the live demo.** The demo page ([`scripts/make_demo.py`](../scripts/make_demo.py)) stores every sample's outputs and timing plots. It was rebuilt from an empty folder after the freeze (D-88). Its audio is re-synthesized, so it differs from the evaluated files by sampling noise. The evidence is therefore `samples/` (§14.1), not the demo page.
 
 ### 14.1 After the freeze: hosting, demos and evidence (D-95..D-105)

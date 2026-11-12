@@ -33,7 +33,7 @@ make env            # conda envs `tts` + `mfa` from envs/*.yml (~3-5 min)
                     # names taken already? use others:  export TTS_ENV=tts2 MFA_ENV=mfa2  (then make env)
 make models         # checkpoints, baseline weights and the frozen lexicon from the public HF Hub repo, sha256-checked (~1.3 GB, no login)
 make assets         # pinned MFA english_us_arpa models + NLTK data (~1-2 min)
-make test           # unit tests: ~305 pass; 9 skip because they need the training data
+make test           # unit tests: ~309 pass; 9 skip because they need the training data
 ```
 
 The datasets are needed only to retrain or re-evaluate (see "Setup"). The demo's reference clips
@@ -199,7 +199,7 @@ make models   # inference checkpoints + baseline weights + the frozen lexicon (H
               # the lexicon only if missing, since inference appends new words to it)
 make assets   # pinned MFA models + NLTK corpora (sha256-checked)
 make lexicon  # rebuild data/lexicon/lexicon.txt from the corpus texts (needs the datasets; D-98)
-make test     # unit tests: 313 pass with the full data (author's machine); 305 pass and 9 skip
+make test     # unit tests: 317 pass with the full data (author's machine); 309 pass and 9 skip
               # on a clean clone without datasets (D-100, rechecked in D-104)
 make help     # every target
 ```
@@ -593,7 +593,7 @@ tests/      unit tests (one per module) + edge_cases/ (21 committed WAV/TXT case
 stats/      phone_logdur.json (LJ per-phone log-duration mean, σ) · l2_dev_pace.json (Ablation B)
 reports/    data splits, lexicon, LJ alignment QC, MFA error on accented speech, augmentation
 results/    <system>/<split>/{per_utt.csv, summary.json} · paired/ · phone_dynamics/ · fidelity/ · tune/ · plots/ · profile_*.json · _rejected/
-docs/       meeami-tts_report.pdf (make report-pdf) · REPORT.md · PLAN.md · DECISIONS.md
+docs/       meeami-tts_report.pdf (make report-pdf) · REPORT.md · PLAN.md · DECISIONS.md · HANDOFF.md (GPU runbook and status log)
 samples/    exact evaluated outputs + references + word timings (make samples, E-36): demo/ · listening/ · browser_tests/
 data/ runs/ export/ out/   git-ignored (datasets, training runs, checkpoints, demo)
 ```
