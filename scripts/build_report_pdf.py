@@ -363,11 +363,7 @@ def build_pdf(cfg, out):
 
     def deco(canv, doc):
         canv.saveState()
-        canv.setFont("Sans", 7); canv.setFillColor(MUTED)
-        canv.drawString(2.1 * cm, A4[1] - 1.25 * cm, "meeami-tts · time-aligned US-English TTS · project report")
-        canv.drawRightString(A4[0] - 2.1 * cm, A4[1] - 1.25 * cm, "code frozen at git tag freeze-v1 (5889ecf)")
-        canv.setStrokeColor(RULE); canv.setLineWidth(0.5)
-        canv.line(2.1 * cm, A4[1] - 1.4 * cm, A4[0] - 2.1 * cm, A4[1] - 1.4 * cm)
+        canv.setFont("Sans", 7); canv.setFillColor(MUTED)       # page number only, no running header
         canv.drawCentredString(A4[0] / 2, 1.1 * cm, str(doc.page))
         canv.restoreState()
 
