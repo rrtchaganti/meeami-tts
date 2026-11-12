@@ -57,6 +57,3 @@ __pycache__/
 # evidence samples (E-36): exact evaluated outputs + references, built by `make samples`
 !/samples/**
 
-# presentation decks are submitted separately, not part of the repository (D-108)
-/slides/
-/docs/HANDOFF.md

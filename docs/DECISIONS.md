@@ -1583,8 +1583,8 @@ docs/HANDOFF.md instead of being worked around.
     overlapping labels in the pipeline, CDF, stretch, per-accent and tuning figures.
 - **D-108 Slides taken out of the repository (owner: the repo is what interviewers see, keep it
   clean).**
-  - `slides/` (three decks and their build scripts) is no longer tracked; `/slides/` is
-    gitignored, and the files stay on the laptop unchanged. The slides are submitted separately.
+  - `slides/` (three decks and their build scripts) is no longer tracked; it is excluded
+    locally (`.git/info/exclude`, not `.gitignore`), and the files stay on the laptop unchanged. The slides are submitted separately.
   - Removed the slide references from README (deliverables table, hosting table, layout, stage
     14), REPORT (§11 source note, §14.1 "Slides"), HANDOFF and the PDF's deliverables table.
     DECISIONS keeps its history.
@@ -1592,7 +1592,7 @@ docs/HANDOFF.md instead of being worked around.
     9 skipped on a clean clone (the 5 new report tests pass in a fresh clone).
 - **D-109 Repository cleanup for reviewers (owner's choice).**
   - `docs/HANDOFF.md` (the private status log and GPU-instance runbook) is no longer tracked and
-    is gitignored; it stays on the laptop. The training commands it held are already in README
+    is excluded locally (`.git/info/exclude`); it stays on the laptop. The training commands it held are already in README
     "Commands in run order", which now also notes tmux and `--resume` (checkpoint every 2,000 steps,
     `train.ckpt_interval`). README, Makefile help and a Makefile comment no longer point to it.
     One pointer remains in an error message of `scripts/train.py`, which is frozen code
