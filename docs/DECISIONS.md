@@ -1394,3 +1394,16 @@ docs/HANDOFF.md instead of being worked around.
       pause, at the start of a sentence, and in letter lists.
   - **Documented** in REPORT §15 (case table) and the README known failure modes. Tests: 4
     stress cases (`initialisms`) and `test_align_one_tmp_follows_lexicon`.
+  - **Follow-up (owner: "note the changes ... with honest explanation of where it fails").**
+    - **Owner's question:** "are you using memorisation?" Answer: no. The cache is MFA's
+      converted copy of the lexicon; no audio, text or results are reused. G2P additions to
+      the lexicon persist by design (one pronunciation per word everywhere).
+    - **Measured:** align_one on one 4.4 s reference took 4.8 s with the cache and 6.0 s with
+      a fresh directory, so the cache saves about 1.2 s.
+    - **Limits found by probing the spelling rule:**
+      - `ijk` goes to G2P (it has a vowel);
+      - `brrr`, `grr`, `pfft` are spelled out;
+      - 2-letter strings are not spelled;
+      - `abd`, `bc`, `abc` are right only via CMUdict.
+    - **Other limits:** a wrong G2P guess persists in the lexicon; one alignment at a time.
+    - Written into REPORT §15 and the README known failure modes.

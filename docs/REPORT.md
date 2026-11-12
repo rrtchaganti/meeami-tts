@@ -890,6 +890,38 @@ Main checkpoint, from [`scripts/profile.py`](../scripts/profile.py) → [`result
 
 The held-out results (§11) are unaffected. Every evaluation word was in the lexicon when MFA's cache was first built. The words added at inference (hi, ravi, dala, chaganti, lakshmi, abc, bcd, lexicon, normalized) all came from demo sessions.
 
+**The two changes, and where they fail.**
+
+*Change 1, MFA dictionary cache (a bug fix, not memorisation).*
+- **What the cache is.** `mfa align_one` converts `lexicon.txt` (about 15k "word → phones" lines) into its own internal form and keeps that in its temporary directory. It holds no audio, no typed text and no results.
+- **The bug.** MFA reused the converted copy even after G2P had appended new words to `lexicon.txt`, so every word added after the first run was unknown to MFA.
+- **The fix.** The directory name now includes a hash of the lexicon. Any change to the file gives a fresh directory, which MFA rebuilds from the current file. Older directories are deleted.
+- **Nothing is learned or remembered from earlier requests.** What persists is by design and was already so: a G2P guess is appended to the lexicon and reused for that word later, so a word is pronounced the same way every time.
+- **The cache buys little.** Measured on one 4.4 s reference: 4.8 s with the cache, 6.0 s rebuilt from scratch.
+
+Where it fails or could:
+- **A wrong G2P guess is kept.** It stays in the lexicon until someone edits that line (e.g. `bcd` → "bed" is still in the local lexicon; the rule below now bypasses it).
+- **The first request with a new word** pays the ~1.2 s rebuild.
+- **Concurrent alignments are not supported.** Deleting old directories assumes one alignment at a time. The browser demo has a single worker; two parallel `align_one` runs with different lexicon versions could delete each other's directory.
+- **A simpler alternative** with no cache at all is to rebuild on every call, at about +1.2 s per request.
+
+*Change 2, spelling vowel-less letter strings (a hand-written heuristic).*
+- **The rule.** A lowercase token of 3–5 letters that has no a/e/i/o/u and is not in CMUdict is spelled letter by letter (`bcd` → `b c d`), like the existing all-caps rule (`GPU`).
+- **No model decides this.** It is a regex in `tts/text/input_rules.py`.
+
+Probed edge cases:
+
+| Input | Result | Right? |
+|---|---|---|
+| `bcd`, `xyz`, `dbms` | spelled | yes |
+| `abd`, `bc`, `abc` | letters | yes, but only because CMUdict lists them |
+| `hmm`, `shh`, `rhythm`, `mrs` | kept as words | yes (in CMUdict) |
+| `ijk` | G2P invents a word | **no**: it contains a vowel, so the rule does not fire |
+| `brrr`, `grr`, `pfft` | spelled "b r r r", "g r r", "p f f t" | **no**: interjections that are not in CMUdict |
+| `pq` (2 letters) | not spelled | **no**: 2-letter tokens are excluded, because spelling them changed the L2 false start `cl` in a corpus transcript |
+
+The robust alternative is a learned normaliser that decides from context whether to spell a token or read it as a word.
+
 **Future work, ranked by expected value:**
 1. Learn the alignment again inside MFA's word spans: MAS within each word, with the word boundaries fixed. This restores the alignment–latent feedback (§7.4) and keeps timing control.
 2. A word-boundary or word-final flag on the encoder input (D-75c).

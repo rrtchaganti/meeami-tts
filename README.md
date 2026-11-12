@@ -613,8 +613,24 @@ data/ runs/ export/ out/   git-ignored (datasets, training runs, checkpoints, de
     collapses to about 30 ms.
   - `I` right after a vowel (`may I know you`) can collapse to 30 ms, because MFA cannot place
     an EY→AY boundary.
-  - Fixed: words new to the lexicon (`abc`, names) used to fall back to CTC because of MFA's
-    stale dictionary cache. Vowel-less letter strings (`bcd`) are now spelled out.
+  - **Fixed, MFA dictionary cache:**
+    - **Symptom:** words new to the lexicon (`abc`, names) fell back to CTC.
+    - **Cause:** MFA keeps a converted copy of `lexicon.txt` in its temporary directory and
+      did not notice words that G2P added later.
+    - **Fix:** that directory is now keyed by the lexicon's hash, so it is rebuilt whenever
+      the file changes. This is a bug fix, not memorisation: only "word → phones" is cached,
+      never audio, text or results.
+    - **Limits:**
+      - A wrong G2P guess stays in the lexicon until edited.
+      - The cache saves only about 1.2 s per request (4.8 s vs 6.0 s).
+      - It assumes one alignment at a time (the demo has a single worker).
+  - **Heuristic, vowel-less letter strings:**
+    - **Rule:** a lowercase token of 3–5 letters with no a/e/i/o/u, not in CMUdict, is spelled
+      out (`bcd` → `b c d`). It is a regex rule, not learned.
+    - **Fails on:**
+      - `ijk` (has a vowel, so G2P guesses a word);
+      - `brrr`, `grr`, `pfft` (spelled out);
+      - 2-letter strings such as `pq` (left alone, so that corpus transcripts stay unchanged).
 - **Abbreviation periods:** title abbreviations need their period, as in LJSpeech (`Dr.`, not
   `Dr`). Without it, `Dr` is read as "drive" (D-74).
 
