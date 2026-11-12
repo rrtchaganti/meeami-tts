@@ -1212,7 +1212,7 @@ docs/HANDOFF.md instead of being worked around.
 - **D-98 Fresh-clone test of the demo (user request).** Nothing came from the working copy except
   the datasets, which were symlinked into `data/raw` because L2-ARCTIC needs its licence form.
   The steps:
-  - cloned from GitHub at 9bf09f2, with the tags present;
+  - cloned from GitHub at 2b34e43, with the tags present;
   - built both envs from `envs/*.yml` into a scratch prefix (tts 2m43s, mfa 42s). `make env`
     itself was not used, because it updates the working `tts`/`mfa` envs in place with
     `--prune`;
@@ -1288,7 +1288,7 @@ docs/HANDOFF.md instead of being worked around.
      - `scripts/demo.py` reads the dataset copy if present, otherwise the shipped clip
        (`live_demo.clips_dir`).
      - New test: every suite utterance is shipped.
-  - **Outsider run** (clean clone of 8a5ca41 from GitHub, **no `data/`**, the real `make env`
+  - **Outsider run** (clean clone of 3c4f5a0 from GitHub, **no `data/`**, the real `make env`
     with `TTS_ENV=tts_out MFA_ENV=mfa_out`):
 
     | Command | Result |
@@ -1474,7 +1474,7 @@ docs/HANDOFF.md instead of being worked around.
       without a token;
     - GitHub still answered 404, because it was not public yet; the clone below used the
       owner's SSH key.
-  - **Fresh clone at 4863709:** existing conda envs (envs/ unchanged since the D-100 env build),
+  - **Fresh clone at da6d81c:** existing conda envs (envs/ unchanged since the D-100 env build),
     with `HF_HOME` / `HF_HUB_CACHE` in an empty scratch folder and no token. Results:
     - `make models`: 6 min; every file downloaded and sha256-checked;
     - `make assets`: ok;
@@ -1600,7 +1600,8 @@ docs/HANDOFF.md instead of being worked around.
   - `slides/` was purged from the whole git history (git filter-branch), not only from the
     current tree, and `main` was force-pushed. A bundle of the history before the rewrite is in
     `out/git_backup_pre_purge.bundle` (laptop only). The `freeze-v1` commit (5889ecf) has no
-    slides and keeps its hash. Commit hashes after it changed, so DECISIONS and REPORT name
-    commits only up to the freeze.
+    slides and keeps its hash; so do the tags. Commits after it got new hashes; the three
+    post-freeze hashes quoted in this log (D-97, D-100, D-104) were updated to the rewritten ones
+    (9bf09f2 → 2b34e43, 8a5ca41 → 3c4f5a0, 4863709 → da6d81c).
   - Kept on purpose: CLAUDE.md, results, reports (including the rejected R3 reports), samples,
     demo clips and this log.
