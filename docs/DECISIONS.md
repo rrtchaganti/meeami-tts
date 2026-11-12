@@ -1532,3 +1532,20 @@ docs/HANDOFF.md instead of being worked around.
   - **Visual QA:** all 34 slides exported through the owner's PowerPoint on Windows (COM,
     read-only, a temp folder deleted afterwards). Fixed: an overflowing table on slide 2 and a
     footnote overlapping the table on slide 33.
+- **D-106 REPORT brought up to date with everything after the freeze (owner: "project report
+  done?").**
+  - **Gap:** REPORT had the E-35 failure table (§15) and the audio-evidence index (§16), but not
+    D-94..D-105.
+  - **Added:**
+    - **Header:** what was added after the freeze, and that §11 is unaffected by it.
+    - **§5.1:** the typed-text pre-pass (what it handles, the stress set at 119/121, the corpus
+      regression test, its limits).
+    - **§11:** the per-reference error distribution and stretch analysis from `per_utt.csv`
+      (median 21.5 vs 38.0 ms; within 20 ms 69.6% vs 41.2%; worst cases named).
+    - **§13:** three post-freeze deviations (the pre-pass, the MFA temporary directory, samples
+      instead of demo audio).
+    - **§14.1:** hosting, the live and browser demos, `samples/`, the outsider check, slides v3.
+    - **§15:** a front-end limitation bullet.
+    - **§16:** four claim rows.
+  - **Corrected:** the stale unit-test count (166 → 308; 300 on a clean clone), and the
+    demo-page "backup" line now says its audio is re-synthesized and is not the evidence.

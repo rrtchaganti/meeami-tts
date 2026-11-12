@@ -9,6 +9,7 @@ How to read this report:
 - Line links point to the frozen code. The one exception is V0, the immediate baseline (the original VITS with MAS). It was added after the freeze as new files (§7.0, §10.6, D-90), and its links point to those files.
 - `D-n` and `E-n` are entries in [DECISIONS.md](DECISIONS.md), the running log of every decision and error.
 - The original specification is [PLAN.md](PLAN.md). Section 13 lists every deviation from it.
+- **After the freeze**, only inference tooling and evidence were added, never model code or experiment configs: the typed-text pre-pass (§5.1), hosting, the live and browser demos, `samples/` and the outsider check (§14.1), and the live-testing findings (§15). The test numbers in §11 are unchanged by all of them.
 
 ---
 
@@ -192,6 +193,32 @@ One deliberate deviation is the **possessive rule** ([`lexicon.py#L95`](../tts/t
 **Symbols** ([`symbols.py#L15-L21`](../tts/text/symbols.py#L15-L21)):
 - `pad`, `sil`, `sp` + 69 ARPAbet phones (15 vowels × 3 stresses + 24 consonants) = 72 symbols.
 - This is **exactly** MFA's `english_us_arpa` phone set, asserted by `test_mfa_phone_set_equals_symbols` (D-24). Every model token therefore has an MFA duration.
+
+### 5.1 Typed-text pre-pass, added after the freeze (D-94, E-35)
+
+The corpus texts are clean read prose. An interviewer types anything. So a rule-based pre-pass ([`tts/text/input_rules.py`](../tts/text/input_rules.py), tables in `text.input_rules` of `configs/base.yaml`) runs in front of the frozen normalizer.
+
+**What it handles:**
+- **Money:** $, €, £, ₹/Rs/INR, ¥, with Indian digit grouping.
+- **Times, dates and durations:** `3:30pm`, M/D dates against fractions, "the 5th of", h/m durations.
+- **Numbers in context:** ratios and scores (`3-2`), multipliers (`1.5x`), versions, decades, °C/°F and units, Roman numerals in context.
+- **Web text:** URLs and e-mails, phone numbers.
+- **Abbreviations and casing:** bare titles (`Dr`, `St` before a capitalized word), weekdays, AD/BC, CamelCase splitting.
+- **Spelling out:** unknown all-caps tokens (`GPU`), and unknown lowercase tokens of 3+ letters without a vowel (`bcd`, E-35).
+- **Refusals:** non-Latin script, and text that leaves no words, each with a one-line reason.
+
+**Fixed against the growing lexicon.** "Known word" means CMUdict plus a `keep_caps` list, not `lexicon.txt`. The lexicon grows at inference, so the rule's output must not depend on what earlier requests added.
+
+**Checks:**
+- **Stress set:** 121 typed-text cases in [`tests/data/text_cases.tsv`](../tests/data/text_cases.tsv), run by `make text-stress`. 119 pass; the other 2 are G2P guesses for unknown names. Before the pre-pass, 58 of 117 failed.
+- **End-to-end rehearsal:** 12/12 cases, each an L2 reference plus typed text, including the refusals (`make rehearse`).
+- **Regression:** `test_corpus_word_sequences_unchanged` asserts that every L2-ARCTIC transcript gives the same words as before. LJ has one intended change, the "Dr Paul" title bug fix. So the evaluation in §11 is unaffected.
+
+**Known limits** (§15):
+- one pronunciation per word (homographs such as "read" and "lead");
+- US date order;
+- the letter "a" is read as the article;
+- the spelling rule misses letter strings with a vowel (`ijk`) and wrongly spells interjections that are not in CMUdict (`brrr`).
 
 ---
 
@@ -791,6 +818,19 @@ The table is in §2. Paired tests on test (D-86, [`results/paired/`](../results/
 | Korean | 0.595 | 39.3 ms / 1.5% | 22.2 ms / 3.3% | 21.8 ms / 2.2% | 0.793 |
 | Vietnamese | 0.406 | 41.6 ms / 2.2% | 25.4 ms / 4.0% | 25.4 ms / 3.2% | 0.771 |
 
+**Distribution and stretch** (from `results/<system>/test/per_utt.csv`; deck v3 slide 23):
+
+| | V0 | M0 | M1 | m1_pos_diph |
+| --- | --- | --- | --- | --- |
+| Median per-reference MAE | 38.0 ms | 29.4 ms | 21.9 ms | **21.5 ms** |
+| 90th percentile | 56.8 ms | 45.8 ms | 36.4 ms | **35.5 ms** |
+| Word boundaries within 20 ms / 50 ms | 41.2% / 75.8% | 55.3% / 84.3% | 69.3% / 90.3% | **69.6% / 90.4%** |
+| MAE at stretch < 0.8 / 0.9–1.1 / > 1.2 | 35.2 / 39.8–40.1 / 42.4 | 30.7 / 30.8–30.9 / 32.7 | 26.0 / 23.0–23.3 / 26.1 | 24.7 / 22.8 / 26.1 |
+
+- **Where the mass is:** 76% of the main system's references fall between 10 and 30 ms. V0's mode is 30–40 ms.
+- **Stretch:** the stretch ratio is the main system's output speech frames over its native frames, available for 1,132 references. Every system's error rises when the reference is far slower or faster than LJ. The gap to V0 holds in every bin.
+- **Worst cases:** the worst reference per accent is shown in `samples/demo/` (e.g. THV_arctic_a0067: 148 ms for the main system and for V0 alike), so failures are not hidden.
+
 **Pace check (plot 8,** [`08_rho_dev_test.png`](../results/plots/08_rho_dev_test.png)**):**
 - The median reference is 1.12× LJ's pace on dev and 1.16× on test, with a similar spread.
 - So dev was a fair stand-in for test.
@@ -837,6 +877,9 @@ Main checkpoint, from [`scripts/profile.py`](../scripts/profile.py) → [`result
 | Baselines: M0 (FastSpeech2) only | + V0, the original pretrained VITS with MAS, inference only, added after the freeze | The immediate baseline for the MAS → MFA swap (raised at review). No frozen system or config changed. | D-90 |
 | (V0) the original VITS reads espeak IPA | Lexicon pronunciations written in espeak-style IPA | `lexicon.txt` is the only pronunciation source (CLAUDE.md) | D-90 |
 | Bundle includes LJ WAVs | M1 bundle without them; the instance downloads LJ, verified against the laptop's hashes | 1 MB/s upload | D-69 |
+| Normalizer as specified | + a typed-text pre-pass in front of it, after the freeze | Interviewer input (money, URLs, letters…); corpus words unchanged, checked by a test | D-94, E-35 |
+| `mfa align_one` with a fixed temporary directory | Temporary directory keyed by the lexicon's hash | MFA reused a stale parsed dictionary, so words added at inference were unknown (CTC fallback) | E-35 |
+| Demo page as the audio deliverable | `samples/`: byte-exact copies of the evaluated outputs | The re-synthesized demo audio differs from the evaluated files (sampling noise) | E-36, D-103 |
 
 ---
 
@@ -861,8 +904,43 @@ Main checkpoint, from [`scripts/profile.py`](../scripts/profile.py) → [`result
   - alignment failures (an unspoken word, a false start, a forced CTC path).
   - Pass means exact length or a clean fallback. **21/21 on GPU and CPU** with the main checkpoint.
 - **Failure handling.** Any failure in `scripts/infer.py --pairs_dir` prints a one-line reason and continues with the next pair.
-- **Unit tests.** `make test` gives 166 passed, 1 skipped (158 at the freeze; V0 and the fidelity probe added 8). The skip is the pre-freeze lock test, which skips by design once the tag exists. Every module has a test and a make target.
-- **Backup outputs for the live demo.** The demo page ([`scripts/make_demo.py`](../scripts/make_demo.py)) stores every sample's outputs and timing plots. It was rebuilt from an empty folder after the freeze (D-88).
+- **Unit tests.** `make test` gives 308 passed, 1 skipped on the author's machine. That is 158 at the freeze; V0 and the fidelity probe added 8, and the post-freeze tooling of §14.1 added the rest. On a clean clone without the datasets it gives 300 passed, 9 skipped. The skip on the full machine is the pre-freeze lock test, which skips by design once the tag exists. Every module has a test and a make target.
+- **Backup outputs for the live demo.** The demo page ([`scripts/make_demo.py`](../scripts/make_demo.py)) stores every sample's outputs and timing plots. It was rebuilt from an empty folder after the freeze (D-88). Its audio is re-synthesized, so it differs from the evaluated files by sampling noise. The evidence is therefore `samples/` (§14.1), not the demo page.
+
+### 14.1 After the freeze: hosting, demos and evidence (D-95..D-105)
+
+None of this changes a model or an experiment config.
+
+**Hosting** ([`scripts/fetch_models.py`](../scripts/fetch_models.py), D-95/D-97/D-100):
+- **What:** a public Hugging Face repository, `Raviteja546/meeami-tts`. It holds inference-only checkpoints (`infer.pt`: generator weights only; 141 MB instead of 956 MB; bit-identical output, `scripts/export_infer.py --verify`), the two baselines' weights and the frozen lexicon.
+- **How it is fetched:** `make models` downloads them at a pinned revision and checks every file against `MANIFEST.sha256`.
+
+**Live demo** ([`scripts/demo.py`](../scripts/demo.py), `configs/live_demo.yaml`, D-96):
+- main vs V0 on a held-out L2-ARCTIC clip, with word times measured on the outputs;
+- `make rehearse` runs 12 end-to-end cases.
+
+**Browser demo** ([`scripts/web_demo.py`](../scripts/web_demo.py), D-101/D-102, E-37):
+- **What a visitor does:** records or uploads a sentence, types it, and gets all seven systems side by side.
+- **Server:** a stdlib server bound to localhost with an access key, and one job at a time.
+- **Sharing:** a Cloudflare quick tunnel gives https, which browsers require for the microphone.
+- **What testing it found:** recording real users exposed the failures in §15.
+
+**Exact evidence** (`samples/`, [`scripts/export_samples.py`](../scripts/export_samples.py), E-36/D-103):
+- **demo/:** 21 test samples in 3 accents. Each has the reference, the human annotation, all 7 outputs, word timings and a plot.
+- **Selection:** fixed before listening. The headline prompt for every speaker, plus the best, median and worst reference per accent.
+- **Self-check:** the export recomputes every sample's MAE from the committed files and stops unless it equals `per_utt.csv`; 147 of 147 matched.
+- **listening/:** the listening sets behind phase-2 decisions, byte-identical to the dev evaluation outputs.
+- **browser_tests/:** all 50 browser tests by the author.
+- **On the Hub:** all 1,248 test outputs per system (`make outputs`, a pinned revision, a sha256 manifest).
+
+**Outsider check** (D-100, D-104):
+- **Setup:** a fresh clone, no login, an empty download cache.
+- **Result:** `make models`, `assets`, `infer`, `rehearse`, `text-stress`, `test` and `outputs` all pass. The README's quick start is that sequence.
+
+**Slides** (`slides/meeami-tts_v3.pptx`, D-105):
+- 34 slides with speaker notes;
+- slide 2 maps the four key questions to slides;
+- the demonstration slides embed the exact sample audio.
 
 ---
 
@@ -877,6 +955,7 @@ Main checkpoint, from [`scripts/profile.py`](../scripts/profile.py) → [`result
 - **V0 needs an adapter.** It reads lexicon pronunciations in espeak-style IPA instead of espeak's own output (function words keep full stress), and it needs a blank-ownership rule. Even with the better rule, a −21 ms bias remains. An adapter that learned to place V0's blanks could narrow the timing gap. It would still have to fight MAS's model-internal alignment.
 - **Fixed alignments flatten phones** (§7.4): every MFA-trained model moves 14–16% less inside phones than LJ. V0 keeps slightly better WER and UTMOS (§10.6).
 - **The ablations were branched late (20k steps from M1),** so they test late-stage augmentation, not augmentation from the start of fine-tuning.
+- **The front end has one pronunciation per word,** and read-speech corpora never contain spelled letters. Live input does: the letter "a" and "I" after a vowel fail (table below), and homographs get one reading.
 
 **Found in live testing of the browser demo (2026-11-12, E-35).** Spoken letters and the word "I", recorded by the owner through the browser demo. Each row was re-aligned with MFA after the fixes.
 
@@ -967,3 +1046,7 @@ The robust alternative is a learned normaliser that decides from context whether
 | Dev pace is representative of test | [`results/plots/08_rho_dev_test.png`](../results/plots/08_rho_dev_test.png) | [`plots.py#L225`](../tts/eval/plots.py#L225) |
 | The test split was not read before the freeze | `git tag freeze-v1` → 5889ecf; test results committed after it | [`guard.py#L39`](../tts/guard.py#L39) |
 | Efficiency numbers | `results/profile_cuda.json`, `profile_cpu_12t.json`, `profile_cpu_1t.json` | [`profile.py`](../scripts/profile.py) |
+| Typed text: 119/121 stress cases, corpus words unchanged | `make text-stress`, [`tests/data/text_cases.tsv`](../tests/data/text_cases.tsv), `test_corpus_word_sequences_unchanged` | [`input_rules.py`](../tts/text/input_rules.py) |
+| Error distribution and stretch analysis (§11) | `results/<system>/test/per_utt.csv` (`wb_mae_ms`, `wb_within20/50`, `stretch_ratio`) | [`evaluate.py`](../scripts/evaluate.py) |
+| Hosted checkpoints are the frozen ones | `MANIFEST.sha256` on the Hub; `scripts/export_infer.py --verify` (bit-identical output) | [`fetch_models.py`](../scripts/fetch_models.py) |
+| Runs from a clean clone without login | D-104 (models, assets, infer, rehearse 12/12, stress 119/121, 300 tests, outputs) | `Makefile` quick-start targets |
