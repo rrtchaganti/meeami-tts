@@ -1590,3 +1590,17 @@ docs/HANDOFF.md instead of being worked around.
     DECISIONS keeps its history.
   - Test counts brought up to date after D-107: 313 passed on the author's machine, 305 passed and
     9 skipped on a clean clone (the 5 new report tests pass in a fresh clone).
+- **D-109 Repository cleanup for reviewers (owner's choice).**
+  - `docs/HANDOFF.md` (the private status log and GPU-instance runbook) is no longer tracked and
+    is gitignored; it stays on the laptop. The training commands it held are already in README
+    "Commands in run order", which now also notes tmux and `--resume` (checkpoint every 2,000 steps,
+    `train.ckpt_interval`). README, Makefile help and a Makefile comment no longer point to it.
+    One pointer remains in an error message of `scripts/train.py`, which is frozen code
+    (CLAUDE.md), so it was left unchanged.
+  - `slides/` was purged from the whole git history (git filter-branch), not only from the
+    current tree, and `main` was force-pushed. A bundle of the history before the rewrite is in
+    `out/git_backup_pre_purge.bundle` (laptop only). The `freeze-v1` commit (5889ecf) has no
+    slides and keeps its hash. Commit hashes after it changed, so DECISIONS and REPORT name
+    commits only up to the freeze.
+  - Kept on purpose: CLAUDE.md, results, reports (including the rejected R3 reports), samples,
+    demo clips and this log.

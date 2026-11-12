@@ -16,7 +16,7 @@ help:
 	@echo "Laptop:  env test data lexicon align-lj stats align-l2-dev align-dev-eval pace-stats-b"
 	@echo "         aug-a aug-b aug-filter m0-demo overfit smoke edge eval eval-all tune phone-dyn paired profile"
 	@echo "         bundle check-data demo  |  inference/demo: models infer live-demo rehearse text-stress web-demo (docs/DEMO.md)"
-	@echo "GPU:     see docs/HANDOFF.md (setup_gpu.sh, fetch_bundle.sh, check-data, train.py)"
+	@echo "GPU:     see README \"Commands in run order\" (setup_gpu.sh, fetch_bundle.sh, check-data, train.py)"
 
 # --- T1: environments -------------------------------------------------------
 # Creates each env if missing, otherwise updates it in place (safe to re-run).
@@ -119,7 +119,7 @@ edge:
 edge-build:
 	$(TTS_RUN) python -m tts.infer.edge_cases --build
 
-# UTMOS filter only (needs the torch.hub SpeechMOS model; see docs/HANDOFF.md)
+# UTMOS filter only (needs the pinned SpeechMOS UTMOS model, make assets-eval; D-66)
 .PHONY: aug-filter
 aug-filter:
 	$(TTS_RUN) python -m tts.augment.filter --kind a

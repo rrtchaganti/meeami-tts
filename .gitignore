@@ -59,3 +59,4 @@ __pycache__/
 
 # presentation decks are submitted separately, not part of the repository (D-108)
 /slides/
+/docs/HANDOFF.md

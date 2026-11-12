@@ -76,7 +76,6 @@ No GPU? Add `ARGS="--device cpu"` (same output, slower synthesis; MFA runs on th
 | **[docs/REPORT.md](docs/REPORT.md)** | **The final report:** problem, approach, every decision with its reasoning and code links, all results |
 | [docs/PLAN.md](docs/PLAN.md) | The original specification (code comments cite its sections) |
 | [docs/DECISIONS.md](docs/DECISIONS.md) | The running log of every decision (D-n) and error (E-n), in order |
-| [docs/HANDOFF.md](docs/HANDOFF.md) | Status log and the GPU-instance runbook |
 | `make demo` → `out/demo_site/index.html` | Demo page: reference vs every system's output and timing plot |
 | **[docs/DEMO.md](docs/DEMO.md)** | **Live demo runbook:** `make models`, `make live-demo`, `make rehearse`, what to say, what to do when something fails |
 
@@ -439,7 +438,7 @@ then scores every output and writes:
 - **Method:**
   - A 300-step benchmark (0.229 s/step) set `max_steps` to 114,000 for an 8 h budget, at batch 32.
   - Training ran in tmux, with resume after an interruption.
-  - Runbook: [docs/HANDOFF.md](docs/HANDOFF.md).
+  - Commands: [Commands in run order](#commands-in-run-order).
 - **Commands:**
   - `python scripts/train.py --config configs/m1.yaml`;
   - `bash scripts/export_run.sh m1`.
@@ -530,7 +529,7 @@ make profile DEVICE=cuda      # T12
 make bundle-m1                # T13: small M1 bundle (+ check-data on a fresh unpack); `make bundle` = full
 git tag smoke-ok; git tag gpu-ready
 
-# --- GPU instance, phase 1: M1 (docs/HANDOFF.md) ---------------------------------------------
+# --- GPU instance, phase 1: M1 ----------------------------------------------------------------
 git clone <repo> meeami-tts && cd meeami-tts && git checkout gpu-ready
 bash scripts/setup_gpu.sh && bash scripts/fetch_bundle.sh <url-or-path> && make lj-download && make check-data
 conda run -n tts python scripts/train.py --config configs/m1.yaml --benchmark 300   # -> train.max_steps
@@ -572,8 +571,8 @@ make live-demo UTT=YBAA_arctic_a0003 TEXT="For the 20th time that evening, the t
 make live-demo REF=their.mp3 TEXT="what the recording says"
 ```
 
-On the GPU instance, prefix the training commands with `conda run -n tts`, inside tmux.
-[HANDOFF.md](docs/HANDOFF.md) has the exact launch lines.
+On the GPU instance, prefix the training commands with `conda run -n tts`, inside tmux (as in
+phase 1); a crashed run resumes with the same command plus `--resume` (checkpoints every 2k steps).
 
 ---
 
@@ -594,7 +593,7 @@ tests/      unit tests (one per module) + edge_cases/ (21 committed WAV/TXT case
 stats/      phone_logdur.json (LJ per-phone log-duration mean, σ) · l2_dev_pace.json (Ablation B)
 reports/    data splits, lexicon, LJ alignment QC, MFA error on accented speech, augmentation
 results/    <system>/<split>/{per_utt.csv, summary.json} · paired/ · phone_dynamics/ · fidelity/ · tune/ · plots/ · profile_*.json · _rejected/
-docs/       meeami-tts_report.pdf (make report-pdf) · REPORT.md · PLAN.md · DECISIONS.md · HANDOFF.md
+docs/       meeami-tts_report.pdf (make report-pdf) · REPORT.md · PLAN.md · DECISIONS.md
 samples/    exact evaluated outputs + references + word timings (make samples, E-36): demo/ · listening/ · browser_tests/
 data/ runs/ export/ out/   git-ignored (datasets, training runs, checkpoints, demo)
 ```
